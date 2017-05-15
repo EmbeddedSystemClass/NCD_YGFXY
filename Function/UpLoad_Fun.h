@@ -6,7 +6,7 @@
 #include	"SystemSet_Data.h"
 #include	"RemoteSoft_Data.h"
 
-#define	UPLOADSENDBUFLEN	2048
+#define	UPLOADSENDBUFLEN	4096
 #define	UPLOADRECVBUFLEN	1024
 #define	UPLOADTEMPBUFLEN	128
 

@@ -136,32 +136,52 @@ void CommunicateWithServerByWifi(MyServerData * myServerData)
 				&readSize, 1, 10 / portTICK_RATE_MS, 1 / portTICK_RATE_MS));
 		
 		//发送数据
-		if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, myServerData->sendBuf, myServerData->sendDataLen,
-			1, 1000 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
+		readSize = myServerData->sendDataLen;
+		while(readSize > 800)
 		{
-			
-			//接收数据,最好等待1s
-			
-			while(pdPASS == ReceiveDataFromQueue(GetUsart4RXQueue(), NULL, myServerData->recvBuf, 1000, 
-				&readSize, 1, 1000 / portTICK_RATE_MS, 1000 / portTICK_RATE_MS))
+			if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, myServerData->sendBuf + (myServerData->sendDataLen - readSize), 
+				800, 1, 1000 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
 			{
-				//如果发生的是GET请求，则说明是下载固件，需要保存
-				if(strstr(myServerData->sendBuf, "GET"))
+				readSize -= 800;
+				vTaskDelay(100 / portTICK_RATE_MS);
+			}
+			else
+				goto END;
+		}
+		
+		if(readSize > 0)
+		{
+			if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, myServerData->sendBuf + (myServerData->sendDataLen - readSize), 
+				readSize, 1, 1000 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
+			{
+				;
+			}
+			else
+				goto END;
+		}
+		
+		//接收数据,最好等待1s
+			
+		while(pdPASS == ReceiveDataFromQueue(GetUsart4RXQueue(), NULL, myServerData->recvBuf, 1000, 
+			&readSize, 1, 1000 / portTICK_RATE_MS, 1000 / portTICK_RATE_MS))
+		{
+			//如果发生的是GET请求，则说明是下载固件，需要保存
+			if(strstr(myServerData->sendBuf, "GET"))
+			{
+				if(i == 0)
 				{
-					if(i == 0)
-					{
-						WriteAppFile(myServerData->recvBuf + 229, readSize-229, true);
-						i++;
-					}
-					else
-						WriteAppFile(myServerData->recvBuf, readSize, false);
-					
-					myServerData->recvDataLen += readSize;
+					WriteAppFile(myServerData->recvBuf + 229, readSize-229, true);
+					i++;
 				}
+				else
+					WriteAppFile(myServerData->recvBuf, readSize, false);
+					
+				myServerData->recvDataLen += readSize;
 			}
 		}
 		
-		giveWifixMutex();
+		END:
+			giveWifixMutex();
 	}
 }
 
@@ -185,7 +205,7 @@ MyState_TypeDef UpLoadData(char *URL, void * sendBuf, unsigned short sendLen, vo
 	{
 		memset(myServerData, 0, sizeof(MyServerData));
 		if(strstr(sendType, "POST"))
-			sprintf(myServerData->sendBuf, "POST %s HTTP/1.1\nHost: 116.62.108.201:8080\nConnection: keep-alive\nContent-Length: %d\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\n%s", URL, sendLen, (char *)sendBuf);
+			sprintf(myServerData->sendBuf, "POST %s HTTP/1.1\nHost: 192.168.0.56:8080\nConnection: keep-alive\nContent-Length: %d\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\n%s", URL, sendLen, (char *)sendBuf);
 		else
 			sprintf(myServerData->sendBuf, "GET %s HTTP/1.1\nHost: 116.62.108.201:8080\nConnection: keep-alive\n\n", URL);
 		

@@ -385,16 +385,16 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 					
 			S_TempCalData->itemData->testdata.testline.BasicResult += S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[2][2];
 		}
-				
+
 		if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
 
-		if(S_TempCalData->CV1 < 0.01)
+		if(S_TempCalData->CV1 < 0.025)
 		{
 			S_TempCalData->resultstatues = NoSample;
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
 		}
-		else if(S_TempCalData->CV2 < 0.05)
+		else if(S_TempCalData->CV2 < 0.01)
 		{
 			S_TempCalData->resultstatues = PeakError;
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;

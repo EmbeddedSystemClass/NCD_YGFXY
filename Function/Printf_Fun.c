@@ -51,9 +51,6 @@ void PrintfData(TestData * testd2)
 		//首先复制数据到自己的缓冲器，以防多任务下，其他任务释放原数据区
 		memcpy(tempTestData, testd2, sizeof(TestData));
 		
-		sprintf(printfbuf, "------------------------------------------------\n\n\0");
-		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
-		
 		sprintf(printfbuf, "武汉纽康度生物科技股份有限公司\n\0");
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
@@ -92,10 +89,7 @@ void PrintfData(TestData * testd2)
 			, mytime.hour, mytime.min, mytime.sec);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "声明：本结果仅对本标本负责！\n\0");
-		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
-		
-		sprintf(printfbuf, "\n------------------------------------------------\n\n\n\n\n\n\n\n\0");
+		sprintf(printfbuf, "声明: 本结果仅对本标本负责！\n\n\n\n\n\0");
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 	}
 	

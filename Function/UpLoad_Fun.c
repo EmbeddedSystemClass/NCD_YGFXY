@@ -101,7 +101,6 @@ static MyState_TypeDef ReadTime(void)
 	
 	return status;
 }
-
 static void UpLoadDeviceInfo(void)
 {
 	UpLoadDeviceDataBuffer * upLoadDeviceDataBuffer = NULL;
@@ -206,37 +205,23 @@ static void UpLoadTestData(void)
 					break;
 				
 				//ÉÏ´«²âÊÔÇúÏß
-				for(upLoadTestDataBuffer->i=0; upLoadTestDataBuffer->i<3; upLoadTestDataBuffer->i++)
+				sprintf(upLoadTestDataBuffer->sendBuf, "cnum=%s&cid=%s&serie_a=[\0", upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->testData->temperweima.PiHao);
+					
+				for(upLoadTestDataBuffer->j=0; upLoadTestDataBuffer->j<300; upLoadTestDataBuffer->j++)
 				{
-					memset(upLoadTestDataBuffer->sendBuf, 0, UPLOADSENDBUFLEN);
-					sprintf(upLoadTestDataBuffer->sendBuf, "cnum=%s&cid=%s&", upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->testData->temperweima.PiHao);
-					
-					memset(upLoadTestDataBuffer->tempBuf, 0, UPLOADTEMPBUFLEN);
-					if(upLoadTestDataBuffer->i == 0)
-						sprintf(upLoadTestDataBuffer->tempBuf, "serie_a=[");
-					else if(upLoadTestDataBuffer->i == 1)
-						sprintf(upLoadTestDataBuffer->tempBuf, "serie_b=[");
+					if(upLoadTestDataBuffer->j == 0)
+						sprintf(upLoadTestDataBuffer->tempBuf, "%d\0", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*100 + upLoadTestDataBuffer->j]);
 					else
-						sprintf(upLoadTestDataBuffer->tempBuf, "serie_c=[");
+						sprintf(upLoadTestDataBuffer->tempBuf, ",%d\0", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*100 + upLoadTestDataBuffer->j]);
 					strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempBuf);
-					
-					for(upLoadTestDataBuffer->j=0; upLoadTestDataBuffer->j<100; upLoadTestDataBuffer->j++)
-					{
-						memset(upLoadTestDataBuffer->tempBuf, 0, UPLOADTEMPBUFLEN);
-						if(upLoadTestDataBuffer->j == 0)
-							sprintf(upLoadTestDataBuffer->tempBuf, "%d", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*100 + upLoadTestDataBuffer->j]);
-						else
-							sprintf(upLoadTestDataBuffer->tempBuf, ",%d", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*100 + upLoadTestDataBuffer->j]);
-						strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempBuf);
-					}
-					
-					sprintf(upLoadTestDataBuffer->tempBuf, "]");
-					strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempBuf);
-					
-					if(My_Pass != UpLoadData("/NCD_Server/up_series", upLoadTestDataBuffer->sendBuf, strlen(upLoadTestDataBuffer->sendBuf),
-						upLoadTestDataBuffer->recvBuf, UPLOADRECVBUFLEN, "POST"))
-						goto END1;
 				}
+					
+				sprintf(upLoadTestDataBuffer->tempBuf, "]\0");
+				strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempBuf);
+					
+				if(My_Pass != UpLoadData("/NCD_Server/up_series", upLoadTestDataBuffer->sendBuf, strlen(upLoadTestDataBuffer->sendBuf),
+					upLoadTestDataBuffer->recvBuf, UPLOADRECVBUFLEN, "POST"))
+					goto END1;
 			}
 			
 			upLoadTestDataBuffer->systemSetData.upLoadIndex++;

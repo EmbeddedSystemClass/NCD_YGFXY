@@ -11,7 +11,7 @@ typedef struct
 	char md5[32];
 	char desc[200];
 	bool isSuccessDownloadFirmware;
-}RemoteSoftInfo; 
+}RemoteSoftInfo;
 #pragma pack()
 
 void setGbRemoteFirmwareVersion(unsigned short version);

@@ -5,7 +5,7 @@
 #include	"tcp.h"
 #include 	"api.h" 
 
-#define	SERVERSENDBUFLEN	1024
+#define	SERVERSENDBUFLEN	4096
 #define	SERVERRECVBUFLEN	1024
 
 typedef struct
