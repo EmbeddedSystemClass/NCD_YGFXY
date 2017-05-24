@@ -341,8 +341,9 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 		DisText(0x204C+(i)*0x40, S_RecordPageBuffer->buf, strlen(S_RecordPageBuffer->buf)+1);
 		
 		//显示时间
-		sprintf(S_RecordPageBuffer->buf, "%02d-%02d-%02d %02d:%02d:%02d\0", S_RecordPageBuffer->tempdata->TestTime.year, S_RecordPageBuffer->tempdata->TestTime.month, S_RecordPageBuffer->tempdata->TestTime.day,
-			S_RecordPageBuffer->tempdata->TestTime.hour, S_RecordPageBuffer->tempdata->TestTime.min, S_RecordPageBuffer->tempdata->TestTime.sec);
+		sprintf(S_RecordPageBuffer->buf, "%02d-%02d-%02d %02d:%02d\0", S_RecordPageBuffer->tempdata->TestTime.year, 
+			S_RecordPageBuffer->tempdata->TestTime.month, S_RecordPageBuffer->tempdata->TestTime.day,
+			S_RecordPageBuffer->tempdata->TestTime.hour, S_RecordPageBuffer->tempdata->TestTime.min);
 		DisText(0x2058+(i)*0x40, S_RecordPageBuffer->buf, strlen(S_RecordPageBuffer->buf)+1);
 		
 		//显示操作人
