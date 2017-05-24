@@ -325,7 +325,6 @@ static void calculateResult(void)
 		S_CheckQRPageBuffer->basicResult += S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][2];
 	}
 			
-	memset(S_CheckQRPageBuffer->buf, 0, 20);
-	sprintf(S_CheckQRPageBuffer->buf, "%.*f", S_CheckQRPageBuffer->qrCode.itemConstData.pointNum, S_CheckQRPageBuffer->basicResult);
-	DisText(0x25c0, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
+	sprintf(S_CheckQRPageBuffer->buf, "%.*f\0", S_CheckQRPageBuffer->qrCode.itemConstData.pointNum, S_CheckQRPageBuffer->basicResult);
+	DisText(0x25c0, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf)+1);
 }
