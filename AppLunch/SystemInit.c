@@ -155,8 +155,6 @@ void MySystemDataInit(void)
 	
 	CreateNetQueue();					//网络数据初始化
 	
-	InitMutex();						//wifi数据初始化
-	
 	InitMotorData();
 	
 	ReadNetData(GetGB_NetData());		//读取网络设置

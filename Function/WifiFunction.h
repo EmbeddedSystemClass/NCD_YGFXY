@@ -36,8 +36,7 @@ MyState_TypeDef CheckWifiMID(void);
 unsigned char GetWifiIndicator(void);
 MyState_TypeDef WifiIsConnectted(void);
 
-void InitMutex(void);
-unsigned char WaitWifiFree(portTickType xBlockTime);
-void SetWifiFree(void);
+void setwifiBusy(unsigned char status);
+unsigned char getwifiBusy(void);
 #endif
 

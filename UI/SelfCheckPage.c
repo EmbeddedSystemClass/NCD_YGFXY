@@ -189,11 +189,11 @@ static void RefreshPageValue(void)
 		BasicPic(0x1a20, 1, 100, 19, 295, 19+4*selfcheckpicinfo[recvdat],302, 316, 357);
 		
 		/*有不可忽略的错误*/
-		if((recvdat == DataBasesError)||(recvdat == ErWeiMaError)||(recvdat == ADDAError)||(recvdat == MotorError))
-			SetGB_SelfCheckResult(SelfCheck_Error);
+//		if((recvdat == DataBasesError)||(recvdat == ErWeiMaError)||(recvdat == ADDAError)||(recvdat == MotorError))
+//			SetGB_SelfCheckResult(SelfCheck_Error);
 		/*没有不可忽略错误的前提下，有可忽略的错误*/
-		else if((GetGB_SelfCheckResult() != SelfCheck_Error) && ( (recvdat == WIFIError) || (recvdat == ReadServerError)))
-			SetGB_SelfCheckResult(SelfCheck_Alam);
+//		else if((GetGB_SelfCheckResult() != SelfCheck_Error) && ( (recvdat == WIFIError) || (recvdat == ReadServerError)))
+//			SetGB_SelfCheckResult(SelfCheck_Alam);
 		
 		if(recvdat == SelfCheckOver)
 		{

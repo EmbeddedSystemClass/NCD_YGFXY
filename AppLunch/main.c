@@ -26,6 +26,7 @@
 #include	"WelcomePage.h"
 #include	"UI_Data.h"
 #include	"ReadBarCode_Task.h"
+#include	"SelfTest_Fun.h"
 
 #include 	"FreeRTOS.h"
 #include 	"task.h"
@@ -82,10 +83,9 @@ static void vStartTask(void * param)
 
 	/*开启看门狗任务*/
 	StartvIwdgTask();
-
-	/*自检任务*/
-	StartSelfCheckTask();
 	
+	SelfTest_Function();
+
 	/*读取输入数据任务*/
 	StartvReadInDataTask();
 	

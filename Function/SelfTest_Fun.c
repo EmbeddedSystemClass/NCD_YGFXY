@@ -62,27 +62,12 @@ static void GB_DataInit(void);
 *Data£º2016Äê1ÔÂ27ÈÕ10:38:06
 ***************************************************************************************************/
 void SelfTest_Function(void)
-{	
-//	GB_DataInit();
-	vTaskDelay(500 *portTICK_RATE_MS);
-	
-//	ErWeiMaTest();
-	vTaskDelay(1000 * portTICK_RATE_MS);
-	
-	DataBasesCheck();
-	vTaskDelay(500 * portTICK_RATE_MS);
+{		
+	SelfTestFun_Init();
 	
 	WifiModuleTest();
 	vTaskDelay(500 * portTICK_RATE_MS);
-	
-	ADDACheck();
-	vTaskDelay(500 *portTICK_RATE_MS);
-	
-	MotorCheck();
-	vTaskDelay(500 *portTICK_RATE_MS);
-	
-	
-	
+
 	SetSelfTestFunState(SelfCheckOver, 10*portTICK_RATE_MS);
 }
 

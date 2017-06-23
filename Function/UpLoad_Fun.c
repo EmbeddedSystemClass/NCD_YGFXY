@@ -12,6 +12,10 @@
 #include	"ServerFun.h"
 #include	"SDFunction.h"
 #include	"Net_Data.h"
+#include 	"Usart4_Driver.h"
+#include	"QueueUnits.h"
+#include	"BackDoorData.h"
+#include	"WifiFunction.h"
 
 #include	"cJSON.h"
 #include	"MyMem.h"
@@ -22,8 +26,9 @@
 #include 	"queue.h"
 #include	"semphr.h"
 
+#include	<string.h>
 #include	"stdio.h"
-#include	"string.h"
+#include 	"stdlib.h"
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
@@ -33,6 +38,7 @@
 /***************************************************************************************************/
 static void UpLoadDeviceInfo(void);
 static MyState_TypeDef UpLoadTestData(void);
+static void PostDataByWifi(void);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************正文********************************************************/
@@ -55,7 +61,8 @@ void UpLoadFunction(void)
 				vTaskDelay(10000);
 		}
 		count++;*/
-
+		if(getwifiBusy() == 0)
+			PostDataByWifi();
 		vTaskDelay(1000 / portTICK_RATE_MS);
 	}
 }
@@ -151,4 +158,24 @@ static MyState_TypeDef UpLoadTestData(void)
 	MyFree(linebuf);
 	
 	return statues;
+}
+
+static void PostDataByWifi(void)
+{
+	double data = 0;
+	char * tempBuf = NULL;
+	
+	tempBuf = MyMalloc(512);
+	if(tempBuf)
+	{
+		memset(tempBuf, 0, 512);
+		
+		if(pdPASS == ReceiveDataFromQueue(GetUsart4RXQueue(), NULL, tempBuf, 500, 1, 100 / portTICK_RATE_MS))
+		{
+			data = strtod(tempBuf , NULL);
+			setwifiResult(data);
+		}
+	}
+	
+	MyFree(tempBuf);
 }

@@ -125,6 +125,8 @@ static double GB_Value = 0.0;
 static unsigned char S_ItemIndex = 0;									//???????
 static unsigned char S_CategoryIndex = 0;								//??j??????
 static unsigned char S_TestIndex = 0;									//??j??????J???
+
+static double wifiResult = 0;											//从wifi接收的结果
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -269,5 +271,15 @@ double GetCurrentData(void)
 	tempresult1 *= a;
 	
 	return (tempresult + tempresult1);
+}
+
+void setwifiResult(double data)
+{
+	wifiResult = data;
+}
+
+double getwifiResult(void)
+{
+	return wifiResult;
 }
 /****************************************end of file************************************************/

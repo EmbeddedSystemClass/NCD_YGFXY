@@ -28,6 +28,8 @@ void SetS_TestIndex(unsigned char index);
 unsigned char GetS_TestIndex(void);
 double GetCurrentData(void);
 
+void setwifiResult(double data);
+double getwifiResult(void);
 #endif
 
 /****************************************end of file************************************************/

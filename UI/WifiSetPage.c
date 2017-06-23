@@ -40,6 +40,7 @@ static MyState_TypeDef PageBufferFree(void);
 
 unsigned char DspWifiSetPage(void *  parm)
 {
+	setwifiBusy(1);
 	SetGBSysPage(DspWifiSetPage, DspNetPreSetPage, NULL, Input, PageUpDate, PageInit, PageBufferMalloc, PageBufferFree);
 	
 	GBPageInit(parm);
@@ -120,6 +121,8 @@ static void Input(unsigned char *pbuf , unsigned short len)
 			SetGB_WifiState(Link_Up);
 			
 			GotoGBParentPage(NULL);
+			
+			setwifiBusy(0);
 		}
 		/*Ë¢ÐÂ*/
 		else if(S_WifiPageBuffer->lcdinput[0] == 0x2d0a)

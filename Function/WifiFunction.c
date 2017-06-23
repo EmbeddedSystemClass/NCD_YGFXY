@@ -30,16 +30,13 @@
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
-
-static xSemaphoreHandle xMutex = NULL;									//wifi互斥量
-
-
+static unsigned char wifiBusy = 0;
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
 static MyState_TypeDef ComWithWIFI(char * cmd, const char *strcmp, char *buf, unsigned short buflen, portTickType xBlockTime);
 static void ProgressWifiListData(WIFI_Def *wifis, char *buf);
-
+static MyState_TypeDef SetWifiWorkInSTAMode(void);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************正文********************************************************/
@@ -47,33 +44,12 @@ static void ProgressWifiListData(WIFI_Def *wifis, char *buf);
 /***************************************************************************************************/
 /***************************************************************************************************/
 
-void InitMutex(void)
-{
-	if(xMutex == NULL)
-	{
-		vSemaphoreCreateBinary(xMutex);
-		
-		xSemaphoreGive(xMutex);
-	}
-}
-
-unsigned char WaitWifiFree(portTickType xBlockTime)
-{
-	
-	return xSemaphoreTake(xMutex, xBlockTime);
-}
-
-void SetWifiFree(void)
-{
-	xSemaphoreGive(xMutex);
-}
 
 static MyState_TypeDef ComWithWIFI(char * cmd, const char *strcmp, char *buf, unsigned short buflen, portTickType xBlockTime)
 {
 	unsigned short rxcount = 0;
 	MyState_TypeDef statues = My_Fail;
-	
-	if(pdPASS == WaitWifiFree(100/portTICK_RATE_MS))
+
 	{
 		if(pdPASS == SendDataToQueue(GetUsart4TXQueue(), GetUsart4TXMutex(), cmd, strlen(cmd), 1, 50 * portTICK_RATE_MS, EnableUsart4TXInterrupt))
 		{
@@ -97,8 +73,6 @@ static MyState_TypeDef ComWithWIFI(char * cmd, const char *strcmp, char *buf, un
 			else
 				statues = My_Pass;
 		}
-
-		SetWifiFree();
 	}
 
 	return statues;
@@ -109,30 +83,20 @@ MyState_TypeDef WIFICheck(void)
 {
 	MyState_TypeDef statues = My_Fail;
 	
-	if(AT_Mode != GetWifiWorkMode())
-	{
-		/*进入at模式成功*/
-		if(My_Pass != SetWifiWorkInAT(AT_Mode))
-			return My_Fail;
-	}
+	unsigned char i=0;
 	
-//	if(Wifi_Mode == GetNetCard())
+	for(i=0; i<5; i++)
 	{
-		SetWifiSocketA();
-	
-		SetWifiSocketB();
+		if(My_Pass == SetWifiWorkInAT(AT_Mode))
+			break;
 	}
-//	else
-	{
-//		CloseSocketA();
-//		CloseSocketB();
-	}
-	
+
+	SetWifiSocketA();
+
 	SetWifiDefaultWorkMode();
 	
-	if(My_Pass == CheckWifiMID())
-		statues = My_Pass;
-
+	SetWifiWorkInSTAMode();
+	
 	RestartWifi();
 
 	return statues;
@@ -177,10 +141,10 @@ MyState_TypeDef SetWifiDefaultWorkMode(void)
 	char *txbuf = NULL;
 	MyState_TypeDef statues = My_Fail;
 	
-	txbuf = MyMalloc(50);
+	txbuf = MyMalloc(500);
 	if(txbuf)
 	{
-		if(My_Pass == ComWithWIFI("AT+TMODE=cmd\r", "+ok", txbuf, 50, 500 * portTICK_RATE_MS))
+		if(My_Pass == ComWithWIFI("AT+TMODE=throughput\r", "+ok", txbuf, 50, 500 * portTICK_RATE_MS))
 			statues = My_Pass;
 	}
 	
@@ -206,6 +170,23 @@ WIFI_WorkMode_DefType GetWifiWorkMode(void)
 	MyFree(txbuf);
 	
 	return mode;
+}
+
+static MyState_TypeDef SetWifiWorkInSTAMode(void)
+{
+	char *txbuf = NULL;
+	MyState_TypeDef statues = My_Fail;
+	
+	txbuf = MyMalloc(500);
+	if(txbuf)
+	{
+		if(My_Pass == ComWithWIFI("AT+WMODE=STA\r", "+ok", txbuf, 50, 500 * portTICK_RATE_MS))
+			statues = My_Pass;
+	}
+	
+	MyFree(txbuf);
+	
+	return statues;
 }
 
 MyState_TypeDef ScanApList(WIFI_Def *wifis)
@@ -437,16 +418,17 @@ MyState_TypeDef SetWifiSocketA(void)
 {
 	char *txbuf = NULL; 
 	MyState_TypeDef statues = My_Fail;
-
+	NetData * netData;
+	
 	txbuf = MyMalloc(100);
 	if(txbuf)
 	{
+		netData = GetGB_NetData();
 		{
-			sprintf(txbuf, (const char *)"AT+NETP=TCP,CLIENT,9602,%d.%d.%d.%d\r", GetGB_NetData()->serverip.ip_1,GetGB_NetData()->serverip.ip_2,GetGB_NetData()->serverip.ip_3,GetGB_NetData()->serverip.ip_4);
+			sprintf(txbuf, (const char *)"AT+NETP=TCP,CLIENT,9600,%d.%d.%d.%d\r", netData->serverip.ip_1, netData->serverip.ip_2, netData->serverip.ip_3, netData->serverip.ip_4);
 		
 			if(My_Pass == ComWithWIFI(txbuf, "+ok", txbuf, 100, 500 * portTICK_RATE_MS))
-				statues = My_Pass;
-				
+				statues = My_Pass;	
 		}
 	}
 
@@ -632,4 +614,14 @@ MyState_TypeDef CloseSocketB(void)
 static void AnalyRecvData(char *buf, mynetbuf *netbuf)
 {
 	
+}
+
+void setwifiBusy(unsigned char status)
+{
+	wifiBusy = status;
+}
+
+unsigned char getwifiBusy(void)
+{
+	return wifiBusy;
 }
