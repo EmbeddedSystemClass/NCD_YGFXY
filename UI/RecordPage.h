@@ -15,6 +15,7 @@ typedef struct Record_tag {
 	unsigned int maxpagenum;
 
 	char buf[300];										//ÁÙÊ±»º³åÇø
+	char buf2[100];
 	unsigned int tempvalue1;
 	unsigned int tempvalue2;
 	TestData *tempdata;

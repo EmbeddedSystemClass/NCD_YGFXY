@@ -236,11 +236,11 @@ static void RefreshPageText(void)
 			sprintf(buf, "%s", S_TestPageBuffer->currenttestdata->testdata.temperweima.CardPiCi);
 			DisText(0x2130, buf, strlen(buf));
 			
-/*			if(S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult <= S_TestPageBuffer->currenttestdata->testdata.temperweima.LowstResult)
-				sprintf(buf, "<%.3f", S_TestPageBuffer->currenttestdata->testdata.temperweima.LowstResult);
+			if(S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult <= S_TestPageBuffer->currenttestdata->testdata.temperweima.LowstResult)
+				sprintf(buf, "<%.2f", S_TestPageBuffer->currenttestdata->testdata.temperweima.LowstResult);
 			else if(S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult >= S_TestPageBuffer->currenttestdata->testdata.temperweima.HighestResult)
-				sprintf(buf, ">%.3f", S_TestPageBuffer->currenttestdata->testdata.temperweima.HighestResult);
-			else*/
+				sprintf(buf, ">%.2f", S_TestPageBuffer->currenttestdata->testdata.temperweima.HighestResult);
+			else
 				sprintf(buf, "%.2f", S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult);
 			DisText(0x2140, buf, strlen(buf));
 		}

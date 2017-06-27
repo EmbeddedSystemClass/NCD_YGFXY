@@ -229,11 +229,22 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 			if(S_RecordPageBuffer->tempdata->crc == CalModbusCRC16Fun1(S_RecordPageBuffer->tempdata, sizeof(TestData)-2))
 			{
 				memset(S_RecordPageBuffer->buf, 0, 300);
-				sprintf(S_RecordPageBuffer->buf, "%5d   %10s%15s  %8.2f %s %d-%d-%d %d:%d:%d %s ", (pageindex-1)*DataNumInPage+i+1, S_RecordPageBuffer->tempdata->temperweima.ItemName,
-				S_RecordPageBuffer->tempdata->sampleid, S_RecordPageBuffer->tempdata->testline.AdjustResult, S_RecordPageBuffer->tempdata->temperweima.ItemMeasure,
+				sprintf(S_RecordPageBuffer->buf, "%5d   %10s%15s  \0", (pageindex-1)*DataNumInPage+i+1, S_RecordPageBuffer->tempdata->temperweima.ItemName,
+				S_RecordPageBuffer->tempdata->sampleid);
+				
+				if(S_RecordPageBuffer->tempdata->testline.AdjustResult <= S_RecordPageBuffer->tempdata->temperweima.LowstResult)
+					sprintf(S_RecordPageBuffer->buf2, "<%.2f\0", S_RecordPageBuffer->tempdata->temperweima.LowstResult);
+				else if(S_RecordPageBuffer->tempdata->testline.AdjustResult >= S_RecordPageBuffer->tempdata->temperweima.HighestResult)
+					sprintf(S_RecordPageBuffer->buf2, ">%.2f\0", S_RecordPageBuffer->tempdata->temperweima.HighestResult);
+				else
+					sprintf(S_RecordPageBuffer->buf2, "%.2f\0", S_RecordPageBuffer->tempdata->testline.AdjustResult);
+				strcat(S_RecordPageBuffer->buf, S_RecordPageBuffer->buf2);
+				
+				sprintf(S_RecordPageBuffer->buf2, " %s %d-%d-%d %d:%d:%d %s \0", S_RecordPageBuffer->tempdata->temperweima.ItemMeasure,
 				S_RecordPageBuffer->tempdata->TestTime.year, S_RecordPageBuffer->tempdata->TestTime.month, S_RecordPageBuffer->tempdata->TestTime.day,
 				S_RecordPageBuffer->tempdata->TestTime.hour, S_RecordPageBuffer->tempdata->TestTime.min, S_RecordPageBuffer->tempdata->TestTime.sec,
 				S_RecordPageBuffer->tempdata->user.user_name);
+				strcat(S_RecordPageBuffer->buf, S_RecordPageBuffer->buf2);
 				
 				DisText(0x28e0+(i)*0x30, S_RecordPageBuffer->buf, strlen(S_RecordPageBuffer->buf));
 			}

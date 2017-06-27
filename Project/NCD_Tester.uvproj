@@ -907,6 +907,11 @@
               <FileType>1</FileType>
               <FilePath>..\Datas\BackDoorData.c</FilePath>
             </File>
+            <File>
+              <FileName>ItemConstData.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Datas\ItemConstData.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
