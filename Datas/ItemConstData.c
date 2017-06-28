@@ -42,7 +42,7 @@ ItemConst itemConst[12]=
 	},
 	//CYSC
 	{
-		.itemName = "CYSC\0",
+		.itemName = "CysC\0",
 		.minV = 0.46,
 		.maxV = 8,
 	},
@@ -90,7 +90,7 @@ ItemConst itemConst[12]=
 	},
 	//Lp-PLA2
 	{
-		.itemName = "Lp-PLA2\0",
+		.itemName = "LP-PLA2\0",
 		.minV = 6.0,
 		.maxV = 800,
 	}
