@@ -114,8 +114,11 @@ void getItemMaxMinValue(CardCodeInfo * cardCodeInfo)
 	
 	for(i=0; i<12; i++)
 	{
-		if(CheckStrIsSame(itemConst[i].itemName, cardCodeInfo->ItemName, strlen(cardCodeInfo->ItemName)))
+		if(pdPASS == CheckStrIsSame(itemConst[i].itemName, cardCodeInfo->ItemName, strlen(cardCodeInfo->ItemName)))
+		{
 			tempItemConst = &itemConst[i];
+			break;
+		}
 	}
 	
 	cardCodeInfo->HighestResult = tempItemConst->maxV;
