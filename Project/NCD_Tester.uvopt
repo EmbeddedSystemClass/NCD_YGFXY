@@ -80,37 +80,37 @@
         <Book>
           <Number>0</Number>
           <Title>Getting Started (STM32F4-Discovery)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\DM00037368.pdf</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\DM00037368.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
           <Title>User Manual (STM32F4-Discovery)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\DM00039084.pdf</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\DM00039084.pdf</Path>
         </Book>
         <Book>
           <Number>2</Number>
           <Title>User Manual (MCBSTM32F400)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\mcbstm32f200.chm</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\mcbstm32f200.chm</Path>
         </Book>
         <Book>
           <Number>3</Number>
           <Title>Schematics (MCBSTM32F400)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\mcbstm32f400-schematics.pdf</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\mcbstm32f400-schematics.pdf</Path>
         </Book>
         <Book>
           <Number>4</Number>
           <Title>Bill of Materials (STM32F4-Discovery)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\stm32f4discovery_bom.zip</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\stm32f4discovery_bom.zip</Path>
         </Book>
         <Book>
           <Number>5</Number>
           <Title>Gerber Files (STM32F4-Discovery)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\stm32f4discovery_gerber.zip</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\stm32f4discovery_gerber.zip</Path>
         </Book>
         <Book>
           <Number>6</Number>
           <Title>Schematics (STM32F4-Discovery)</Title>
-          <Path>D:\Program Files\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\stm32f4discovery_sch.zip</Path>
+          <Path>D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Documents\stm32f4discovery_sch.zip</Path>
         </Book>
         <Book>
           <Number>7</Number>
@@ -173,12 +173,12 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>/</Name>
+          <Name>(106=-1,-1,-1,-1,0)(107=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U286370559 -O207 -S0 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8004 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO15 -FD20000000 -FC800 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F407ZG$Flash\STM32F4xx_1024.FLM)</Name>
+          <Name>-U799713843 -O207 -S0 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8004 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO15 -FD20000000 -FC800 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F407ZG$Flash\STM32F4xx_1024.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -192,16 +192,64 @@
           <Type>0</Type>
           <LineNumber>297</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134350368</Address>
+          <Address>134349820</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\UI\CheckQRPage.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\UI\CheckQRPage.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\NCD_Tester\../UI/CheckQRPage.c\297</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>314</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134308816</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\UpLoad_Fun.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\NCD_Tester\../Function/UpLoad_Fun.c\314</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>87</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134309448</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\UpLoad_Fun.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\NCD_Tester\../Function/UpLoad_Fun.c\87</Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>216</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134304536</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\ServerFun.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\NCD_Tester\../Function/ServerFun.c\216</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -240,7 +288,7 @@
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>8</SubType>
-          <ItemText>0x20006FDE</ItemText>
+          <ItemText>0x20007596</ItemText>
         </Mm>
       </MemoryWindow1>
       <Tracepoint>

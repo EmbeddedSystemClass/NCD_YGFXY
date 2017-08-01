@@ -26,6 +26,7 @@
 
 #include	"QueueUnits.h"
 #include	"ServerFun.h"
+#include	"MyTools.h"
 
 #include 	"task.h"
 #include 	"queue.h"
@@ -388,6 +389,15 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 
 		if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
+		
+		if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1705-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult *= 0.6666;
+		}
+		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IK1705-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult /= 2.3;
+		}
 
 		if(S_TempCalData->CV1 < 0.025)
 		{

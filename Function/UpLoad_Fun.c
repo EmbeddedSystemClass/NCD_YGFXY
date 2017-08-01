@@ -67,7 +67,7 @@ void UpLoadFunction(void)
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
 
-		vTaskDelay(60000 / portTICK_RATE_MS);
+		vTaskDelay(30000 / portTICK_RATE_MS);
 	}
 }
 
@@ -169,7 +169,7 @@ static void UpLoadTestData(void)
 		//读取测试数据,读取失败则退出
 		upLoadTestDataBuffer->pageRequest.startElementIndex = upLoadTestDataBuffer->systemSetData.upLoadIndex;
 		upLoadTestDataBuffer->pageRequest.orderType = DESC;
-		upLoadTestDataBuffer->pageRequest.pageSize = 1;
+		upLoadTestDataBuffer->pageRequest.pageSize = 5;
 
 		if(My_Pass != ReadTestData(&(upLoadTestDataBuffer->pageRequest), &(upLoadTestDataBuffer->page), &(upLoadTestDataBuffer->systemSetData)))
 			goto END;

@@ -78,7 +78,7 @@ static void activityStart(void)
 	{
 		copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
 		
-		memcpy(&(S_NetSetPageBuffer->myNetSet), &(S_NetSetPageBuffer->systemSetData), sizeof(NetSet));
+		memcpy(&(S_NetSetPageBuffer->myNetSet), &(S_NetSetPageBuffer->systemSetData.netSet), sizeof(NetSet));
 		
 		UpPageValue();
 	}
@@ -112,10 +112,10 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 			
 			/*自动获取ip*/
 			if(S_NetSetPageBuffer->lcdinput[1] == 0x8000)
-				S_NetSetPageBuffer->systemSetData.netSet.ipmode = DHCP_Mode;
+				S_NetSetPageBuffer->myNetSet.ipmode = DHCP_Mode;
 			/*使用设置的ip*/
 			else if(S_NetSetPageBuffer->lcdinput[1] == 0x0000)
-				S_NetSetPageBuffer->systemSetData.netSet.ipmode = User_Mode;
+				S_NetSetPageBuffer->myNetSet.ipmode = User_Mode;
 				
 			S_NetSetPageBuffer->ischanged = 1;
 		}
@@ -132,7 +132,8 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 			{
 				copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
 		
-				memcpy(&(S_NetSetPageBuffer->systemSetData), &(S_NetSetPageBuffer->myNetSet), sizeof(NetSet));
+				S_NetSetPageBuffer->myNetSet.crc = CalModbusCRC16Fun1(&(S_NetSetPageBuffer->myNetSet), sizeof(NetSet)-2);
+				memcpy(&(S_NetSetPageBuffer->systemSetData.netSet), &(S_NetSetPageBuffer->myNetSet), sizeof(NetSet));
 				
 				if(My_Pass == SaveSystemSetData(&(S_NetSetPageBuffer->systemSetData)))
 				{
