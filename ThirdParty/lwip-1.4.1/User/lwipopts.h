@@ -124,6 +124,8 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_DHCP               1
 
 
+#define LWIP_DNS                       0
+
 /* ---------- UDP options ---------- */
 #define LWIP_UDP                1
 #define UDP_TTL                 255
