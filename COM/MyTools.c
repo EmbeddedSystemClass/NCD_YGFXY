@@ -12,6 +12,9 @@
 
 #include	"MyTools.h"
 
+#include	"Define.h"
+
+#include	"math.h"
 #include	<string.h>
 #include	"stdio.h"
 /***************************************************************************************************/
@@ -67,3 +70,96 @@ bool CheckStrIsSame(void *str1 , void * str2 , unsigned short len)
 	return true;
 }
 
+/***************************************************************************************************
+*FunctionName: calculateDataCV
+*Description: 计算cv值
+*Input: datas -- 数据
+*		len -- 数据长度
+*		sum -- 数据累加和，如果为0，则需要计算，否则直接使用
+*Output: 
+*Return: 
+*Author: xsx
+*Date: 2017年8月2日 14:06:33
+***************************************************************************************************/
+float calculateDataCV(unsigned short * datas, unsigned short len, double sum)
+{
+	double average = 0;
+	double tempV1 = 0;
+	double tempV2 = 0;
+	unsigned short i=0;
+	unsigned short *p = datas;
+	
+	if(sum == 0)
+	{
+		for(i=0; i<len; i++)
+			average += *p++;
+	}
+	else
+		average = sum;
+	average /= len;
+	
+	p = datas;
+	for(i=0; i<len; i++)
+	{
+		tempV1 = *p++;
+		tempV1 -= average;
+		tempV1 *= tempV1;
+		tempV2 += tempV1;
+	}
+	
+	tempV2 /= len;
+	tempV2 = sqrt(tempV2);
+
+	return tempV2 / average;
+}
+
+void findFeng(unsigned short * datas, unsigned short startIndex, unsigned short midIndex, unsigned short endIndex, Point * myPoint)
+{
+	unsigned short i=0, j=0;
+	double tempv1 = 0;
+	Point tempPoint;
+		
+	myPoint->x = 0;
+	myPoint->y = 0;
+	for(i=startIndex; i<endIndex; i++)
+	{
+		tempPoint.x = 0;
+		tempPoint.y = 0;
+		for(j=i-15; j<15+i; j++) 
+		{
+			tempv1 = datas[j];
+			if(tempPoint.y < tempv1) 
+			{
+				tempPoint.y = tempv1;
+				tempPoint.x = j;
+			}
+		}
+
+		for(j=0; j<10; j++) 
+		{
+			if(datas[tempPoint.x-j] < datas[tempPoint.x-j-1])
+				break;
+
+			if(tempPoint.x+j+1 < MaxPointLen)
+			{
+				if(datas[tempPoint.x+j] < datas[tempPoint.x+j+1])
+					break;
+			}		
+		}
+
+		if(j < 10)
+		{
+			i += 10;
+			continue;
+		}
+		else 
+		{
+			if(tempPoint.y > myPoint->y)
+			{
+				myPoint->x = tempPoint.x;
+				myPoint->y = tempPoint.y;
+			}
+			i = (tempPoint.x + 15);
+		}
+	}
+}

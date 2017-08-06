@@ -194,8 +194,8 @@ static void UpLoadTestData(void)
 					upLoadTestDataBuffer->testData->TestTime.hour, upLoadTestDataBuffer->testData->TestTime.min, 
 					upLoadTestDataBuffer->testData->TestTime.sec, upLoadTestDataBuffer->testData->TestTemp.E_Temperature, 
 					upLoadTestDataBuffer->testData->TestTemp.O_Temperature, upLoadTestDataBuffer->testData->time, 
-					upLoadTestDataBuffer->testData->testline.C_Point[1], upLoadTestDataBuffer->testData->testline.T_Point[1],
-					upLoadTestDataBuffer->testData->testline.B_Point[1], upLoadTestDataBuffer->testData->testline.BasicBili, 
+					upLoadTestDataBuffer->testData->testline.C_Point.x, upLoadTestDataBuffer->testData->testline.T_Point.x,
+					upLoadTestDataBuffer->testData->testline.B_Point.x, upLoadTestDataBuffer->testData->testline.BasicBili, 
 					upLoadTestDataBuffer->testData->tempadjust.parm, upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, 
 					upLoadTestDataBuffer->testData->testline.BasicResult, upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, 
 					upLoadTestDataBuffer->testData->testline.AdjustResult, upLoadTestDataBuffer->tempBuf);

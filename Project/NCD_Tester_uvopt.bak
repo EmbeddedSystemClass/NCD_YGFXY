@@ -192,64 +192,64 @@
           <Type>0</Type>
           <LineNumber>297</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134349820</Address>
+          <Address>134306124</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\UI\CheckQRPage.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../UI/CheckQRPage.c\297</Expression>
+          <Expression>\\NCD_Tester\../Function/Test_Fun.c\297</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>314</LineNumber>
+          <LineNumber>366</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134308816</Address>
+          <Address>134307098</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\UpLoad_Fun.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/UpLoad_Fun.c\314</Expression>
+          <Expression>\\NCD_Tester\../Function/Test_Fun.c\366</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>87</LineNumber>
+          <LineNumber>350</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134309448</Address>
+          <Address>134306860</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\UpLoad_Fun.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/UpLoad_Fun.c\87</Expression>
+          <Expression>\\NCD_Tester\../Function/Test_Fun.c\350</Expression>
         </Bp>
         <Bp>
           <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>216</LineNumber>
+          <LineNumber>317</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134304536</Address>
+          <Address>134306430</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\ServerFun.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/ServerFun.c\216</Expression>
+          <Expression>\\NCD_Tester\../Function/Test_Fun.c\317</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -297,7 +297,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>0</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -374,7 +374,7 @@
 
   <Group>
     <GroupName>Drivers</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -962,7 +962,7 @@
 
   <Group>
     <GroupName>Tasks</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1152,7 +1152,7 @@
 
   <Group>
     <GroupName>UI</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1524,7 +1524,7 @@
 
   <Group>
     <GroupName>DataS</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1834,7 +1834,7 @@
 
   <Group>
     <GroupName>COM</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2084,7 +2084,7 @@
 
   <Group>
     <GroupName>CMSIS</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2347,7 +2347,7 @@
 
   <Group>
     <GroupName>Fatfs</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

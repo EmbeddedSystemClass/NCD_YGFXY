@@ -21,7 +21,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1050
+#define	GB_SoftVersion	(unsigned short)1051
 #define	GB_SoftVersion_Build	"Build17072601\0"
 
 /*服务器信息*/
@@ -438,11 +438,18 @@ typedef enum
 }ResultState;
 
 #pragma pack(1)
+typedef struct Point_tag {
+	unsigned short y;
+	unsigned short x;
+}Point;
+#pragma pack()
+
+#pragma pack(1)
 typedef struct TestLine_tag {
 	unsigned short TestPoint[MaxPointLen];
-	unsigned short C_Point[2];
-	unsigned short T_Point[2];
-	unsigned short B_Point[2];
+	Point C_Point;
+	Point T_Point;
+	Point B_Point;
 	float BasicBili;
 	float BasicResult;
 	float AdjustResult;

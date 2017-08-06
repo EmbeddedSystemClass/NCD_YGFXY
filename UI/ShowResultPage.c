@@ -338,8 +338,8 @@ static void dspIco(void)
 	{
 		//在曲线上标记出T,C,基线
 		S_ShowPageBuffer->myico[0].ICO_ID = 22;
-		S_ShowPageBuffer->myico[0].X = 574+S_ShowPageBuffer->testdata.testline.T_Point[1]-12;
-		tempvalue = S_ShowPageBuffer->testdata.testline.T_Point[0];
+		S_ShowPageBuffer->myico[0].X = 574+S_ShowPageBuffer->testdata.testline.T_Point.x-12;
+		tempvalue = S_ShowPageBuffer->testdata.testline.T_Point.y;
 		tempvalue /= S_ShowPageBuffer->lineinfo.Y_Scale*2;
 		tempvalue = 1-tempvalue;
 		tempvalue *= 302;										//曲线窗口宽度
@@ -347,8 +347,8 @@ static void dspIco(void)
 		S_ShowPageBuffer->myico[0].Y = (unsigned short)tempvalue - 11;
 		
 		S_ShowPageBuffer->myico[1].ICO_ID = 22;
-		S_ShowPageBuffer->myico[1].X = 574+S_ShowPageBuffer->testdata.testline.C_Point[1]-12;
-		tempvalue = S_ShowPageBuffer->testdata.testline.C_Point[0];
+		S_ShowPageBuffer->myico[1].X = 574+S_ShowPageBuffer->testdata.testline.C_Point.x-12;
+		tempvalue = S_ShowPageBuffer->testdata.testline.C_Point.y;
 		tempvalue /= S_ShowPageBuffer->lineinfo.Y_Scale*2;
 		tempvalue = 1-tempvalue;
 		tempvalue *= 302;										//曲线窗口宽度
@@ -356,8 +356,8 @@ static void dspIco(void)
 		S_ShowPageBuffer->myico[1].Y = (unsigned short)tempvalue - 11;
 		
 		S_ShowPageBuffer->myico[2].ICO_ID = 22;
-		S_ShowPageBuffer->myico[2].X = 574+S_ShowPageBuffer->testdata.testline.B_Point[1]-12;
-		tempvalue = S_ShowPageBuffer->testdata.testline.B_Point[0];
+		S_ShowPageBuffer->myico[2].X = 574+S_ShowPageBuffer->testdata.testline.B_Point.x-12;
+		tempvalue = S_ShowPageBuffer->testdata.testline.B_Point.y;
 		tempvalue /= S_ShowPageBuffer->lineinfo.Y_Scale*2;
 		tempvalue = 1-tempvalue;
 		tempvalue *= 302;										//曲线窗口宽度

@@ -308,10 +308,10 @@ static void dspAdjStatus(char * str)
 
 static void dspTestResult(void)
 {
-	sprintf(S_AdjustPageBuffer->buf, "(%d,%d)", S_AdjustPageBuffer->itemData.testdata.testline.T_Point[1], S_AdjustPageBuffer->itemData.testdata.testline.T_Point[0]);
+	sprintf(S_AdjustPageBuffer->buf, "(%d,%d)", S_AdjustPageBuffer->itemData.testdata.testline.T_Point.x, S_AdjustPageBuffer->itemData.testdata.testline.T_Point.y);
 	DisText(0x2720, S_AdjustPageBuffer->buf, strlen(S_AdjustPageBuffer->buf));
 	
-	sprintf(S_AdjustPageBuffer->buf, "(%d,%d)", S_AdjustPageBuffer->itemData.testdata.testline.C_Point[1], S_AdjustPageBuffer->itemData.testdata.testline.C_Point[0]);
+	sprintf(S_AdjustPageBuffer->buf, "(%d,%d)", S_AdjustPageBuffer->itemData.testdata.testline.C_Point.x, S_AdjustPageBuffer->itemData.testdata.testline.C_Point.y);
 	DisText(0x2728, S_AdjustPageBuffer->buf, strlen(S_AdjustPageBuffer->buf));
 	
 	sprintf(S_AdjustPageBuffer->buf, "%.3f", S_AdjustPageBuffer->itemData.testdata.testline.BasicBili);

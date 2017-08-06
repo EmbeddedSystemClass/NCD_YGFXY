@@ -7,11 +7,6 @@
 
 #define	DataMaxWinSize			20
 
-typedef struct PointData_tag {
-	unsigned short data;
-	unsigned short index;
-}PointData;
-
 
 #pragma pack(1)
 typedef struct TempCalData_tag{
@@ -19,8 +14,11 @@ typedef struct TempCalData_tag{
 	double tempvalue2;
 	double average;														//平均值
 	double stdev;														//标准差
-	float CV1;															//变异系数1
-	float CV2;															//变异系数2
+	double CV_1;															//变异系数1
+	double CV_2;															//变异系数1
+	double CV_3;															//变异系数1
+	double CV_4;															//变异系数1
+	double CV_5;															//变异系数2
 	unsigned short tempvalue3;
 	unsigned short temptestline[MaxPointLen + FilterNum];
 	double lastdata;														//记录上次滤波数据
