@@ -17,7 +17,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
-const ItemConstData GB_ItemConstData[4]=
+const ItemConstData GB_ItemConstData[ITEM_NUM]=
 {
 	{
 		.itemName = "NT-proBNP\0",
@@ -40,8 +40,8 @@ const ItemConstData GB_ItemConstData[4]=
 	{
 		.itemName = "cTnI\0",
 		.icoIndex = 2,
-		.pointNum = 2,
-		.lowstResult = 0.1,
+		.pointNum = 3,
+		.lowstResult = 0.001,
 		.highestResult = 30,
 		.normalResult = {"<=0.3 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
@@ -54,6 +54,15 @@ const ItemConstData GB_ItemConstData[4]=
 		.highestResult = 350,
 		.normalResult = {"<=99.3 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
+	},
+	{
+		.itemName = "D-Dimer\0",
+		.icoIndex = 3,
+		.pointNum = 1,
+		.lowstResult = 0.2,
+		.highestResult = 15,
+		.normalResult = {"<=0.5 mg/L\0"},
+		.itemMeasure = {"mg/L\0"}
 	},
 };
 /***************************************************************************************************/

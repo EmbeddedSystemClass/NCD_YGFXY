@@ -21,8 +21,8 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1051
-#define	GB_SoftVersion_Build	"Build17072601\0"
+#define	GB_SoftVersion	(unsigned short)1053
+#define	GB_SoftVersion_Build	"Build17080701\0"
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116
@@ -144,7 +144,7 @@ typedef struct
 /**********************************************************************************************************/
 
 
-#define	ITEM_NUM	4
+#define	ITEM_NUM	5
 #define	ItemNameLen						20			//????????
 #define	ItemMeasureLen					10			//????????
 

@@ -238,7 +238,7 @@ ResultState TestFunction(void * parm)
 
 static void AnalysisTestData(TempCalData * S_TempCalData)
 {
-	unsigned short i=0, k=0;
+	unsigned short i=0;
 	
 	{
 		//计算最大值,平均值
@@ -286,18 +286,37 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		
 		//can not find T line
 		if(S_TempCalData->itemData->testdata.testline.T_Point.y == 0)
+		{
 			S_TempCalData->itemData->testdata.testline.T_Point.x = S_TempCalData->itemData->testdata.temperweima.ItemLocation;
 		
-		S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.testline.T_Point.x-15;
-		if(S_TempCalData->tempvalue3 < (300 - 31))
 			S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x-15], 31, 0);
-		else
-			S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x-15], (300 - 31), 0);
 
-		if((S_TempCalData->CV_1 > 0.05) && (S_TempCalData->itemData->testdata.testline.T_Point.y == 0))
-		{
-			goto END2;
+			if(S_TempCalData->CV_1 > 0.05)
+			{
+				goto END2;
+			}
 		}
+		else
+		{
+			if((S_TempCalData->itemData->testdata.testline.T_Point.x >= 200) || (S_TempCalData->itemData->testdata.testline.T_Point.x <= 100))
+				goto END2;
+			
+			if(S_TempCalData->itemData->testdata.testline.T_Point.x < S_TempCalData->itemData->testdata.temperweima.ItemLocation) 
+			{
+				S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.temperweima.ItemLocation - S_TempCalData->itemData->testdata.testline.T_Point.x;
+				
+				if(S_TempCalData->tempvalue3 >= 10)
+		        {
+					S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x], S_TempCalData->tempvalue3, 0);
+		        	
+			        if(S_TempCalData->CV_1 < 0.01)
+			        {
+			        	S_TempCalData->itemData->testdata.testline.T_Point.x = S_TempCalData->itemData->testdata.temperweima.ItemLocation;
+			        }
+		        }
+			}
+		}
+		
 		S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
 
 		
@@ -314,12 +333,12 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		else
 			S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x-15], (300 - 31), 0);
 		
-		if((S_TempCalData->CV_1 > 0.05) && (S_TempCalData->itemData->testdata.testline.C_Point.y == 0))
+		if((S_TempCalData->CV_1 > 0.03) && (S_TempCalData->itemData->testdata.testline.C_Point.y == 0))
 		{
 			goto END2;
 		}
 		
-		if(S_TempCalData->CV_1 < 0.05)
+		if(S_TempCalData->CV_1 < 0.03)
 		{
 			goto END2;
 		}
@@ -341,13 +360,9 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		else
 			S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], (300 - 31), 0);
 		
-		S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.testline.T_Point.x-15;
-		if(S_TempCalData->tempvalue3 < (300 - 31))
-			S_TempCalData->CV_2 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], 31, 0);
-		else
-			S_TempCalData->CV_2 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], (300 - 31), 0);
+		S_TempCalData->CV_2 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], 31, 0);
 		
-		if((S_TempCalData->CV_1 + S_TempCalData->CV_2) < 0.2)
+		if((S_TempCalData->CV_1 + S_TempCalData->CV_2) < 0.13)
 			goto END2;
 		
 		//step.6 canliu
@@ -385,14 +400,6 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		{
 		     goto END2;
 		}
-		
-		//step. 7 b line cv<0.1
-		S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.testline.C_Point.x - 22;
-		S_TempCalData->tempvalue3 -= S_TempCalData->itemData->testdata.testline.T_Point.x;
-		S_TempCalData->tempvalue3 -= 28;
-		S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x+28], S_TempCalData->tempvalue3, 0);
-		if(S_TempCalData->CV_1 > 0.1)
-			goto END2;
 				
 		/*计算结果*/
 		S_TempCalData->tempvalue2 = (S_TempCalData->itemData->testdata.testline.T_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);

@@ -190,78 +190,46 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>297</LineNumber>
+          <LineNumber>168</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134306124</Address>
+          <Address>134297978</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\CodeScanFunction.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/Test_Fun.c\297</Expression>
+          <Expression>\\NCD_Tester\../Function/CodeScanFunction.c\168</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>366</LineNumber>
+          <LineNumber>137</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134307098</Address>
+          <Address>134350988</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
+          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\UI\CheckQRPage.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/Test_Fun.c\366</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>350</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134306860</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/Test_Fun.c\350</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>317</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134306430</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\MyWork\脫芦鹿芒路脰脦枚脪脟\NCD_YGFXY\NCD_YGFXY\Function\Test_Fun.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/Test_Fun.c\317</Expression>
+          <Expression>\\NCD_Tester\../UI/CheckQRPage.c\137</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>S_CheckQRPageBuffer</ItemText>
+          <ItemText>GB_ItemConstData</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>GB_TestBuffer</ItemText>
+          <ItemText>S_CheckQRPageBuffer</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -297,7 +265,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>0</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -374,7 +342,7 @@
 
   <Group>
     <GroupName>Drivers</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1152,7 +1120,7 @@
 
   <Group>
     <GroupName>UI</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1524,7 +1492,7 @@
 
   <Group>
     <GroupName>DataS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1834,7 +1802,7 @@
 
   <Group>
     <GroupName>COM</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2011,7 +1979,7 @@
 
   <Group>
     <GroupName>FreertOS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2032,7 +2000,7 @@
       <GroupNumber>10</GroupNumber>
       <FileNumber>126</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
