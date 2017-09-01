@@ -66,12 +66,6 @@ void PrintfData(TestData * testd2)
 		tempvalue = tempTestData->testline.AdjustResult;
 		if(tempTestData->testResultDesc != ResultIsOK)
 			sprintf(printfbuf, "测试结果: ERROR\n\0");
-		else if(IsShowRealValue() == true)
-			sprintf(printfbuf, "测试结果: %.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.AdjustResult, tempTestData->temperweima.itemConstData.itemMeasure);
-		else if(tempvalue <= tempTestData->temperweima.itemConstData.lowstResult)
-			sprintf(printfbuf, "测试结果: <%.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->temperweima.itemConstData.lowstResult, tempTestData->temperweima.itemConstData.itemMeasure);
-		else if(tempvalue >= tempTestData->temperweima.itemConstData.highestResult)
-			sprintf(printfbuf, "测试结果: >%.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->temperweima.itemConstData.highestResult, tempTestData->temperweima.itemConstData.itemMeasure);
 		else
 			sprintf(printfbuf, "测试结果: %.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.AdjustResult, tempTestData->temperweima.itemConstData.itemMeasure);
 		

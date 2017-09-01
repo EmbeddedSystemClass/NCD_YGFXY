@@ -323,18 +323,7 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 		
 		//ÏÔÊ¾½á¹û
 		if(S_RecordPageBuffer->tempdata->testResultDesc != ResultIsOK)
-		{
 			sprintf(S_RecordPageBuffer->buf, "Error\0");
-		}
-		else if(IsShowRealValue() == true)
-			sprintf(S_RecordPageBuffer->buf, "%.*f %s\0", S_RecordPageBuffer->tempdata->temperweima.itemConstData.pointNum, 
-				S_RecordPageBuffer->tempdata->testline.AdjustResult, S_RecordPageBuffer->tempdata->temperweima.itemConstData.itemMeasure);
-		else if(S_RecordPageBuffer->tempdata->testline.AdjustResult <= S_RecordPageBuffer->tempdata->temperweima.itemConstData.lowstResult)
-			sprintf(S_RecordPageBuffer->buf, "<%.*f %s\0", S_RecordPageBuffer->tempdata->temperweima.itemConstData.pointNum, 
-				S_RecordPageBuffer->tempdata->temperweima.itemConstData.lowstResult, S_RecordPageBuffer->tempdata->temperweima.itemConstData.itemMeasure);
-		else if(S_RecordPageBuffer->tempdata->testline.AdjustResult >= S_RecordPageBuffer->tempdata->temperweima.itemConstData.highestResult)
-			sprintf(S_RecordPageBuffer->buf, ">%.*f %s\0", S_RecordPageBuffer->tempdata->temperweima.itemConstData.pointNum, 
-				S_RecordPageBuffer->tempdata->temperweima.itemConstData.highestResult, S_RecordPageBuffer->tempdata->temperweima.itemConstData.itemMeasure);
 		else
 			sprintf(S_RecordPageBuffer->buf, "%.*f %s\0", S_RecordPageBuffer->tempdata->temperweima.itemConstData.pointNum, 
 				S_RecordPageBuffer->tempdata->testline.AdjustResult, S_RecordPageBuffer->tempdata->temperweima.itemConstData.itemMeasure);
