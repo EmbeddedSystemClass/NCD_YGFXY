@@ -110,12 +110,6 @@ void TIM4_IRQHandler(void)
 		if(BackLimited)
 			SetGB_MotorLocation(0);
 		
-		if(PreLimited)
-		{			
-			if(GetGB_MotorTargetLocation() > MaxLocation)
-				SetGB_MotorTargetLocation(GetGB_MotorLocation());
-		}
-		
 		if(GetGB_MotorTargetLocation() > GetGB_MotorLocation())
 			SetDRVDir(Forward);
 		else

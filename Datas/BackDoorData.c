@@ -57,11 +57,11 @@ const BackDoorData s_BackDoorData[12]=
 	},
 	//??-HCG
 	{
-		.data1 = 2.5,
-		.data2 = {2.5, 5, 25, 100, 250, 1000},
-		.data3 = {5, 25, 240, 240},
-		.data4 = {5, 25},
-		.data5 = {5, 25}
+		.data1 = 2.35,
+		.data2 = {2.5, 25, 250, 2500, 25000, 200000},
+		.data3 = {5, 25, 240},
+		.data4 = {2.5, 2500},
+		.data5 = {2.5, 2500}
 	},
 	//PGI
 	{
@@ -148,7 +148,7 @@ void SetS_TestItemName(void * name)
 		SetS_ItemIndex(2);
 	else if(CheckStrIsSame("CysC", name, strlen(name)))
 		SetS_ItemIndex(3);
-	else if(CheckStrIsSame("??-HCG", name, strlen(name)))
+	else if(CheckStrIsSame("¦Â-HCG", name, strlen(name)))
 		SetS_ItemIndex(4);
 	else if(CheckStrIsSame("PGI", name, strlen(name)))
 		SetS_ItemIndex(5);
@@ -158,7 +158,7 @@ void SetS_TestItemName(void * name)
 		SetS_ItemIndex(7);
 	else if(CheckStrIsSame("MPO", name, strlen(name)))
 		SetS_ItemIndex(8);
-	else if(CheckStrIsSame("??2-MG", name, strlen(name)))
+	else if(CheckStrIsSame("¦Â2-MG", name, strlen(name)))
 		SetS_ItemIndex(9);
 	else if(CheckStrIsSame("H-FABP", name, strlen(name)))
 		SetS_ItemIndex(10);

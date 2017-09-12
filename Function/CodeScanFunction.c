@@ -139,22 +139,20 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 {
 	unsigned short datalen = 0;
 	unsigned char j=0;
-	
-	/*清空二维码空间*/
+
 	memset(S_ReadCodeBuffer->decryptcode, 0, 320);
 
-	/*数据解密失败*/
 	if(pdFAIL == MyDencrypt(pbuf, S_ReadCodeBuffer->decryptcode, len))
 		goto END;
 	
 	memcpy(S_ReadCodeBuffer->originalcode, S_ReadCodeBuffer->decryptcode, len);
 	S_ReadCodeBuffer->pbuf2 = S_ReadCodeBuffer->originalcode;
 
-	/*获取检测卡二维码信息存放地址*/
+	//获取检测卡二维码信息存放地址
 	if(NULL == S_ScanQRTaskData->cardQR)
 		goto END;
 	
-	/*获取数据头*/
+	//获取数据头
 	S_ReadCodeBuffer->pbuf1 = strtok(S_ReadCodeBuffer->decryptcode, "#");
 	if(S_ReadCodeBuffer->pbuf1)
 	{
@@ -165,8 +163,8 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 	}
 	else
 		goto END;
-	
-	/*获取数据长度*/
+
+	//获取数据长度
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL, "#");
 	if(S_ReadCodeBuffer->pbuf1)
 	{
@@ -176,7 +174,7 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 	else
 		goto END;
 	
-	/*获取测试项目名称*/
+	//获取测试项目名称
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL, "#");
 	if(S_ReadCodeBuffer->pbuf1)
 	{
@@ -199,28 +197,28 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 	else
 		goto END;
 		
-	/*读取检测卡上的检测指标计算方式*/
+	//读取检测卡上的检测指标计算方式
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->TestType = strtol(S_ReadCodeBuffer->pbuf1 , NULL , 10);
 	else
 		goto END;
 		
-	/*读取检测卡上的检测指标正常范围*/
+	//读取检测卡上的检测指标正常范围
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->NormalResult = strtod(S_ReadCodeBuffer->pbuf1 , NULL );
 	else
 		goto END;
 		
-	/*读取检测卡上的最低检测值*/
+	//读取检测卡上的最低检测值
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->LowstResult = strtod(S_ReadCodeBuffer->pbuf1 , NULL );
 	else
 		goto END;
 		
-	/*读取检测卡上的最高检测值*/
+	//读取检测卡上的最高检测值
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->HighestResult = strtod(S_ReadCodeBuffer->pbuf1 , NULL );
@@ -228,21 +226,21 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 		goto END;	
 	
 	getItemMaxMinValue(S_ScanQRTaskData->cardQR);
-	/*读取测试项目的单位*/
+	//读取测试项目的单位
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		memcpy(S_ScanQRTaskData->cardQR->ItemMeasure, S_ReadCodeBuffer->pbuf1 ,strlen(S_ReadCodeBuffer->pbuf1));
 	else
 		goto END;
 		
-	/*读取检测卡T线位置*/
+	//读取检测卡T线位置
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->ItemLocation = 210;//strtol(S_ReadCodeBuffer->pbuf1 , NULL, 10);
 	else
 		goto END;
 		
-	/*读取检测卡标准曲线数目*/
+	//读取检测卡标准曲线数目
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->ItemBiaoQuNum = strtol(S_ReadCodeBuffer->pbuf1 , NULL, 10);
@@ -251,7 +249,7 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 	
 	if(S_ScanQRTaskData->cardQR->ItemBiaoQuNum > 1)
 	{
-		/*读取检测卡标准曲线临界浓度*/
+		//读取检测卡标准曲线临界浓度
 		S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 		if(S_ReadCodeBuffer->pbuf1)
 			S_ScanQRTaskData->cardQR->ItemFenDuan = strtod(S_ReadCodeBuffer->pbuf1 , NULL);
@@ -259,8 +257,6 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 			goto END;
 	}
 	
-		
-	/*标准曲线*/
 	for(j=0; j<S_ScanQRTaskData->cardQR->ItemBiaoQuNum; j++)
 	{		
 		S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
@@ -278,15 +274,13 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 			goto END;
 
 	}
-		
-	/*读取检测卡反应时间*/
+
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->CardWaitTime = strtol(S_ReadCodeBuffer->pbuf1 , NULL , 10);
 	else
 		goto END;
-		
-	/*读取检测卡C线位置*/
+
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		S_ScanQRTaskData->cardQR->CLineLocation = 280;//strtol(S_ReadCodeBuffer->pbuf1 , NULL , 10);
@@ -294,14 +288,12 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 		goto END;
 
 
-	/*读取检测卡批号*/
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 		memcpy(S_ScanQRTaskData->cardQR->CardPiCi, S_ReadCodeBuffer->pbuf1, strlen(S_ReadCodeBuffer->pbuf1));
 	else
 		goto END;
 
-	/*读取检测卡保质期*/
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 	{
@@ -318,7 +310,6 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 	else
 		goto END;
 
-	/*读取二维码CRC*/
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
 	{

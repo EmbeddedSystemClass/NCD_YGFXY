@@ -174,6 +174,7 @@ static void PostDataByWifi(void)
 		{
 			data = strtod(tempBuf , NULL);
 			setwifiResult(data);
+			SendDataToQueue(GetUsart4TXQueue(), NULL, "xsx\r\n", 5, 1, 100 / portTICK_RATE_MS, EnableUsart4TXInterrupt);
 		}
 	}
 	
