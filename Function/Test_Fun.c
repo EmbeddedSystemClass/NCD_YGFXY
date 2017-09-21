@@ -360,7 +360,7 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		else
 			S_TempCalData->CV_1 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], (300 - 31), 0);
 		
-		S_TempCalData->CV_2 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], 31, 0);
+		S_TempCalData->CV_2 = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x-15], 31, 0);
 		
 		if((S_TempCalData->CV_1 + S_TempCalData->CV_2) < 0.13)
 			goto END2;
