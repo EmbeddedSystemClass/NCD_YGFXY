@@ -193,6 +193,7 @@ static MyState_TypeDef loadSystemData(void)
 		else
 		{
 			//开机上传一次设备信息
+			systemSetData->upLoadIndex = 53;
 			systemSetData->deviceInfo.isnew = true;
 			setSystemSetData(systemSetData);
 			status = My_Pass;

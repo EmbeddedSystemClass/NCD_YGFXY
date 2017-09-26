@@ -826,11 +826,6 @@
               <FilePath>..\UI\OtherSetPage.c</FilePath>
             </File>
             <File>
-              <FileName>OperGuidePage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\UI\OperGuidePage.c</FilePath>
-            </File>
-            <File>
               <FileName>AdjustLedPage.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\UI\AdjustLedPage.c</FilePath>
@@ -1039,6 +1034,11 @@
               <FileName>Md5.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\COM\Md5.c</FilePath>
+            </File>
+            <File>
+              <FileName>StringDefine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\COM\StringDefine.h</FilePath>
             </File>
           </Files>
         </Group>

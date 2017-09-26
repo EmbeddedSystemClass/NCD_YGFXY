@@ -3,6 +3,7 @@
 
 #include	"SystemSetPage.h"
 #include	"Define.h"
+#include	"StringDefine.h"
 #include	"LCD_Driver.h"
 #include	"MyMem.h"
 #include	"LunchPage.h"

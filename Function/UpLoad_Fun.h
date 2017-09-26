@@ -8,7 +8,7 @@
 
 #define	UPLOADSENDBUFLEN	4096
 #define	UPLOADRECVBUFLEN	1024
-#define	UPLOADTEMPBUFLEN	128
+#define	UPLOADTEMPBUFLEN	2048
 
 #pragma pack(1)
 typedef struct UpLoadDeviceDataBuffer_Tag
@@ -35,6 +35,7 @@ typedef struct UpLoadTestDataBuffer_Tag
 	char sendBuf[UPLOADSENDBUFLEN];
 	char recvBuf[UPLOADRECVBUFLEN];
 	char tempBuf[UPLOADTEMPBUFLEN];
+	char tempbuf2[50];
 	unsigned char k;
 	unsigned short i;
 	unsigned short j;

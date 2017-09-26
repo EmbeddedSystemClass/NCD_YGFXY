@@ -2,6 +2,8 @@
 #define CARDL_D_H_H
 
 #include	"stm32f4xx.h"
+#include	"stm32f4xx_gpio.h"
+#include	"stm32f4xx_rcc.h"
 
 
 #define	PreLimit_Pin			GPIO_Pin_14

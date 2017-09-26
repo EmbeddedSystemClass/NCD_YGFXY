@@ -5,24 +5,18 @@
 #include 	"FreeRTOS.h"
 #include	"ff.h"
 
-
-#define		AdminPassWord		"201300\0"								//管理员密码，用于修改设备id
-#define		AdjustPassWord		"201301\0"								//校准密码
-#define		TestPassWord		"201302\0"								//老化测试密码
-#define		CheckQRPassWord		"201303\0"								//测试二维码密码
-#define		AdjLedPassWord		"201304\0"								//校准led密码··················
-#define		FactoryResetPassWord	"201305\0"							//恢复出厂设置密码
-#define		ChangeValueShowTypePassWord	"201306\0"						//切换结果显示模式，是否显示真实值
-#define		UnlockLCDPassWord	"201307\0"								//解锁屏幕一次
-
 /**************************************************************************************************/
 /***************************************************************************************************/
 /*****************************************软件版本**************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1056
+#define	GB_SoftVersion	(unsigned short)1057
 #define	GB_SoftVersion_Build	"Build17091801\0"
+
+#define	DEVICE_EN		100
+#define	DEVICE_CN		101
+#define	DeviceLanguage	DEVICE_CN
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116

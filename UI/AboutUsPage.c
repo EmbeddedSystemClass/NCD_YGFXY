@@ -223,7 +223,7 @@ static void dspPageText(void)
 	if((getIsSuccessDownloadFirmware() == true) && (getGbRemoteFirmwareVersion() > GB_SoftVersion))
 	{
 		S_AboutUsPageBuffer->tempV = getGbRemoteFirmwareVersion();
-		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d (�°汾V%d.%d.%02d)\0", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100,
+		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d (New Version V%d.%d.%02d)\0", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100,
 			S_AboutUsPageBuffer->tempV/1000, S_AboutUsPageBuffer->tempV%1000/100, S_AboutUsPageBuffer->tempV%100);
 	}
 	else

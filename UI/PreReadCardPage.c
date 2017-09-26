@@ -403,7 +403,7 @@ static void ShowCardInfo(void)
 	sprintf(S_PreReadPageBuffer->buf, "%d S\0", S_PreReadPageBuffer->temperweima.CardWaitTime*60);
 	DisText(0x1440, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 		
-	sprintf(S_PreReadPageBuffer->buf, "20%02dÄê%02dÔÂ%02dÈÕ\0", S_PreReadPageBuffer->temperweima.CardBaoZhiQi.year, 
+	sprintf(S_PreReadPageBuffer->buf, "20%02d-%02d-%02d\0", S_PreReadPageBuffer->temperweima.CardBaoZhiQi.year, 
 		S_PreReadPageBuffer->temperweima.CardBaoZhiQi.month, S_PreReadPageBuffer->temperweima.CardBaoZhiQi.day);
 	DisText(0x1450, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 }

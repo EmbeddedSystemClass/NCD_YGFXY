@@ -182,48 +182,40 @@ static void UpLoadTestData(void)
 			{
 				//上传测试数据
 				if(upLoadTestDataBuffer->testData->testResultDesc != ResultIsOK)
-					sprintf(upLoadTestDataBuffer->tempBuf, "Error\0");
+					sprintf(upLoadTestDataBuffer->tempBuf, "false\0");
 				else
-					sprintf(upLoadTestDataBuffer->tempBuf, "Ok\0");
+					sprintf(upLoadTestDataBuffer->tempBuf, "true\0");
 				
-				sprintf(upLoadTestDataBuffer->sendBuf, "cnum=%s&cid=%s&did=%s&t_name=%s&sid=%s&testtime=20%d-%d-%d %d:%d:%d&e_t=%.1f&o_t=%.1f&outt=%d&c_l=%d&t_l=%d&b_l=%d&t_c_v=%.3f&a_p=%.3f&b_v=%.*f&a_v=%.*f&t_re=%s\0",
+				sprintf(upLoadTestDataBuffer->sendBuf, "cardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.3f&testv=%.*f&serialnum=%s-%s&t_isok=%s\0",
 					upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->testData->temperweima.PiHao, 
 					upLoadTestDataBuffer->systemSetData.deviceInfo.deviceid, upLoadTestDataBuffer->testData->user.user_name, 
 					upLoadTestDataBuffer->testData->sampleid, upLoadTestDataBuffer->testData->TestTime.year, 
 					upLoadTestDataBuffer->testData->TestTime.month, upLoadTestDataBuffer->testData->TestTime.day, 
 					upLoadTestDataBuffer->testData->TestTime.hour, upLoadTestDataBuffer->testData->TestTime.min, 
-					upLoadTestDataBuffer->testData->TestTime.sec, upLoadTestDataBuffer->testData->TestTemp.E_Temperature, 
-					upLoadTestDataBuffer->testData->TestTemp.O_Temperature, upLoadTestDataBuffer->testData->time, 
+					upLoadTestDataBuffer->testData->TestTime.sec, upLoadTestDataBuffer->testData->time, 
 					upLoadTestDataBuffer->testData->testline.C_Point.x, upLoadTestDataBuffer->testData->testline.T_Point.x,
 					upLoadTestDataBuffer->testData->testline.B_Point.x, upLoadTestDataBuffer->testData->testline.BasicBili, 
-					upLoadTestDataBuffer->testData->tempadjust.parm, upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, 
-					upLoadTestDataBuffer->testData->testline.BasicResult, upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, 
-					upLoadTestDataBuffer->testData->testline.AdjustResult, upLoadTestDataBuffer->tempBuf);
+					upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, upLoadTestDataBuffer->testData->testline.AdjustResult, 
+					upLoadTestDataBuffer->testData->temperweima.PiHao, upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->tempBuf);
 
-				if(My_Pass != UpLoadData("/NCD_Server/up_testdata", upLoadTestDataBuffer->sendBuf, strlen(upLoadTestDataBuffer->sendBuf), 
-					upLoadTestDataBuffer->recvBuf, UPLOADRECVBUFLEN, "POST"))
-					break;
-				
-				//上传测试曲线
-				sprintf(upLoadTestDataBuffer->sendBuf, "cnum=%s&cid=%s&serie_a=[\0", upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->testData->temperweima.PiHao);
-					
-				for(upLoadTestDataBuffer->j=0; upLoadTestDataBuffer->j<300; upLoadTestDataBuffer->j++)
+				for(upLoadTestDataBuffer->i=0; upLoadTestDataBuffer->i<100; upLoadTestDataBuffer->i++)
 				{
-					if(upLoadTestDataBuffer->j == 0)
-						sprintf(upLoadTestDataBuffer->tempBuf, "%d\0", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*100 + upLoadTestDataBuffer->j]);
+					if(upLoadTestDataBuffer->i == 0)
+						sprintf(upLoadTestDataBuffer->tempbuf2, "&series=[%d,%d,%d\0", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*3],
+							upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*3+1], upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*3+2]);
 					else
-						sprintf(upLoadTestDataBuffer->tempBuf, ",%d\0", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*100 + upLoadTestDataBuffer->j]);
-					strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempBuf);
+						sprintf(upLoadTestDataBuffer->tempbuf2, ",%d,%d,%d\0", upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*3],
+							upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*3+1], upLoadTestDataBuffer->testData->testline.TestPoint[upLoadTestDataBuffer->i*3+2]);
+					strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempbuf2);
 				}
 					
-				sprintf(upLoadTestDataBuffer->tempBuf, "]\0");
-				strcat(upLoadTestDataBuffer->sendBuf, upLoadTestDataBuffer->tempBuf);
-					
-				if(My_Pass != UpLoadData("/NCD_Server/up_series", upLoadTestDataBuffer->sendBuf, strlen(upLoadTestDataBuffer->sendBuf),
+				strcat(upLoadTestDataBuffer->sendBuf, "]\0");
+				
+				if(My_Pass != UpLoadData("/NCD_Server/UpLoadYGFXY", upLoadTestDataBuffer->sendBuf, strlen(upLoadTestDataBuffer->sendBuf), 
 					upLoadTestDataBuffer->recvBuf, UPLOADRECVBUFLEN, "POST"))
 					goto END1;
 			}
-			
+
 			upLoadTestDataBuffer->systemSetData.upLoadIndex++;
 			upLoadTestDataBuffer->testData++;
 		}

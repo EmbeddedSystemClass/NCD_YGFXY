@@ -11,6 +11,7 @@
 #include	"SystemSet_Dao.h"
 #include	"MyMem.h"
 #include	"MyTools.h"
+#include	"StringDefine.h"
 
 #include	<string.h>
 #include	"stdio.h"
@@ -253,7 +254,7 @@ static void showDeviceInfo(void)
 		DisText(0x1a40, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceid, MaxDeviceIDLen);
 		
 		/*显示设备名称*/
-		DisText(0x1a50, "荧光免疫定量分析仪\0", 19);
+		DisText(0x1a50, DeviceName, strlen(DeviceName)+1);
 			
 		/*显示使用单位*/
 		DisText(0x1a60, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceunit, MaxDeviceUnitLen);
