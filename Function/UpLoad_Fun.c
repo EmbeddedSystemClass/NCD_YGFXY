@@ -303,7 +303,7 @@ static void DownLoadFirmware(void)
 		{
 			memset(upLoadDeviceDataBuffer, 0, sizeof(UpLoadDeviceDataBuffer));
 			
-			UpLoadData("/NCD_Server/deviceCodeDownload", NULL, 0, NULL, 0, "GET");
+			UpLoadData("/NCD_Server/DownloadSoftFile?softName=YGFXY_1", NULL, 0, NULL, 0, "GET");
 		}
 		MyFree(upLoadDeviceDataBuffer);
 	}

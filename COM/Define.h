@@ -11,18 +11,19 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1057
-#define	GB_SoftVersion_Build	"Build17091801\0"
+#define	GB_SoftVersion	(unsigned short)1058
+#define	GB_SoftVersion_Build	"Build17092801\0"
 
 #define	DEVICE_EN		100
 #define	DEVICE_CN		101
-#define	DeviceLanguage	DEVICE_CN
+#define	DeviceLanguage	DEVICE_EN
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116
 #define	GB_ServerIp_2		62
 #define	GB_ServerIp_3		108
 #define	GB_ServerIp_4		201
+
 
 #define	GB_ServerPort		8080
 /**********************************************************************************************************/

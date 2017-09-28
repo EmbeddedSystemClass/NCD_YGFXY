@@ -73,12 +73,9 @@ MyState_TypeDef createDeviceInfoActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_ShowDeviceInfoPageBuffer)
-	{
-		copyGBSystemSetData(&(S_ShowDeviceInfoPageBuffer->systemSetData));
+	copyGBSystemSetData(&(S_ShowDeviceInfoPageBuffer->systemSetData));
 
-		showDeviceInfo();
-	}
+	showDeviceInfo();
 	
 	SelectPage(100);
 }
@@ -94,45 +91,41 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_ShowDeviceInfoPageBuffer)
+	S_ShowDeviceInfoPageBuffer->lcdinput[0] = pbuf[4];
+	S_ShowDeviceInfoPageBuffer->lcdinput[0] = (S_ShowDeviceInfoPageBuffer->lcdinput[0]<<8) + pbuf[5];
+		
+	/*基本信息*/
+	if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a03)
+		S_ShowDeviceInfoPageBuffer->presscount = 0;
+		
+	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a04)
+		S_ShowDeviceInfoPageBuffer->presscount++;
+		
+	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a05)
 	{
-		/*命令*/
-		S_ShowDeviceInfoPageBuffer->lcdinput[0] = pbuf[4];
-		S_ShowDeviceInfoPageBuffer->lcdinput[0] = (S_ShowDeviceInfoPageBuffer->lcdinput[0]<<8) + pbuf[5];
-		
-		/*基本信息*/
-		if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a03)
-			S_ShowDeviceInfoPageBuffer->presscount = 0;
-		
-		else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a04)
-			S_ShowDeviceInfoPageBuffer->presscount++;
-		
-		else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a05)
+		if(S_ShowDeviceInfoPageBuffer->presscount > 10)
+			SendKeyCode(2);
+	}
+	/*获取密码*/
+	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a10)
+	{
+		S_ShowDeviceInfoPageBuffer->tempValue = GetBufLen(&pbuf[7] , 2*pbuf[6]);
+		if((S_ShowDeviceInfoPageBuffer->tempValue == 6) && ( pdPASS == CheckStrIsSame(&pbuf[7], AdminPassWord, 6)))
 		{
-			if(S_ShowDeviceInfoPageBuffer->presscount > 10)
-				SendKeyCode(2);
+			startActivity(createSetDeviceIDActivity, NULL);
 		}
-		/*获取密码*/
-		else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a10)
-		{
-			S_ShowDeviceInfoPageBuffer->tempValue = GetBufLen(&pbuf[7] , 2*pbuf[6]);
-			if((S_ShowDeviceInfoPageBuffer->tempValue == 6) && ( pdPASS == CheckStrIsSame(&pbuf[7], AdminPassWord, 6)))
-			{
-				startActivity(createSetDeviceIDActivity, NULL);
-			}
-			else
-				SendKeyCode(1);
-		}
-		/*返回*/
-		else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a00)
-		{
-			backToFatherActivity();
-		}
-		/*修改*/
-		else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a01)
-		{
-			startActivity(createSetDeviceInfoActivity, NULL);
-		}
+		else
+			SendKeyCode(1);
+	}
+	/*返回*/
+	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a00)
+	{
+		backToFatherActivity();
+	}
+	/*修改*/
+	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a01)
+	{
+		startActivity(createSetDeviceInfoActivity, NULL);
 	}
 }
 
@@ -147,10 +140,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	if(S_ShowDeviceInfoPageBuffer)
-	{
 
-	}
 }
 
 /***************************************************************************************************
@@ -248,22 +238,19 @@ static void activityBufferFree(void)
 
 static void showDeviceInfo(void)
 {
-	if(S_ShowDeviceInfoPageBuffer)
-	{
-		/*显示设备id*/
-		DisText(0x1a40, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceid, MaxDeviceIDLen);
+	/*显示设备id*/
+	DisText(0x1a40, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceid, MaxDeviceIDLen);
 		
-		/*显示设备名称*/
-		DisText(0x1a50, DeviceName, strlen(DeviceName)+1);
+	/*显示设备名称*/
+	DisText(0x1a50, DeviceNameStr, strlen(DeviceNameStr)+1);
 			
-		/*显示使用单位*/
-		DisText(0x1a60, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceunit, MaxDeviceUnitLen);
+	/*显示使用单位*/
+	DisText(0x1a60, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceunit, MaxDeviceUnitLen);
 
-		/*显示责任人*/
-		DisText(0x1a90, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceuser.user_name, MaxNameLen);
+	/*显示责任人*/
+	DisText(0x1a90, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceuser.user_name, MaxNameLen);
 		
-		/*显示责任人联系方式*/
-		DisText(0x1a80, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceuser.user_phone, MaxPhoneLen);
-	}
+	/*显示责任人联系方式*/
+	DisText(0x1a80, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceuser.user_phone, MaxPhoneLen);
 }
 

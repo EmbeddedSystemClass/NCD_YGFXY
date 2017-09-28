@@ -117,6 +117,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
@@ -145,34 +149,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>278</LineNumber>
+          <LineNumber>259</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134305810</Address>
+          <Address>134304684</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Function\Test_Fun.c</Filename>
+          <Filename>..\Function\ServerFun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/Test_Fun.c\278</Expression>
+          <Expression>\\NCD_Tester\../Function/ServerFun.c\259</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>381</LineNumber>
+          <LineNumber>262</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134307118</Address>
+          <Address>134304704</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Function\Test_Fun.c</Filename>
+          <Filename>..\Function\ServerFun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\NCD_Tester\../Function/Test_Fun.c\381</Expression>
+          <Expression>\\NCD_Tester\../Function/ServerFun.c\262</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -211,7 +215,7 @@
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>8</SubType>
-          <ItemText>0x200096fe</ItemText>
+          <ItemText>0x200077ee</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -1492,7 +1496,7 @@
 
   <Group>
     <GroupName>Daos</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

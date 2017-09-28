@@ -31,7 +31,7 @@
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
-
+const char * fileStartStr = "i am zhangxiong^*^!";
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -48,6 +48,8 @@ void CommunicateWithServerByLineNet(MyServerData * myServerData)
 	err_t err;
 	struct pbuf *p = NULL;
 	unsigned char i=0;
+	char * tempPoint = NULL;
+	unsigned short tempValue = 0;
 	
 	SetGB_LineNetStatus(0);
 	
@@ -88,18 +90,24 @@ void CommunicateWithServerByLineNet(MyServerData * myServerData)
 		if(strstr(myServerData->sendBuf, "GET"))
 		{
 			p = myServerData->recvbuf->p;
-			if(i == 0)
+			while(p)
 			{
-				i++;
-				WriteAppFile((unsigned char *)(p->payload)+229, p->len-229, true);
-			}
-			else
-				WriteAppFile(p->payload, p->len, false);
-			
-			while(p->next)
-			{
+				if(i == 0)
+				{
+					//查找文件头
+					tempPoint = strstr(p->payload, fileStartStr);
+					if(tempPoint)
+					{
+						tempValue = tempPoint - ((char *)p->payload) + strlen(fileStartStr);
+						WriteAppFile((char *)(p->payload) + tempValue, p->len-tempValue, true);
+						i++;
+					}
+				}
+				else
+				{
+					WriteAppFile(p->payload, p->len, false);
+				}
 				p = p->next;
-				WriteAppFile(p->payload, p->len, false);
 			}
 			
 			vTaskDelay(10 / portTICK_RATE_MS);
@@ -127,7 +135,8 @@ void CommunicateWithServerByWifi(MyServerData * myServerData)
 {
 	unsigned short i = 0;
 	unsigned short readSize = 0;
-	portTickType queueBlockTime;
+	unsigned short tempValue = 0;
+	char * tempPoint = NULL;
 	
 	if(My_Pass == takeWifiMutex(1000 / portTICK_RATE_MS))
 	{
@@ -170,14 +179,25 @@ void CommunicateWithServerByWifi(MyServerData * myServerData)
 			{
 				if(i == 0)
 				{
-					WriteAppFile(myServerData->recvBuf + 229, readSize-229, true);
-					i++;
+					//查找文件头
+					tempPoint = strstr(myServerData->recvBuf, fileStartStr);
+					if(tempPoint)
+					{
+						tempValue = tempPoint - myServerData->recvBuf + strlen(fileStartStr);
+						readSize -= tempValue;
+						WriteAppFile(myServerData->recvBuf + tempValue, readSize, true);
+						i++;
+					}
 				}
 				else
+				{
 					WriteAppFile(myServerData->recvBuf, readSize, false);
-					
-				myServerData->recvDataLen += readSize;
+				}
+				
+				
 			}
+			
+			myServerData->recvDataLen += readSize;
 		}
 		
 		END:

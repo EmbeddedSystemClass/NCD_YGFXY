@@ -14,6 +14,7 @@
 #include	"System_Data.h"
 #include	"QueueUnits.h"
 #include	"MyMem.h"
+#include	"StringDefine.h"
 
 #include 	"FreeRTOS.h"
 #include 	"queue.h"
@@ -51,43 +52,43 @@ void PrintfData(TestData * testd2)
 		//首先复制数据到自己的缓冲器，以防多任务下，其他任务释放原数据区
 		memcpy(tempTestData, testd2, sizeof(TestData));
 		
-		sprintf(printfbuf, "武汉纽康度生物科技股份有限公司\n\0");
+		sprintf(printfbuf, "%s\n\0", CompanyNameStr);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "测试人: %s\n\0", tempTestData->user.user_name);
+		sprintf(printfbuf, "%s: %s\n\0", TesterNameStr, tempTestData->user.user_name);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "样品编号: %s\n\0", tempTestData->sampleid);
+		sprintf(printfbuf, "%s: %s\n\0", SampleIdStr, tempTestData->sampleid);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "测试项目: %s\n\0", tempTestData->temperweima.ItemName);
+		sprintf(printfbuf, "%s: %s\n\0", ItemNameStr, tempTestData->temperweima.ItemName);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
 		tempvalue = tempTestData->testline.AdjustResult;
 		if(tempTestData->testResultDesc != ResultIsOK)
-			sprintf(printfbuf, "测试结果: ERROR\n\0");
+			sprintf(printfbuf, "%s: ERROR\n\0", ResultStr);
 		else if(IsShowRealValue() == true)
-			sprintf(printfbuf, "测试结果: %.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.AdjustResult, tempTestData->temperweima.itemConstData.itemMeasure);
+			sprintf(printfbuf, "%s: %.*f %-8.8s\n\0", ResultStr, tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.AdjustResult, tempTestData->temperweima.itemConstData.itemMeasure);
 		else if(tempvalue <= tempTestData->temperweima.itemConstData.lowstResult)
-			sprintf(printfbuf, "测试结果: <%.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->temperweima.itemConstData.lowstResult, tempTestData->temperweima.itemConstData.itemMeasure);
+			sprintf(printfbuf, "%s: <%.*f %-8.8s\n\0", ResultStr, tempTestData->temperweima.itemConstData.pointNum, tempTestData->temperweima.itemConstData.lowstResult, tempTestData->temperweima.itemConstData.itemMeasure);
 		else
-			sprintf(printfbuf, "测试结果: %.*f %-8.8s\n\0", tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.AdjustResult, tempTestData->temperweima.itemConstData.itemMeasure);
+			sprintf(printfbuf, "%s: %.*f %-8.8s\n\0", ResultStr, tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.AdjustResult, tempTestData->temperweima.itemConstData.itemMeasure);
 		
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "参考值: %s\n\0", tempTestData->temperweima.itemConstData.normalResult);
+		sprintf(printfbuf, "%s: %s\n\0", ReferenceValueStr, tempTestData->temperweima.itemConstData.normalResult);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "测试时间: 20%02d-%02d-%02d %02d:%02d:%02d\n\0", tempTestData->TestTime.year, tempTestData->TestTime.month, tempTestData->TestTime.day
+		sprintf(printfbuf, "%s: 20%02d-%02d-%02d %02d:%02d:%02d\n\0", TestTimeStr, tempTestData->TestTime.year, tempTestData->TestTime.month, tempTestData->TestTime.day
 			, tempTestData->TestTime.hour, tempTestData->TestTime.min, tempTestData->TestTime.sec);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
 		GetGB_Time(&mytime);
-		sprintf(printfbuf, "打印时间: 20%02d-%02d-%02d %02d:%02d:%02d\n\0", mytime.year, mytime.month, mytime.day
+		sprintf(printfbuf, "%s: 20%02d-%02d-%02d %02d:%02d:%02d\n\0", PrintTimeStr, mytime.year, mytime.month, mytime.day
 			, mytime.hour, mytime.min, mytime.sec);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "声明: 本结果仅对本标本负责！\n\n\n\n\n\0");
+		sprintf(printfbuf, "%s\n\n\n\n\n\0", StatementStr);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 	}
 	
