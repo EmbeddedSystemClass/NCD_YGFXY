@@ -42,6 +42,8 @@ typedef struct UpLoadTestDataBuffer_Tag
 }UpLoadTestDataBuffer;
 #pragma pack()
 
+#define	UpLoadTestDataBufferStructSize	sizeof(UpLoadTestDataBuffer)
+
 void UpLoadFunction(void);
 
 #endif

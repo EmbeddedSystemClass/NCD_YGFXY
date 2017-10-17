@@ -448,6 +448,8 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 2.3;
 		}
+		
+
 
 		S_TempCalData->resultstatues = ResultIsOK;
 		S_TempCalData->itemData->testdata.testline.AdjustResult =  S_TempCalData->itemData->testdata.testline.BasicResult * S_TempCalData->itemData->testdata.tempadjust.parm;

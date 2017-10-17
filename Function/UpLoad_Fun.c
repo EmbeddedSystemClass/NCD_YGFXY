@@ -39,6 +39,7 @@ static void UpLoadDeviceInfo(void);
 static void UpLoadTestData(void);
 static void readRemoteFirmwareVersion(void);
 static void DownLoadFirmware(void);
+static void upLoadUserServer(void);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************ÕýÎÄ********************************************************/
@@ -66,6 +67,8 @@ void UpLoadFunction(void)
 			UpLoadTestData();	
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
+		
+		upLoadUserServer();
 
 		vTaskDelay(30000 / portTICK_RATE_MS);
 	}
@@ -254,7 +257,7 @@ static void readRemoteFirmwareVersion(void)
 	{
 		memset(upLoadDeviceDataBuffer, 0, sizeof(UpLoadDeviceDataBuffer));
 		
-		sprintf(upLoadDeviceDataBuffer->sendBuf, "a");
+		sprintf(upLoadDeviceDataBuffer->sendBuf, "softName=YGFXY_1");
 		
 		if(My_Pass == UpLoadData("/NCD_Server/deviceSoftInfo", upLoadDeviceDataBuffer->sendBuf, strlen(upLoadDeviceDataBuffer->sendBuf),
 			upLoadDeviceDataBuffer->recvBuf, SERVERRECVBUFLEN, "POST"))
@@ -307,4 +310,9 @@ static void DownLoadFirmware(void)
 		}
 		MyFree(upLoadDeviceDataBuffer);
 	}
+}
+
+static void upLoadUserServer(void)
+{
+	
 }

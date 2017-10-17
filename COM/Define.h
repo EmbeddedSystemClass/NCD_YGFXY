@@ -11,12 +11,12 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1058
+#define	GB_SoftVersion	(unsigned short)1059
 #define	GB_SoftVersion_Build	"Build17092801\0"
 
 #define	DEVICE_EN		100
 #define	DEVICE_CN		101
-#define	DeviceLanguage	DEVICE_EN
+#define	DeviceLanguage	DEVICE_CN
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116
@@ -378,6 +378,13 @@ typedef struct NetSet_Tag
 }NetSet;
 #pragma pack()
 
+#pragma pack(1)
+typedef struct
+{
+	IP_Def serverIP;														//服务器IP
+	unsigned short serverPort;											//服务器端口号
+}ServerSet; 
+#pragma pack()
 
 
 /**********************************************************************************************************/

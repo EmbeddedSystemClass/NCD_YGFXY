@@ -19,7 +19,8 @@ typedef struct SystemSetData_Tag
 	unsigned int upLoadIndex;											//测试数据等待上传的索引
 	unsigned short testLedLightIntensity;								//测试时采用的led亮度值，为校准后产生，默认为200
 	AdjustData adjustData[MaxAdjDataNum];
-	unsigned char parm1[100];											//预留参数1
+	unsigned int userUpLoadIndex;										//用户服务器上传索引
+	unsigned char parm1[96];											//预留参数1
 	unsigned short parm2[10];											//预留参数2
 	unsigned int parm3[10];												//预留参数3
 	unsigned short crc;
