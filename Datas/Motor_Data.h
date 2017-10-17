@@ -51,20 +51,8 @@ typedef enum
 }DRVDecay_Type;
 
 
-LimitState_Def GetMotorPreLimitState(void);
-void SetMotorPreLimitState(LimitState_Def value);
-
-LimitState_Def GetMotorBackLimitState(void);
-void SetMotorBackLimitState(LimitState_Def value);
-
 unsigned short GetGB_MotorLocation(void);
-void SetGB_MotorLocation(unsigned short value);
 
-unsigned short GetGB_MotorTargetLocation(void);
-void SetGB_MotorTargetLocation(unsigned short value);
-
-unsigned short GetGB_MotorDir(void);
-void SetGB_MotorDir(DRVDir_Type dir);
 
 
 #endif

@@ -10,15 +10,24 @@
 /***************************************************************************************************/
 #include	"Motor_Data.h"
 #include	"Define.h"
+#include	"Motor.h"
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
-static LimitState_Def GB_PreLimitState = NotLimitted;							//前限位状态
-static LimitState_Def GB_BackLimitState = NotLimitted;							//后限位状态
-static unsigned short GB_MotorLocation = 10000;									//电机当前位置
-static unsigned short GB_MotorTargetLocation = 0;								//目标位置
-static DRVDir_Type GB_MotorDir = Reverse;										//电机方向
-
+Motor GB_Motors = 
+{
+	.highTime = 1,										//高电平时间段，(1-3)*100us
+	.lowTime = 2,										//低电平时间段，(4)*100us
+	.periodCnt = 0,
+	.isFront = true,									//是否前进
+	.moveStepNum = 0,									//运动步数
+	.motorLocation = 60000,									//代表当前电机对准口的编号，0 -- 无效数据， 1-8表示插卡空对应编号
+	.motorTargetLocation = 0,							//代表电机目标对准口的编号，0 -- 无效数据， 1-8表示插卡空对应编号
+	.motorMaxLocation = 60000,
+	.parm1 = 0,											//两次中断的间隔步数
+	.parm2 = true,										//由于停止位置在边沿，需要继续走几步到中间，true，继续走，false停止
+	.parm3 = 0											//到达位置后，为了补偿居中，继续走的步数
+};
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -30,55 +39,9 @@ static DRVDir_Type GB_MotorDir = Reverse;										//电机方向
 /***************************************************************************************************/
 /***************************************************************************************************/
 
-LimitState_Def GetMotorPreLimitState(void)
-{
-	return GB_PreLimitState;
-}
-
-void SetMotorPreLimitState(LimitState_Def value)
-{
-	GB_PreLimitState = value;
-}
-
-LimitState_Def GetMotorBackLimitState(void)
-{
-	return GB_BackLimitState;
-}
-
-void SetMotorBackLimitState(LimitState_Def value)
-{
-	GB_BackLimitState = value;
-}
-
 unsigned short GetGB_MotorLocation(void)
 {
-	return GB_MotorLocation;
-}
-
-void SetGB_MotorLocation(unsigned short value)
-{
-	GB_MotorLocation = value;
-}
-
-unsigned short GetGB_MotorTargetLocation(void)
-{
-	return GB_MotorTargetLocation;
-}
-
-void SetGB_MotorTargetLocation(unsigned short value)
-{
-	GB_MotorTargetLocation = value;
-}
-
-
-unsigned short GetGB_MotorDir(void)
-{
-	return GB_MotorDir;
-}
-
-void SetGB_MotorDir(DRVDir_Type dir)
-{
-	GB_MotorDir = dir;
+	return GB_Motors.motorLocation;
 }
 
 

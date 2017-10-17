@@ -337,7 +337,7 @@ static void RefreshCurve(void)
 	if(My_Pass == TakeTestResult(&(S_TestPageBuffer->currenttestdata->testdata.testResultDesc)))
 	{
 		GetGB_Time(&(S_TestPageBuffer->currenttestdata->testdata.TestTime));
-		MotorMoveTo(MaxLocation, 1);
+		MotorMoveTo(1, 2, MaxLocation, false);
 
 		//保留一份数据给打印机打印
 		memcpy(&(S_TestPageBuffer->testDataForPrintf), &(S_TestPageBuffer->currenttestdata->testdata), sizeof(TestData));

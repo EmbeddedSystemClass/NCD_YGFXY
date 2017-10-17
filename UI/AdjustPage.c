@@ -338,14 +338,14 @@ static void CheckQRCode(void)
 		if((S_AdjustPageBuffer->scancode == CardCodeScanFail) || (S_AdjustPageBuffer->scancode == CardCodeCardOut) ||
 			(S_AdjustPageBuffer->scancode == CardCodeScanTimeOut) || (S_AdjustPageBuffer->scancode == CardCodeCRCError))
 		{
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			S_AdjustPageBuffer->isAdjjing = false;
 			dspAdjStatus("Scan Fail\0");
 		}
 		//¹ýÆÚ
 		else if(S_AdjustPageBuffer->scancode == CardCodeTimeOut)
 		{
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			S_AdjustPageBuffer->isAdjjing = false;
 			dspAdjStatus("Out Of Date\0");
 		}
@@ -371,7 +371,7 @@ static void CheckPreTestCard(void)
 {
 	if(My_Pass == TakeTestResult(&(S_AdjustPageBuffer->cardTestResult)))
 	{
-		MotorMoveTo(MaxLocation, 1);
+		MotorMoveTo(1, 2, MaxLocation, false);
 		S_AdjustPageBuffer->isAdjjing = false;
 		dspTestResult();
 	}

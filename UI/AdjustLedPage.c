@@ -271,7 +271,7 @@ static void analysisTestData(void)
 	{
 		dspTestStatus("Success\0");
 		S_AdjustLedPageBuffer->isTestting = false;
-		MotorMoveTo(MaxLocation, 1);
+		MotorMoveTo(1, 2, MaxLocation, false);
 		return;
 	}
 	else if(S_AdjustLedPageBuffer->targetValue > S_AdjustLedPageBuffer->maxPoint[0])
@@ -317,5 +317,5 @@ static void analysisTestData(void)
 	DisText(0x2620, S_AdjustLedPageBuffer->buf, strlen(S_AdjustLedPageBuffer->buf)+1);
 	S_AdjustLedPageBuffer->isTestting = false;
 	
-	MotorMoveTo(MaxLocation, 1);
+	MotorMoveTo(1, 2, MaxLocation, false);
 }

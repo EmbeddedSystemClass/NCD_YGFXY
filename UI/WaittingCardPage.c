@@ -79,7 +79,7 @@ static void activityStart(void)
 {
 	if(S_WaitPageData)
 	{
-		MotorMoveTo(WaittingCardLocation, 1);
+		MotorMoveTo(1, 2, WaittingCardLocation, false);
 		
 		S_WaitPageData->currenttestdata = GetCurrentTestItem();
 		S_WaitPageData->currenttestdata->statues = status_wait1;
@@ -156,7 +156,7 @@ static void activityFresh(void)
 	if(GetMinWaitTime() < 40)
 	{
 		stopPlay();
-		MotorMoveTo(MaxLocation, 1);
+		MotorMoveTo(1, 2, MaxLocation, false);
 		DeleteCurrentTest();
 		
 		backToActivity(paiduiActivityName);

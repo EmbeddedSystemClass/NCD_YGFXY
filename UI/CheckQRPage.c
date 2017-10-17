@@ -131,7 +131,7 @@ static void activityFresh(void)
 
 		if(My_Pass == TakeScanQRCodeResult(&(S_CheckQRPageBuffer->scancode)))
 		{	
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			
 			//¶þÎ¬Âë¶ÁÈ¡Ê§°Ü
 			if((S_CheckQRPageBuffer->scancode == CardCodeScanFail) || (S_CheckQRPageBuffer->scancode == CardCodeCardOut) ||

@@ -2,9 +2,9 @@
 #ifndef	MOTOR_F_H
 #define MOTOR_F_H
 
+#include	"Define.h"
 
-void MotorMoveTo(unsigned int location, unsigned char mode);
-void StopMotor(void);
+void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int location, bool isWait);
 
 #endif
 

@@ -119,8 +119,6 @@ void SetDRVDir(DRVDir_Type value)
 		GPIO_ResetBits(DRV_Dir_Group, DRV_Dir_Pin);
 	else
 		GPIO_SetBits(DRV_Dir_Group, DRV_Dir_Pin);
-	
-	SetGB_MotorDir(value);
 }
 
 /***************************************************************************************************

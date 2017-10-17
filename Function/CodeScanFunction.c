@@ -59,8 +59,8 @@ ScanCodeResult ScanCodeFun(QRCode * parm)
 	readQRCodeBuffer->cardQR = parm;
 	memset(readQRCodeBuffer->cardQR, 0, sizeof(QRCode));
 		
-	MotorMoveTo(0, 0);
-	MotorMoveTo(500, 0);
+	MotorMoveTo(1, 2, 0, true);
+	MotorMoveTo(1, 2, 500, true);
 	readQRCodeBuffer->motorLocation = GetGB_MotorLocation();
 		
 	OpenCodeScanner();
@@ -82,18 +82,15 @@ ScanCodeResult ScanCodeFun(QRCode * parm)
 		}
 		else
 		{
-			if((readQRCodeBuffer->motorLocation >= 1000)||(readQRCodeBuffer->motorLocation <= 200))
+			//if((readQRCodeBuffer->motorLocation >= 1000)||(readQRCodeBuffer->motorLocation <= 200))
 				readQRCodeBuffer->motorDir++;
 			
 			if(readQRCodeBuffer->motorDir%2 == 0)
-				readQRCodeBuffer->motorLocation += 1;
+				MotorMoveTo(10, 15, 1000, true);
 			else
-				readQRCodeBuffer->motorLocation -= 1;
+				MotorMoveTo(10, 15, 200, true);
 			
-			MotorMoveTo(readQRCodeBuffer->motorLocation, 0);
-			
-			if(readQRCodeBuffer->motorLocation % 50 == 0)
-				ReadBasicCodeData(readQRCodeBuffer);
+			ReadBasicCodeData(readQRCodeBuffer);
 
 			vTaskDelay(2 / portTICK_RATE_MS);
 			

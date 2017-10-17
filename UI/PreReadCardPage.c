@@ -271,14 +271,14 @@ static void CheckQRCode(void)
 		//不支持的品种
 		if(S_PreReadPageBuffer->scancode == CardUnsupported)
 		{
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			AddNumOfSongToList(56, 0);
 			SendKeyCode(6);
 		}
 		//过期
 		else if(S_PreReadPageBuffer->scancode == CardCodeTimeOut)
 		{
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			AddNumOfSongToList(15, 0);
 			SendKeyCode(4);
 		}
@@ -297,14 +297,16 @@ static void CheckQRCode(void)
 				memcpy(&(S_PreReadPageBuffer->currenttestdata->testdata.temperweima), &(S_PreReadPageBuffer->temperweima), sizeof(QRCode));
 				
 				//设置倒计时时间
-				timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*60);
+				timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*1);
 			
 				//读取校准参数
 				memcpy(S_PreReadPageBuffer->currenttestdata->testdata.tempadjust.ItemName, S_PreReadPageBuffer->currenttestdata->testdata.temperweima.ItemName, AdjItemNameLen);
 				getAdjPram(getGBSystemSetData(), &(S_PreReadPageBuffer->currenttestdata->testdata.tempadjust));
 				
-				S_PreReadPageBuffer->preTestErrorCount = 0;
-				StartTest(S_PreReadPageBuffer->currenttestdata);
+				//S_PreReadPageBuffer->preTestErrorCount = 0;
+				//StartTest(S_PreReadPageBuffer->currenttestdata);
+				
+				startActivity(createTimeDownActivity, NULL);
 			}
 			else
 			{
@@ -318,7 +320,7 @@ static void CheckQRCode(void)
 				else
 				{
 					vTaskDelay(100 / portTICK_RATE_MS);
-					MotorMoveTo(MaxLocation, 1);
+					MotorMoveTo(1, 2, MaxLocation, false);
 					AddNumOfSongToList(13, 0);
 					SendKeyCode(2);
 				}
@@ -327,7 +329,7 @@ static void CheckQRCode(void)
 		/*其他错误：CardCodeScanFail, CardCodeCardOut, CardCodeScanTimeOut, CardCodeCRCError*/
 		else
 		{
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			AddNumOfSongToList(12, 0);
 			SendKeyCode(1);
 		}
@@ -351,14 +353,14 @@ static void CheckPreTestCard(void)
 			}
 			else
 			{
-				MotorMoveTo(MaxLocation, 1);
+				MotorMoveTo(1, 2, MaxLocation, false);
 				AddNumOfSongToList(16, 0);
 				SendKeyCode(5);
 			}
 		}
 		else if(S_PreReadPageBuffer->cardpretestresult == ResultIsOK)
 		{
-			MotorMoveTo(MaxLocation, 1);
+			MotorMoveTo(1, 2, MaxLocation, false);
 			AddNumOfSongToList(14, 0);
 			SendKeyCode(3);
 		}
@@ -367,7 +369,7 @@ static void CheckPreTestCard(void)
 			//如果是排队模式，则进入排队界面
 			if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
 			{
-				MotorMoveTo(MaxLocation, 1);
+				MotorMoveTo(1, 2, MaxLocation, false);
 				
 				S_PreReadPageBuffer->currenttestdata->statues = status_start;
 

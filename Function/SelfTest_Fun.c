@@ -292,8 +292,7 @@ static MyState_TypeDef testMotol(void)
 	
 	SetDRVPowerStatues(LowPower);
 
-	SetGB_MotorLocation(10000);
-	MotorMoveTo(0, 1);
+	MotorMoveTo(1, 2, 0, false);
 	vTaskDelay(100 / portTICK_RATE_MS);
 	
 	while(!BackLimited)
@@ -307,13 +306,12 @@ static MyState_TypeDef testMotol(void)
 	
 	if(count > 3)
 	{
-		StopMotor();
 		return My_Fail;
 	}
 	
 	SetDRVPowerStatues(NonamalPower);
 	vTaskDelay(100 / portTICK_RATE_MS);
-	MotorMoveTo(MaxLocation, 0);
+	MotorMoveTo(1, 2, MaxLocation, true);
 	vTaskDelay(100 / portTICK_RATE_MS);
 	
 	//走到最大行程，如果前限位触发，则报异常

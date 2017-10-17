@@ -13,6 +13,7 @@
 #include	"Timer4_Driver.h"
 #include	"CardLimit_Driver.h"
 #include	"DRV8825_Driver.h"
+#include	"Motor.h"
 
 #include 	"FreeRTOS.h"
 #include 	"task.h"
@@ -25,8 +26,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
-
-unsigned char motorstautes = 0;
+extern Motor GB_Motors;
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -37,29 +37,31 @@ unsigned char motorstautes = 0;
 /****************************************File Start*************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
-
-
-
-void MotorMoveTo(unsigned int location, unsigned char mode)
+void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int location, bool isWait)
 {
-//	if(location > MaxLocation)
-//			location = MaxLocation;
+	if(GB_Motors.motorLocation == location)
+		return;
+	else if(GB_Motors.motorLocation > location)
+		GB_Motors.isFront = false;
+	else
+		GB_Motors.isFront = true;
 
-//	ClearMotorMutex();
-	
-	SetGB_MotorTargetLocation(location);
-	
-	if(GetGB_MotorTargetLocation() > GetGB_MotorLocation())
+	if(GB_Motors.isFront)
 		SetDRVDir(Forward);
 	else
 		SetDRVDir(Reverse);
+	vTaskDelay(10 / portTICK_RATE_MS);
 	
-	motorstautes = 1;
-	StartTimer4();
-	if(mode == 0)
+	GB_Motors.periodCnt = 0;
+	GB_Motors.parm1 = 0;
+	GB_Motors.highTime = highTime;
+	GB_Motors.lowTime = lowTime;
+	GB_Motors.motorTargetLocation = location;
+	GB_Motors.moveStepNum = 60000;
+
+	while(isWait && GB_Motors.motorLocation != GB_Motors.motorTargetLocation)
 	{
-		while(1 == motorstautes)
-			vTaskDelay(1 / portTICK_RATE_MS);;
+		vTaskDelay(100 / portTICK_RATE_MS);
 	}
 }
 

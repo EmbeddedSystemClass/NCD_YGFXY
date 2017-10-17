@@ -1040,6 +1040,11 @@
               <FileType>5</FileType>
               <FilePath>..\COM\StringDefine.h</FilePath>
             </File>
+            <File>
+              <FileName>Motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\COM\Motor.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

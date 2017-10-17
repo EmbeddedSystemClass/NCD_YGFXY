@@ -123,7 +123,7 @@ static err_t ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *
 			strcat(pxbuf1, pxbuf2);
 			
 			if(0 == GetTestStatusFlorLab())
-				MotorMoveTo(MaxLocation, 1);
+				MotorMoveTo(1, 2, MaxLocation, 1);
 		}
 
 		err = netconn_write( pxNetCon, pxbuf1, strlen(pxbuf1), NETCONN_COPY );

@@ -161,17 +161,17 @@ ResultState TestFunction(void * parm)
 		
 		repeat:
 				
-			MotorMoveTo(0, 0);
+			MotorMoveTo(1, 2, 0, true);
 				
-			MotorMoveTo(StartTestLocation, 0);
+			MotorMoveTo(1, 2, StartTestLocation, true);
 		
 			S_TempCalData->resultstatues = NoResult;
 			S_TempCalData->tempvalue1 = 0;
 			
+			MotorMoveTo(11, 21, EndTestLocation, false);
+			
 			for(i=1; i<= steps; i++)
 			{
-				MotorMoveTo(GetGB_MotorLocation() + 1, 0);
-				
 				vTaskDelay(1 / portTICK_RATE_MS);				
 				S_TempCalData->tempvalue1 += ADS8325();
 				
@@ -447,6 +447,14 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IK1705-01", 9))
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 2.3;
+		}
+		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1708-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult /= 1.75;
+		}
+		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IM1705-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult /= 5.0f;
 		}
 		
 

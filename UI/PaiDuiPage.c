@@ -239,7 +239,7 @@ static void activityFresh(void)
 					{
 						vTaskDelay(1000 / portTICK_RATE_MS);
 						//创建成功，则使电机远离，防止用户拔卡
-						MotorMoveTo(1000, 1);			
+						MotorMoveTo(1, 2, 1000, false);			
 						startActivity(createSampleActivity, NULL);		
 						return;
 					}
