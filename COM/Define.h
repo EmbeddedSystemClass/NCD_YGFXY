@@ -18,6 +18,10 @@
 #define	DEVICE_CN		101
 #define	DeviceLanguage	DEVICE_CN
 
+#define	Device_Final	0x27
+#define	Device_Demo		0x28
+#define	DeviceUseType	Device_Demo
+
 /*服务器信息*/
 #define	GB_ServerIp_1		116
 #define	GB_ServerIp_2		62

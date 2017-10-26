@@ -295,18 +295,39 @@ static void CheckQRCode(void)
 			{
 				//将读取的二维码数据拷贝到测试数据包中
 				memcpy(&(S_PreReadPageBuffer->currenttestdata->testdata.temperweima), &(S_PreReadPageBuffer->temperweima), sizeof(QRCode));
-				
-				//设置倒计时时间
-				timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*1);
-			
+
 				//读取校准参数
 				memcpy(S_PreReadPageBuffer->currenttestdata->testdata.tempadjust.ItemName, S_PreReadPageBuffer->currenttestdata->testdata.temperweima.ItemName, AdjItemNameLen);
 				getAdjPram(getGBSystemSetData(), &(S_PreReadPageBuffer->currenttestdata->testdata.tempadjust));
 				
-				//S_PreReadPageBuffer->preTestErrorCount = 0;
-				//StartTest(S_PreReadPageBuffer->currenttestdata);
+				#if(DeviceUseType == Device_Final)
 				
-				startActivity(createTimeDownActivity, NULL);
+					//设置倒计时时间
+					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*60);
+				
+					S_PreReadPageBuffer->preTestErrorCount = 0;
+					StartTest(S_PreReadPageBuffer->currenttestdata);
+				
+				#elif(DeviceUseType == Device_Demo)
+				
+					//设置倒计时时间
+					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*10);
+				
+					/*跳过验证加样功能，直接测试*/
+					//如果是排队模式，则进入排队界面
+					if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
+					{
+						MotorMoveTo(1, 2, MaxLocation, false);
+						
+						S_PreReadPageBuffer->currenttestdata->statues = status_start;
+
+						startActivity(createPaiDuiActivity, NULL);
+					}
+					else
+					{		
+						startActivity(createTimeDownActivity, NULL);
+					}
+				#endif
 			}
 			else
 			{
