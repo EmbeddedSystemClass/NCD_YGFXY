@@ -118,7 +118,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>瘁?瘁?趏B[</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -152,7 +151,7 @@
           <Type>0</Type>
           <LineNumber>248</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134340910</Address>
+          <Address>134341014</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -162,6 +161,22 @@
           <Filename>..\UI\ShowResultPage.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\NCD_Tester\../UI/ShowResultPage.c\248</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>343</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134322026</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\UI\PreReadCardPage.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\NCD_Tester\../UI/PreReadCardPage.c\343</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -173,7 +188,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>S_ShowPageBuffer</ItemText>
+          <ItemText>S_PreReadPageBuffer</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -301,7 +316,7 @@
 
   <Group>
     <GroupName>Drivers</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

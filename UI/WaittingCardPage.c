@@ -133,24 +133,26 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	/*是否插卡*/
-	if(GetCardState() == CardIN)
+	S_WaitPageData->cnt++;
+	
+	if(S_WaitPageData->cnt % 5 == 0)
 	{
-		stopPlay();
-		S_WaitPageData->currenttestdata->statues = status_preread;
-		startActivity(createPreReadCardActivity, NULL);
-		return;
-	}
-	/*时间到，未插卡，返回*/
-	else 
-	{
-		/*提示插卡*/
-		if(TimeOut == timer_expired(&(S_WaitPageData->timer2)))
+		/*是否插卡*/
+		if(GetCardState() == CardIN)
+		{
+			stopPlay();
+			S_WaitPageData->currenttestdata->statues = status_preread;
+			startActivity(createPreReadCardActivity, NULL);
+			return;
+		}
+		/*时间到，未插卡，返回*/
+		else if(TimeOut == timer_expired(&(S_WaitPageData->timer2)))
 		{
 			AddNumOfSongToList(11, 0);
 			timer_restart(&(S_WaitPageData->timer2));
 		}
 	}
+	
 	
 	//如果排队中，有卡接近测试时间，则删除当前测试创建任务，返回
 	if(GetMinWaitTime() < 40)

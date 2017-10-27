@@ -9,6 +9,7 @@ typedef struct WaitPage_tag {
 	Timer timer2;				//¼ä¸ôÌáÊ¾²å¿¨
 	ItemData * currenttestdata;
 	unsigned short lcdinput[100];
+	unsigned int cnt;
 }WaitPageData;
 
 MyState_TypeDef createWaittingCardActivity(Activity * thizActivity, Intent * pram);

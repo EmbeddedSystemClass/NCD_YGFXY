@@ -2755,15 +2755,15 @@ I (..\COM\MyMem.h)(0x579300E1)
 I (..\COM\MyTools.h)(0x59CC7127)
 I (..\UI\PaiDuiPage.h)(0x59C30E5F)
 I (..\UI\SelectUserPage.h)(0x59C30E5F)
-I (..\UI\WaittingCardPage.h)(0x59C30E5F)
+I (..\UI\WaittingCardPage.h)(0x59F19324)
 I (..\Task\PlaySong_Task.h)(0x59C30E5F)
 I (..\Function\ReadBarCode_Fun.h)(0x59C30E5F)
 I (..\Datas\Motor_Data.h)(0x59E5B390)
 I (..\Function\Motor_Fun.h)(0x59E5B390)
 I (D:\Program Files\MDK5\ARM\ARMCC\include\string.h)(0x588B8344)
 I (D:\Program Files\MDK5\ARM\ARMCC\include\stdio.h)(0x588B8344)
-F (..\UI\WaittingCardPage.c)(0x59E5B390)(--c99 -c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork -I ..\AppLunch -I ..\COM -I ..\Datas -I ..\Function -I ..\HardwareDriver -I ..\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I ..\Libraries\STM32F4x7_ETH_Driver\inc -I ..\Libraries\STM32F4xx_StdPeriph_Driver\inc -I ..\Task -I ..\ThirdParty\Fatfs\src -I ..\ThirdParty\lwip-1.4.1\src\include -I ..\ThirdParty\lwip-1.4.1\src\include\ipv4 -I ..\ThirdParty\lwip-1.4.1\src\include\netif -I ..\ThirdParty\lwip-1.4.1\src\include\lwip -I ..\ThirdParty\lwip-1.4.1\port\STM32F4x7\FreeRTOS -I ..\ThirdParty\lwip-1.4.1\port\STM32F4x7 -I ..\ThirdParty\lwip-1.4.1\User -I ..\ThirdParty\cJSON-master -I ..\UI -I ..\ThirdParty\FreeRTOS\inc -I ..\Daos -I ..\Libraries\CMSIS\Include-I.\RTE\_Target_1-I"D:\Program Files\MDK5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-I"D:\Program Files\MDK5\ARM\CMSIS\Include"-D__UVISION_VERSION="524" -DSTM32F407xx-o .\obj\waittingcardpage.o --omf_browse .\obj\waittingcardpage.crf --depend .\obj\waittingcardpage.d)
-I (..\UI\WaittingCardPage.h)(0x59C30E5F)
+F (..\UI\WaittingCardPage.c)(0x59F19350)(--c99 -c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork -I ..\AppLunch -I ..\COM -I ..\Datas -I ..\Function -I ..\HardwareDriver -I ..\Libraries\CMSIS\Device\ST\STM32F4xx\Include -I ..\Libraries\STM32F4x7_ETH_Driver\inc -I ..\Libraries\STM32F4xx_StdPeriph_Driver\inc -I ..\Task -I ..\ThirdParty\Fatfs\src -I ..\ThirdParty\lwip-1.4.1\src\include -I ..\ThirdParty\lwip-1.4.1\src\include\ipv4 -I ..\ThirdParty\lwip-1.4.1\src\include\netif -I ..\ThirdParty\lwip-1.4.1\src\include\lwip -I ..\ThirdParty\lwip-1.4.1\port\STM32F4x7\FreeRTOS -I ..\ThirdParty\lwip-1.4.1\port\STM32F4x7 -I ..\ThirdParty\lwip-1.4.1\User -I ..\ThirdParty\cJSON-master -I ..\UI -I ..\ThirdParty\FreeRTOS\inc -I ..\Daos -I ..\Libraries\CMSIS\Include-I.\RTE\_Target_1-I"D:\Program Files\MDK5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-I"D:\Program Files\MDK5\ARM\CMSIS\Include"-D__UVISION_VERSION="524" -DSTM32F407xx-o .\obj\waittingcardpage.o --omf_browse .\obj\waittingcardpage.crf --depend .\obj\waittingcardpage.d)
+I (..\UI\WaittingCardPage.h)(0x59F19324)
 I (..\Datas\Timer_Data.h)(0x59C30E5F)
 I (..\COM\Define.h)(0x59F1874E)
 I (..\Libraries\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x59CC7127)
@@ -2872,7 +2872,7 @@ I (..\UI\LunchPage.h)(0x59C30E5F)
 I (..\Datas\Timer_Data.h)(0x59C30E5F)
 I (..\Datas\SystemSet_Data.h)(0x59DD788F)
 I (..\Task\CodeScan_Task.h)(0x59C30E5F)
-I (..\UI\WaittingCardPage.h)(0x59C30E5F)
+I (..\UI\WaittingCardPage.h)(0x59F19324)
 I (..\UI\TimeDownNorPage.h)(0x59C30E5F)
 I (..\Function\CodeScanFunction.h)(0x59C30E5F)
 I (..\UI\PaiDuiPage.h)(0x59C30E5F)
@@ -2987,7 +2987,7 @@ I (..\COM\Intent.h)(0x59C30E5F)
 I (..\HardwareDriver\LCD_Driver.h)(0x59C30E5F)
 I (..\HardwareDriver\Usart6_Driver.h)(0x59C30E5F)
 I (..\COM\MyMem.h)(0x579300E1)
-I (..\UI\WaittingCardPage.h)(0x59C30E5F)
+I (..\UI\WaittingCardPage.h)(0x59F19324)
 I (..\Datas\Timer_Data.h)(0x59C30E5F)
 I (..\UI\PaiDuiPage.h)(0x59C30E5F)
 I (..\HardwareDriver\CardLimit_Driver.h)(0x59CC7127)
