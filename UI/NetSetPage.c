@@ -8,6 +8,7 @@
 #include	"MyMem.h"
 #include	"CRC16.h"
 #include	"SleepPage.h"
+#include	"MyTools.h"
 
 #include 	"FreeRTOS.h"
 #include 	"task.h"
@@ -32,7 +33,6 @@ static MyState_TypeDef activityBufferMalloc(void);
 static void activityBufferFree(void);
 
 static void UpPageValue(void);
-static void SetTempIP(unsigned char *buf, unsigned char len);
 /******************************************************************************************/
 /******************************************************************************************/
 /******************************************************************************************/
@@ -116,34 +116,31 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 			/*使用设置的ip*/
 			else if(S_NetSetPageBuffer->lcdinput[1] == 0x0000)
 				S_NetSetPageBuffer->myNetSet.ipmode = User_Mode;
-				
-			S_NetSetPageBuffer->ischanged = 1;
 		}
 		/*设置IP*/
 		else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E10)
 		{
-			SetTempIP(&pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
-			S_NetSetPageBuffer->ischanged = 1;
+			memset(S_NetSetPageBuffer->buf, 0, 50);
+			memcpy(S_NetSetPageBuffer->buf, &pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
+			if(My_Pass != parseIpString(&S_NetSetPageBuffer->myNetSet.myip, S_NetSetPageBuffer->buf))
+			{
+				memset(&S_NetSetPageBuffer->myNetSet.myip, 0, 4);
+				ClearText(0x1E10);
+				SendKeyCode(3);
+			}
 		}
 		/*确认修改*/
 		else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E05)
 		{
-			if(1 == S_NetSetPageBuffer->ischanged)
-			{
-				copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
+			copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
 		
-				S_NetSetPageBuffer->myNetSet.crc = CalModbusCRC16Fun1(&(S_NetSetPageBuffer->myNetSet), sizeof(NetSet)-2);
-				memcpy(&(S_NetSetPageBuffer->systemSetData.netSet), &(S_NetSetPageBuffer->myNetSet), sizeof(NetSet));
+			S_NetSetPageBuffer->myNetSet.crc = CalModbusCRC16Fun1(&(S_NetSetPageBuffer->myNetSet), sizeof(NetSet)-2);
+			memcpy(&(S_NetSetPageBuffer->systemSetData.netSet), &(S_NetSetPageBuffer->myNetSet), sizeof(NetSet));
 				
-				if(My_Pass == SaveSystemSetData(&(S_NetSetPageBuffer->systemSetData)))
-				{
-					SendKeyCode(1);
-
-					S_NetSetPageBuffer->ischanged = 0;
-				}
-				else
-					SendKeyCode(2);
-			}
+			if(My_Pass == SaveSystemSetData(&(S_NetSetPageBuffer->systemSetData)))
+				SendKeyCode(1);
+			else
+				SendKeyCode(2);
 		}
 		/*返回*/
 		else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E04)
@@ -288,59 +285,6 @@ static void UpPageValue(void)
 		}
 		else
 			ClearText(0x1E10);
-	}
-}
-
-static void SetTempIP(unsigned char *buf, unsigned char len)
-{
-	unsigned short temp = 0;
-	
-	if(S_NetSetPageBuffer)
-	{
-		if(len == 15)
-		{
-			memset(S_NetSetPageBuffer->buf, 0, 100);
-			memcpy(S_NetSetPageBuffer->buf, buf, 3);
-			temp = strtol(S_NetSetPageBuffer->buf, NULL, 10);
-			if(temp > 255)
-			{
-				SendKeyCode(3);
-				return;
-			}
-			S_NetSetPageBuffer->myNetSet.myip.ip_1 = temp;
-			
-			memset(S_NetSetPageBuffer->buf, 0, 100);
-			memcpy(S_NetSetPageBuffer->buf, buf+4, 3);
-			temp = strtol(S_NetSetPageBuffer->buf, NULL, 10);
-			if(temp > 255)
-			{
-				SendKeyCode(3);
-				return;
-			}
-			S_NetSetPageBuffer->myNetSet.myip.ip_2 = temp;
-			
-			memset(S_NetSetPageBuffer->buf, 0, 100);
-			memcpy(S_NetSetPageBuffer->buf, buf+8, 3);
-			temp = strtol(S_NetSetPageBuffer->buf, NULL, 10);
-			if(temp > 255)
-			{
-				SendKeyCode(3);
-				return;
-			}
-			S_NetSetPageBuffer->myNetSet.myip.ip_3 = temp;
-			
-			memset(S_NetSetPageBuffer->buf, 0, 100);
-			memcpy(S_NetSetPageBuffer->buf, buf+12, 3);
-			temp = strtol(S_NetSetPageBuffer->buf, NULL, 10);
-			if(temp > 255)
-			{
-				SendKeyCode(3);
-				return;
-			}
-			S_NetSetPageBuffer->myNetSet.myip.ip_4 = temp;
-		}
-		else
-			SendKeyCode(3);
 	}
 }
 

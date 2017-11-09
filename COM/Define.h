@@ -11,8 +11,8 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1059
-#define	GB_SoftVersion_Build	"Build17092801\0"
+#define	GB_SoftVersion	(unsigned short)1061
+#define	GB_SoftVersion_Build	"Build17100902\0"
 
 #define	DEVICE_EN		100
 #define	DEVICE_CN		101
@@ -20,7 +20,7 @@
 
 #define	Device_Final	0x27
 #define	Device_Demo		0x28
-#define	DeviceUseType	Device_Demo
+#define	DeviceUseType	Device_Final
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116
@@ -196,11 +196,10 @@ typedef struct QRCode_Tag
 
 #define	MaxLocation			6500						//最大行程
 #define	StartTestLocation	1250							//测试起始位置
-#define	EndTestLocation		4300						//测试结束为止
+#define	EndTestLocation		4250						//测试结束为止
 #define	WaittingCardLocation	MaxLocation					//等待插卡的位置
 #define	AvregeNum		10								//平均值滤波个数
-#define	FilterNum		5								//平滑滤波个数
-#define	MaxPointLen		((EndTestLocation - StartTestLocation)/AvregeNum - FilterNum)	//测试点个数
+#define	MaxPointLen		((EndTestLocation - StartTestLocation)/AvregeNum)	//测试点个数
 
 
 /**********************************************************************************************************/
@@ -416,22 +415,6 @@ typedef enum
 	TimeError = 2,		//错误
 }TimerState_Def;
 
-/*********************************************************************************************/
-/*********************************************************************************************/
-/*********************************************************************************************/
-/**************************校准参数***********************************************************/
-/*********************************************************************************************/
-
-//校准参数只保留名字的前10位
-#define	AdjItemNameLen	10
-
-#pragma pack(1)
-typedef struct AdjustData_tag
-{
-	char ItemName[AdjItemNameLen];
-	float parm;
-}AdjustData;
-#pragma pack()
 
 typedef enum
 {
@@ -458,7 +441,8 @@ typedef struct TestLine_tag {
 	Point B_Point;
 	float BasicBili;
 	float BasicResult;
-	float AdjustResult;
+	unsigned char CMdifyNum;					//c线补偿倍数，*10
+	unsigned char parm[3];
 } TestLine;
 #pragma pack()
 
@@ -467,12 +451,7 @@ typedef struct TestData_tag {
 	User_Type user;
 	char sampleid[MaxSampleIDLen];
 	QRCode temperweima;
-	AdjustData tempadjust;
-/*	float precv1[5];							//预测时的整体cv值
-	float precv2[5];							//预测时的C线cv值
-	unsigned char preChanelIndex[5];			//预测时的通道
-	float cv3;									//正式测试的cv值
-	unsigned char chanelIndex[5];				//正式测时的通道*/
+	unsigned char parm[14];
 	TestLine testline;
 	MyTime_Def TestTime;						//测试时间
 	MyTemp_Def TestTemp;						//测试温度

@@ -81,7 +81,6 @@
 ".\obj\netinfopage.o"
 ".\obj\recordpage.o"
 ".\obj\showresultpage.o"
-".\obj\adjustpage.o"
 ".\obj\retestpage.o"
 ".\obj\othersetpage.o"
 ".\obj\adjustledpage.o"

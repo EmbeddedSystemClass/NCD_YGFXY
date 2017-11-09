@@ -75,14 +75,23 @@ unsigned char GetTestStatusFlorLab(void)
 /*********************************************************************************************/
 /*********************************************************************************************/
 
-void GetGB_Time(void * time)
+void GetGB_Time(MyTime_Def * time)
 {
 	vTaskSuspendAll();
 	memcpy(time, &GB_Time, sizeof(MyTime_Def));
+	if(time->month == 0 || time->day == 0)
+	{
+		time->year = 0;
+		time->month = 1;
+		time->day = 1;
+		time->hour = 0;
+		time->min = 0;
+		time->sec = 0;
+	}
 	xTaskResumeAll();
 }
 
-void SetGB_Time(void * time)
+void SetGB_Time(MyTime_Def * time)
 {	
 	vTaskSuspendAll();
 	memcpy(&GB_Time, time, sizeof(MyTime_Def));

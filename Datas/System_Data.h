@@ -15,8 +15,8 @@ void SetTestStatusFlorLab(unsigned char status);
 unsigned char GetTestStatusFlorLab(void);
 
 //系统时间
-void GetGB_Time(void * time);
-void SetGB_Time(void * time);
+void GetGB_Time(MyTime_Def * time);
+void SetGB_Time(MyTime_Def * time);
 
 //环境温度
 float GetGB_EnTemperature(void);

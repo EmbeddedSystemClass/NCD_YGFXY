@@ -461,10 +461,6 @@ static void CheckQRCode(void)
 		//读取成功
 		else if(S_ReTestPageBuffer->scancode == CardCodeScanOK)
 		{
-			//读取校准参数
-			memcpy(S_ReTestPageBuffer->reTestData.itemData.testdata.tempadjust.ItemName, S_ReTestPageBuffer->reTestData.itemData.testdata.temperweima.ItemName, AdjItemNameLen);
-			getAdjPram(getGBSystemSetData(), &(S_ReTestPageBuffer->reTestData.itemData.testdata.tempadjust));
-
 			S_ReTestPageBuffer->reTestData.retestStep = 3;
 			S_ReTestPageBuffer->reTestData.itemData.ledLight = getTestLedLightIntensity(getGBSystemSetData());
 			StartTest(&(S_ReTestPageBuffer->reTestData.itemData));

@@ -105,7 +105,7 @@ MyState_TypeDef SavereTestData(ReTestData *reTestData, unsigned char type)
 					, timer_Count(&(reTestData->oneretesttimer)), reTestData->result, reTestData->advalue1, reTestData->advalue2, reTestData->advalue3, reTestData->ledstatus, reTestData->itemData.testdata.TestTemp.E_Temperature, reTestData->itemData.testdata.TestTemp.I_Temperature
 					, reTestData->itemData.testdata.TestTemp.O_Temperature, reTestData->itemData.testdata.testline.T_Point.y, reTestData->itemData.testdata.testline.T_Point.x, reTestData->itemData.testdata.testline.C_Point.y
 					, reTestData->itemData.testdata.testline.C_Point.x, reTestData->itemData.testdata.testline.B_Point.y, reTestData->itemData.testdata.testline.B_Point.x, reTestData->itemData.testdata.testline.BasicBili
-					, reTestData->itemData.testdata.testline.BasicResult, reTestData->itemData.testdata.testline.AdjustResult);
+					, reTestData->itemData.testdata.testline.BasicResult, reTestData->itemData.testdata.testline.BasicResult);
 				myfile->res = f_write(&(myfile->file), buf, strlen(buf), &(myfile->bw));
 				
 				if(FR_OK != myfile->res)

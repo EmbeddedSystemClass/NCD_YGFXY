@@ -215,6 +215,8 @@ MyState_TypeDef deleteWifi(WIFI_Def * wifi)
 	
 	MyFree(wifiBuf);
 	MyFree(myfile);
+	
+	return statues;
 }
 
 /***************************************************************************************************

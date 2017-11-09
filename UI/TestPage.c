@@ -337,6 +337,7 @@ static void RefreshCurve(void)
 	if(My_Pass == TakeTestResult(&(S_TestPageBuffer->currenttestdata->testdata.testResultDesc)))
 	{
 		GetGB_Time(&(S_TestPageBuffer->currenttestdata->testdata.TestTime));
+		
 		MotorMoveTo(1, 2, MaxLocation, false);
 
 		//保留一份数据给打印机打印
@@ -378,13 +379,13 @@ static void RefreshPageText(void)
 			sprintf(S_TestPageBuffer->buf, "Error\0");
 		else if(IsShowRealValue() == true)
 			sprintf(S_TestPageBuffer->buf, "%.*f %s\0", S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.pointNum,
-				S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult, S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemMeasure);
-		else if(S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult <= S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.lowstResult)
+				S_TestPageBuffer->currenttestdata->testdata.testline.BasicResult, S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemMeasure);
+		else if(S_TestPageBuffer->currenttestdata->testdata.testline.BasicResult <= S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.lowstResult)
 			sprintf(S_TestPageBuffer->buf, "<%.*f %s\0", S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.pointNum, 
 				S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.lowstResult, S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemMeasure);
 		else
 			sprintf(S_TestPageBuffer->buf, "%.*f %s\0", S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.pointNum, 
-				S_TestPageBuffer->currenttestdata->testdata.testline.AdjustResult, S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemMeasure);
+				S_TestPageBuffer->currenttestdata->testdata.testline.BasicResult, S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemMeasure);
 		
 		DisText(0x1838, S_TestPageBuffer->buf, strlen(S_TestPageBuffer->buf)+1);
 	}

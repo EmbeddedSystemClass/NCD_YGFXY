@@ -189,7 +189,17 @@ static void UpLoadTestData(void)
 				else
 					sprintf(upLoadTestDataBuffer->tempBuf, "true\0");
 				
-				sprintf(upLoadTestDataBuffer->sendBuf, "cardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.3f&testv=%.*f&serialnum=%s-%s&t_isok=%s\0",
+				if(upLoadTestDataBuffer->testData->TestTime.month == 0 || upLoadTestDataBuffer->testData->TestTime.day == 0)
+				{
+					upLoadTestDataBuffer->testData->TestTime.year = 0;
+					upLoadTestDataBuffer->testData->TestTime.month = 1;
+					upLoadTestDataBuffer->testData->TestTime.day = 1;
+					upLoadTestDataBuffer->testData->TestTime.hour = 0;
+					upLoadTestDataBuffer->testData->TestTime.min = 0;
+					upLoadTestDataBuffer->testData->TestTime.sec = 0;
+				}
+				
+				sprintf(upLoadTestDataBuffer->sendBuf, "cardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%02d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.3f&testv=%.*f&serialnum=%s-%s&t_isok=%s&cparm=%d\0",
 					upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->testData->temperweima.PiHao, 
 					upLoadTestDataBuffer->systemSetData.deviceInfo.deviceid, upLoadTestDataBuffer->testData->user.user_name, 
 					upLoadTestDataBuffer->testData->sampleid, upLoadTestDataBuffer->testData->TestTime.year, 
@@ -198,8 +208,9 @@ static void UpLoadTestData(void)
 					upLoadTestDataBuffer->testData->TestTime.sec, upLoadTestDataBuffer->testData->time, 
 					upLoadTestDataBuffer->testData->testline.C_Point.x, upLoadTestDataBuffer->testData->testline.T_Point.x,
 					upLoadTestDataBuffer->testData->testline.B_Point.x, upLoadTestDataBuffer->testData->testline.BasicBili, 
-					upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, upLoadTestDataBuffer->testData->testline.AdjustResult, 
-					upLoadTestDataBuffer->testData->temperweima.PiHao, upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->tempBuf);
+					upLoadTestDataBuffer->testData->temperweima.itemConstData.pointNum, upLoadTestDataBuffer->testData->testline.BasicResult, 
+					upLoadTestDataBuffer->testData->temperweima.PiHao, upLoadTestDataBuffer->testData->temperweima.piNum, upLoadTestDataBuffer->tempBuf,
+					upLoadTestDataBuffer->testData->testline.CMdifyNum);
 
 				for(upLoadTestDataBuffer->i=0; upLoadTestDataBuffer->i<100; upLoadTestDataBuffer->i++)
 				{
@@ -234,7 +245,6 @@ static void UpLoadTestData(void)
 	
 	END:
 		MyFree(upLoadTestDataBuffer);
-
 }
 
 /***************************************************************************************************

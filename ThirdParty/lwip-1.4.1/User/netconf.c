@@ -74,7 +74,7 @@ static void LwIP_Init(NetSet * netset)
 	{
 		IP4_ADDR(&ipaddr, netset->myip.ip_1, netset->myip.ip_2, netset->myip.ip_3, netset->myip.ip_4);
 		IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
-		IP4_ADDR(&gw, netset->myip.ip_1, netset->myip.ip_2, netset->myip.ip_3, 1);	
+		IP4_ADDR(&gw, netset->myip.ip_1, netset->myip.ip_2, netset->myip.ip_3, 254);	
 	}
 	
 	SetGB_LineNetIP(ipaddr.addr);
@@ -160,7 +160,7 @@ void ETH_link_callback(struct netif *netif)
 		{
 			IP4_ADDR(&ipaddr, myNetData.myip.ip_1, myNetData.myip.ip_2, myNetData.myip.ip_3, myNetData.myip.ip_4);
 			IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
-			IP4_ADDR(&gw, myNetData.myip.ip_1, myNetData.myip.ip_2, myNetData.myip.ip_3, 1);
+			IP4_ADDR(&gw, myNetData.myip.ip_1, myNetData.myip.ip_2, myNetData.myip.ip_3, 254);
 		}
 
 		SetGB_LineNetIP(ipaddr.addr);

@@ -73,7 +73,7 @@ MyState_TypeDef createDeviceInfoActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	copyGBSystemSetData(&(S_ShowDeviceInfoPageBuffer->systemSetData));
+	copyGBSystemSetData(&S_ShowDeviceInfoPageBuffer->systemSetData);
 
 	showDeviceInfo();
 	

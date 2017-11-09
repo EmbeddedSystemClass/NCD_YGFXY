@@ -811,11 +811,6 @@
               <FilePath>..\UI\ShowResultPage.c</FilePath>
             </File>
             <File>
-              <FileName>AdjustPage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\UI\AdjustPage.c</FilePath>
-            </File>
-            <File>
               <FileName>ReTestPage.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\UI\ReTestPage.c</FilePath>

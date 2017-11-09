@@ -4,8 +4,6 @@
 
 #include	"Define.h"
 
-#define		MaxAdjDataNum	50											//最多保存50个品种的校准参数
-
 #pragma pack(1)
 typedef struct SystemSetData_Tag
 {
@@ -18,11 +16,9 @@ typedef struct SystemSetData_Tag
 	unsigned int testDataNum;											//测试数据已保存的数目
 	unsigned int upLoadIndex;											//测试数据等待上传的索引
 	unsigned short testLedLightIntensity;								//测试时采用的led亮度值，为校准后产生，默认为200
-	AdjustData adjustData[MaxAdjDataNum];
+	unsigned char parm1[700];
 	unsigned int userUpLoadIndex;										//用户服务器上传索引
-	unsigned char parm1[96];											//预留参数1
-	unsigned short parm2[10];											//预留参数2
-	unsigned int parm3[10];												//预留参数3
+	unsigned char parm2[156];											//预留参数1											//预留参数3
 	unsigned short crc;
 }SystemSetData;
 #pragma pack()
@@ -48,10 +44,6 @@ void setUpLoadIndex(unsigned int index);
 
 void setTestLedLightIntensity(SystemSetData * systemSetData, unsigned short value);
 unsigned short getTestLedLightIntensity(SystemSetData * systemSetData);
-
-MyState_TypeDef addAdjPram(SystemSetData * systemSetData, AdjustData * adjData);
-void getAdjPram(SystemSetData * systemSetData, AdjustData * adjData);
-void getAllAdjPram(SystemSetData * systemSetData, AdjustData * adjData);
 
 void setIsShowRealValue(bool isShow);
 bool IsShowRealValue(void);

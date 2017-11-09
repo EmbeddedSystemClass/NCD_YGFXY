@@ -17,6 +17,7 @@
 #include	"math.h"
 #include	<string.h>
 #include	"stdio.h"
+#include 	"stdlib.h"
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
@@ -162,4 +163,66 @@ void findFeng(unsigned short * datas, unsigned short startIndex, unsigned short 
 			i = (tempPoint.x + 15);
 		}
 	}
+}
+
+MyState_TypeDef parseIpString(IP_Def * ip, char * ipStr)
+{
+	char * tempP = NULL;
+		
+	if(ip == NULL || ipStr == NULL)
+		return My_Fail;
+	
+	tempP = strtok(ipStr, ".");
+	if(tempP)
+	{
+		ip->ip_1 = strtol(tempP, NULL, 10);
+		if(ip->ip_1 > 255)
+			return My_Fail;
+	}
+	else
+		return My_Fail;
+	
+	tempP = strtok(NULL, ".");
+	if(tempP)
+	{
+		ip->ip_2 = strtol(tempP, NULL, 10);
+		if(ip->ip_2 > 255)
+			return My_Fail;
+	}
+	else
+		return My_Fail;
+	
+	tempP = strtok(NULL, ".");
+	if(tempP)
+	{
+		ip->ip_3 = strtol(tempP, NULL, 10);
+		if(ip->ip_3 > 255)
+			return My_Fail;
+	}
+	else
+		return My_Fail;
+	
+	tempP = strtok(NULL, ".");
+	if(tempP)
+	{
+		ip->ip_4 = strtol(tempP, NULL, 10);
+		if(ip->ip_4 > 255)
+			return My_Fail;
+	}
+	else
+		return My_Fail;
+	
+	return My_Pass;
+}
+
+MyState_TypeDef parsePortString(unsigned short * port, char * portStr)
+{
+	if(port == NULL || portStr == NULL)
+		return My_Fail;
+	
+	*port = strtol(portStr, NULL, 10);
+	if(*port > 65535)
+		return My_Fail;
+	
+	return My_Pass;
 }

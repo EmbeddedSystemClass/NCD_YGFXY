@@ -54,9 +54,7 @@ MyState_TypeDef SystemReset(void)
 		getDeviceInfo(&(systemSetData->deviceInfo));
 		//保留已校准的led值
 		systemSetData->testLedLightIntensity = getTestLedLightIntensity(getGBSystemSetData());
-		//保留已校准的校准参数
-		getAllAdjPram(getGBSystemSetData(), systemSetData->adjustData);
-		
+
 		if(My_Pass != SaveSystemSetData(systemSetData))
 			return My_Fail;
 	}

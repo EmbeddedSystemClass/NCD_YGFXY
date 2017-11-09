@@ -89,15 +89,11 @@ MyState_TypeDef createShowResultActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_ShowPageBuffer)
-	{
-
-		RefreshText();
+	RefreshText();
 			
-		DspLine();
+	DspLine();
 			
-		dspIco();
-	}
+	dspIco();
 	
 	SelectPage(147);
 }
@@ -113,24 +109,18 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_ShowPageBuffer)
-	{
-		/*命令*/
-		S_ShowPageBuffer->lcdinput[0] = pbuf[4];
-		S_ShowPageBuffer->lcdinput[0] = (S_ShowPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	S_ShowPageBuffer->lcdinput[0] = pbuf[4];
+	S_ShowPageBuffer->lcdinput[0] = (S_ShowPageBuffer->lcdinput[0]<<8) + pbuf[5];
 		
-		/*退出*/
-		if(0x2301 == S_ShowPageBuffer->lcdinput[0])
-		{
-			backToFatherActivity();
-		}
-		/*打印*/
-		else if(0x2300 == S_ShowPageBuffer->lcdinput[0])
-		{
-			SendKeyCode(1);
-			PrintfData(&(S_ShowPageBuffer->testdata));
-			SendKeyCode(16);
-		}
+	/*退出*/
+	if(0x2301 == S_ShowPageBuffer->lcdinput[0])
+	{
+		backToFatherActivity();
+	}
+	/*打印*/
+	else if(0x2300 == S_ShowPageBuffer->lcdinput[0])
+	{
+		PrintfData(&(S_ShowPageBuffer->testdata));
 	}
 }
 
@@ -262,13 +252,13 @@ static void RefreshText(void)
 			sprintf(S_ShowPageBuffer->tempbuf, "Error\0");
 		else if(IsShowRealValue() == true)
 			sprintf(S_ShowPageBuffer->tempbuf, "%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum,
-				S_ShowPageBuffer->testdata.testline.AdjustResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
-		else if(S_ShowPageBuffer->testdata.testline.AdjustResult <= S_ShowPageBuffer->testdata.temperweima.itemConstData.lowstResult)
+				S_ShowPageBuffer->testdata.testline.BasicResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
+		else if(S_ShowPageBuffer->testdata.testline.BasicResult <= S_ShowPageBuffer->testdata.temperweima.itemConstData.lowstResult)
 			sprintf(S_ShowPageBuffer->tempbuf, "<%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum, 
 				S_ShowPageBuffer->testdata.temperweima.itemConstData.lowstResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
 		else
 			sprintf(S_ShowPageBuffer->tempbuf, "%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum, 
-				S_ShowPageBuffer->testdata.testline.AdjustResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
+				S_ShowPageBuffer->testdata.testline.BasicResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
 
 		DisText(0x2338, S_ShowPageBuffer->tempbuf, strlen(S_ShowPageBuffer->tempbuf)+1);
 		

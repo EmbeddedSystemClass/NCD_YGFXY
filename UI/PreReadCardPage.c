@@ -296,10 +296,6 @@ static void CheckQRCode(void)
 				//将读取的二维码数据拷贝到测试数据包中
 				memcpy(&(S_PreReadPageBuffer->currenttestdata->testdata.temperweima), &(S_PreReadPageBuffer->temperweima), sizeof(QRCode));
 
-				//读取校准参数
-				memcpy(S_PreReadPageBuffer->currenttestdata->testdata.tempadjust.ItemName, S_PreReadPageBuffer->currenttestdata->testdata.temperweima.ItemName, AdjItemNameLen);
-				getAdjPram(getGBSystemSetData(), &(S_PreReadPageBuffer->currenttestdata->testdata.tempadjust));
-				
 				#if(DeviceUseType == Device_Final)
 				
 					//设置倒计时时间

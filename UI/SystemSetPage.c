@@ -8,7 +8,6 @@
 #include	"MyMem.h"
 #include	"LunchPage.h"
 #include	"ShowDeviceInfoPage.h"
-#include	"AdjustPage.h"
 #include	"ReTestPage.h"
 #include	"UserMPage.h"
 #include	"NetPreSetPage.h"
@@ -153,11 +152,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		{
 			if(GetBufLen(&pbuf[7] , 2*pbuf[6]) == 6)
 			{
-				if(pdPASS == CheckStrIsSame(&pbuf[7] , AdjustPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
-				{
-					startActivity(createAdjActivity, NULL);
-				}
-				else if(pdPASS == CheckStrIsSame(&pbuf[7] , TestPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				if(pdPASS == CheckStrIsSame(&pbuf[7] , TestPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
 				{
 					startActivity(createReTestActivity, NULL);
 				}
