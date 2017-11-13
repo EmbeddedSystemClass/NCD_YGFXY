@@ -6,13 +6,6 @@
 
 typedef struct PointBuffer_Tag
 {
-	FatfsFileInfo_Def myfile;
-	unsigned char word[94][94];
-	unsigned char key[60];
-	unsigned char *q;
-	unsigned char *k;
-	unsigned char *t;
-	unsigned char *s;
 	unsigned short i;
 	unsigned short j;
 	unsigned short tempIndex;
@@ -20,7 +13,9 @@ typedef struct PointBuffer_Tag
 	unsigned short tempV2;
 }PointBuffer;
 
-unsigned char MyDencrypt(char *source, char *target, unsigned short len);
+#define	PointBufferStructSize	sizeof(PointBuffer)
+
+MyState_TypeDef MyDencrypt(char *source, char *target, unsigned short len);
 
 #endif
 

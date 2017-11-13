@@ -29,7 +29,7 @@ struct netbuf *pxRxBuffer;
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
-static err_t ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *pxNetCon);
+static void ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *pxNetCon);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -47,8 +47,6 @@ static err_t ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *
 ***************************************************************************************************/
 void ProcessQuest(void * parm)
 {
-	err_t err;
-	
 	unsigned char *pcRxString;
 	unsigned short usLength;
 	
@@ -57,25 +55,23 @@ void ProcessQuest(void * parm)
 	
 	pxNetCon = parm;
 	/* We expect to immediately get data. */
-	if((err = netconn_recv( pxNetCon , &pxRxBuffer)) == ERR_OK)
+	if(ERR_OK == netconn_recv( pxNetCon , &pxRxBuffer))
 	{
 		netbuf_data(pxRxBuffer, ( void * )&pcRxString, &usLength);
 
 		netbuf_delete(pxRxBuffer);
 		
-		if(ERR_OK != ProcessCMD(pcRxString ,usLength, pxNetCon))
-			;        
+		ProcessCMD(pcRxString ,usLength, pxNetCon);        
 	}
 
 }
 
-static err_t ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *pxNetCon)
+static void ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *pxNetCon)
 {
 	char *pxbuf1;
 	char *pxbuf2;
 	unsigned short temp = 0xffff;
 	unsigned short i=0;
-	err_t err;
 	
 	pxbuf1 = MyMalloc(4096);
 	pxbuf2 = MyMalloc(10);
@@ -123,16 +119,14 @@ static err_t ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *
 			strcat(pxbuf1, pxbuf2);
 			
 			if(0 == GetTestStatusFlorLab())
-				MotorMoveTo(1, 2, MaxLocation, 1);
+				MotorMoveTo(1, 2, MaxLocation, true);
 		}
 
-		err = netconn_write( pxNetCon, pxbuf1, strlen(pxbuf1), NETCONN_COPY );
+		netconn_write( pxNetCon, pxbuf1, strlen(pxbuf1), NETCONN_COPY );
 	}
 	
 	MyFree(pxbuf1);
 	MyFree(pxbuf2);
-	
-	return err;
 }
 
 /****************************************end of file************************************************/

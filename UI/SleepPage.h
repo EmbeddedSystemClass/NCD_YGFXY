@@ -8,7 +8,7 @@
 
 typedef struct SleepPageBuffer_tag {
 	unsigned short lcdinput[20];
-	SystemSetData systemSetData;
+	unsigned char ledLightIntensity;
 }SleepPageBuffer;
 
 

@@ -32,9 +32,11 @@ typedef struct Page_tag {
 }Page;
 #pragma pack()
 
+#define	PageStructSize	sizeof(Page)
+
 
 MyState_TypeDef WriteTestData(TestData * testdata, unsigned int writeIndex);
-MyState_TypeDef ReadTestData(PageRequest * pageRequest, Page * page, SystemSetData * systemSetData);
+MyState_TypeDef ReadTestData(PageRequest * pageRequest, Page * page, unsigned int recordNum);
 
 #endif
 

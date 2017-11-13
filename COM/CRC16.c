@@ -90,7 +90,7 @@ unsigned short CalModbusCRC16Fun1(void *puchMsg, unsigned short usDataLen)
     unsigned char *pdata = (unsigned char *)puchMsg;
 	unsigned short uchCRCHi = 0xFF;
     unsigned short uchCRCLo = 0xFF;
-    unsigned int uIndex ;
+    unsigned short uIndex;
     while (usDataLen--)
     {
         uIndex = uchCRCHi ^ *pdata++ ;
@@ -106,7 +106,7 @@ void CalModbusCRC16Fun2(void *puchMsg, unsigned short usDataLen, void *crc)
 	unsigned char *pcrc = (unsigned char *)crc;
 	unsigned short uchCRCHi = 0xFF;
     unsigned short uchCRCLo = 0xFF;
-    unsigned int uIndex ;
+    unsigned short uIndex ;
     while (usDataLen--)
     {
         uIndex = uchCRCHi ^ *pdata++ ;

@@ -55,11 +55,11 @@ MyState_TypeDef checkMd5(void)
 	RemoteSoftInfo * remoteSoftInfo = NULL;		//读取的固件信息
 	char currentMd5[40];				//当前MD5
 	
-	remoteSoftInfo = MyMalloc(sizeof(RemoteSoftInfo));
+	remoteSoftInfo = MyMalloc(RemoteSoftInfoStructSize);
 	if(remoteSoftInfo)
 	{
 		//读取文件中的md5
-		memset(remoteSoftInfo, 0, sizeof(RemoteSoftInfo));
+		memset(remoteSoftInfo, 0, RemoteSoftInfoStructSize);
 		if(My_Fail == ReadRemoteSoftInfo(remoteSoftInfo))
 			return My_Fail;
 	}

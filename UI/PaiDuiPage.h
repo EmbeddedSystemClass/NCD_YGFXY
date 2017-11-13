@@ -6,7 +6,6 @@
 #include	"UI_Data.h"
 
 typedef struct PaiDuiPageBuffer_tag {
-	TestData tempd;
 	ItemData *tempd2;
 	Basic_ICO myico;
 	Timer timer0;								//¼ì²â²å¿¨¼ÆÊ±Æ÷

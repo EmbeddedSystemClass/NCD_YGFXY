@@ -19,10 +19,20 @@
 #include	"AdjustLedPage.h"
 #include	"AboutUsPage.h"
 #include	"SystemResetFun.h"
-
+/*
+#include	"usbd_msc_core.h"
+#include	"usbd_usr.h"
+#include	"usbd_desc.h"
+#include	"usb_conf.h"
+*/
 #include 	"FreeRTOS.h"
 #include 	"task.h"
 #include 	"queue.h"
+
+#include	"usbd_msc_core.h"
+#include	"usbd_usr.h"
+#include	"usbd_desc.h"
+#include	"usb_conf.h"
 
 #include	<string.h>
 #include	"stdio.h"
@@ -30,6 +40,7 @@
 /******************************************************************************************/
 /*****************************************局部变量声明*************************************/
 static SysSetPageBuffer * S_SysSetPageBuffer = NULL;
+//USB_OTG_CORE_HANDLE USB_OTG_dev;
 /******************************************************************************************/
 /*****************************************局部函数声明*************************************/
 static void activityStart(void);
@@ -181,6 +192,10 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 					unLockLCDOneTime();
 					SendKeyCode(2);
 				}
+				/*else if(pdPASS == CheckStrIsSame(&pbuf[7] , EnableUSBPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				{
+					USBD_Init(&USB_OTG_dev,USB_OTG_FS_CORE_ID,&USR_desc,&USBD_MSC_cb,&USR_cb);
+				}*/
 				else
 					SendKeyCode(1);
 			}

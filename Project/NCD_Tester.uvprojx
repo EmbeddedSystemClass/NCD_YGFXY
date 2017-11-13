@@ -334,9 +334,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>USE_USB_OTG_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\AppLunch;..\COM;..\Datas;..\Function;..\HardwareDriver;..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\Libraries\STM32F4x7_ETH_Driver\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Task;..\ThirdParty\Fatfs\src;..\ThirdParty\lwip-1.4.1\src\include;..\ThirdParty\lwip-1.4.1\src\include\ipv4;..\ThirdParty\lwip-1.4.1\src\include\netif;..\ThirdParty\lwip-1.4.1\src\include\lwip;..\ThirdParty\lwip-1.4.1\port\STM32F4x7\FreeRTOS;..\ThirdParty\lwip-1.4.1\port\STM32F4x7;..\ThirdParty\lwip-1.4.1\User;..\ThirdParty\cJSON-master;..\UI;..\ThirdParty\FreeRTOS\inc;..\Daos;..\Libraries\CMSIS\Include</IncludePath>
+              <IncludePath>..\AppLunch;..\COM;..\Datas;..\Function;..\HardwareDriver;..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\Libraries\STM32F4x7_ETH_Driver\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Task;..\ThirdParty\Fatfs\src;..\ThirdParty\lwip-1.4.1\src\include;..\ThirdParty\lwip-1.4.1\src\include\ipv4;..\ThirdParty\lwip-1.4.1\src\include\netif;..\ThirdParty\lwip-1.4.1\src\include\lwip;..\ThirdParty\lwip-1.4.1\port\STM32F4x7\FreeRTOS;..\ThirdParty\lwip-1.4.1\port\STM32F4x7;..\ThirdParty\lwip-1.4.1\User;..\ThirdParty\cJSON-master;..\UI;..\ThirdParty\FreeRTOS\inc;..\Daos;..\Libraries\CMSIS\Include;..\ThirdParty\USB\USB_APP;..\ThirdParty\USB\STM32_USB_OTG_Driver\inc;..\ThirdParty\USB\STM32_USB_Device_Library\Core\inc;..\ThirdParty\USB\STM32_USB_Device_Library\Class\msc\inc;..\Entity</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -661,11 +661,6 @@
               <FilePath>..\Task\Universal_Task.c</FilePath>
             </File>
             <File>
-              <FileName>BasicWEB_Task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Task\BasicWEB_Task.c</FilePath>
-            </File>
-            <File>
               <FileName>PlaySong_Task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Task\PlaySong_Task.c</FilePath>
@@ -838,6 +833,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Entity</GroupName>
+          <Files>
+            <File>
+              <FileName>HttpBuf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Entity\HttpBuf.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>DataS</GroupName>
           <Files>
             <File>
@@ -991,19 +996,9 @@
               <FilePath>..\COM\MyEncryptTool.c</FilePath>
             </File>
             <File>
-              <FileName>CRC_CCITT.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\COM\CRC_CCITT.c</FilePath>
-            </File>
-            <File>
               <FileName>MyTools.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\COM\MyTools.c</FilePath>
-            </File>
-            <File>
-              <FileName>MyQueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\COM\MyQueue.c</FilePath>
             </File>
             <File>
               <FileName>MyMem.c</FileName>
@@ -1014,11 +1009,6 @@
               <FileName>MyStack.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\COM\MyStack.c</FilePath>
-            </File>
-            <File>
-              <FileName>MyLink.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\COM\MyLink.c</FilePath>
             </File>
             <File>
               <FileName>Intent.c</FileName>

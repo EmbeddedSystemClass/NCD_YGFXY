@@ -171,7 +171,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN_E
   0x00,         /*iConfiguration: Index of string descriptor describing
   the configuration*/
   0xE0,         /*bmAttributes: bus powered and Support Remote Wake-up */
-  0xFA,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
+  0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
   
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
@@ -179,40 +179,33 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN_E
   USB_INTERFACE_DESCRIPTOR_TYPE,/*bDescriptorType: Interface descriptor type*/
   0x00,         /*bInterfaceNumber: Number of Interface*/
   0x00,         /*bAlternateSetting: Alternate setting*/
-  0x04,         /*bNumEndpoints*/
-  0xDC,         /*bInterfaceClass: HID*/
-  0xA0,         /*bInterfaceSubClass : 1=BOOT, 0=no boot*/
-  0xB0,         /*nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse*/
+  0x01,         /*bNumEndpoints*/
+  0x03,         /*bInterfaceClass: HID*/
+  0x01,         /*bInterfaceSubClass : 1=BOOT, 0=no boot*/
+  0x02,         /*nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse*/
   0,            /*iInterface: Index of string descriptor*/
-  /******************** endpoint descriptor ********************/
-    /* 18 */
-    0x07,         /* endpoint descriptor length = 07H */
-    USB_ENDPOINT_DESCRIPTOR_TYPE, /* endpoint descriptor type = 05H */
-    0x81,         /* endpoint 1 IN */
-    0x02,					/* bulk transfer = 02H */
-    0x40,0x00,    /* endpoint max packet size = 0040H */
-    0x00,         /* the value is invalid when bulk transfer */
-
-    0x07,         /* endpoint descriptor length = 07H */
-    USB_ENDPOINT_DESCRIPTOR_TYPE, /* endpoint descriptor type = 05H */
-    0x01,         /* endpoint 1 OUT */
-    0x02,					/* bulk transfer = 02H */
-    0x40,0x00,    /* endpoint max packet size = 0040H */
-    0x00,         /* the value is invalid when bulk transfer */
-		
-    0x07,         /* endpoint descriptor length = 07H */
-    USB_ENDPOINT_DESCRIPTOR_TYPE, /* endpoint descriptor type = 05H */
-    0x82,         /* endpoint 2 IN */
-    0x02,					/* bulk transfer = 02H */
-    0x40,0x00,    /* endpoint max packet size = 0040H */
-    0x00,         /* the value is invalid when bulk transfer */
-		
-    0x07,         /* endpoint descriptor length = 07H */
-    USB_ENDPOINT_DESCRIPTOR_TYPE, /* endpoint descriptor type = 05H */
-    0x02,         /* endpoint 2 OUT */
-    0x02,					/* bulk transfer = 02H */
-    0x40,0x00,    /* endpoint max packet size = 0040H */
-    0x00,         /* the value is invalid when bulk transfer */
+  /******************** Descriptor of Joystick Mouse HID ********************/
+  /* 18 */
+  0x09,         /*bLength: HID Descriptor size*/
+  HID_DESCRIPTOR_TYPE, /*bDescriptorType: HID*/
+  0x11,         /*bcdHID: HID Class Spec release number*/
+  0x01,
+  0x00,         /*bCountryCode: Hardware target country*/
+  0x01,         /*bNumDescriptors: Number of HID class descriptors to follow*/
+  0x22,         /*bDescriptorType*/
+  HID_MOUSE_REPORT_DESC_SIZE,/*wItemLength: Total length of Report descriptor*/
+  0x00,
+  /******************** Descriptor of Mouse endpoint ********************/
+  /* 27 */
+  0x07,          /*bLength: Endpoint Descriptor size*/
+  USB_ENDPOINT_DESCRIPTOR_TYPE, /*bDescriptorType:*/
+  
+  HID_IN_EP,     /*bEndpointAddress: Endpoint Address (IN)*/
+  0x03,          /*bmAttributes: Interrupt endpoint*/
+  HID_IN_PACKET, /*wMaxPacketSize: 4 Byte max */
+  0x00,
+  0x0A,          /*bInterval: Polling Interval (10 ms)*/
+  /* 34 */
 } ;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED

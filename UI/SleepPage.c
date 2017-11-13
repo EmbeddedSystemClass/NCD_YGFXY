@@ -65,10 +65,7 @@ MyState_TypeDef createSleepActivity(Activity * thizActivity, Intent * pram)
 
 static void activityStart(void)
 {
-	if(S_SleepPageBuffer)
-	{
-		copyGBSystemSetData(&(S_SleepPageBuffer->systemSetData));
-	}	
+	S_SleepPageBuffer->ledLightIntensity = getLedLightIntensity();	
 	
 	SetLEDLight(10);
 	
@@ -76,18 +73,11 @@ static void activityStart(void)
 }
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_SleepPageBuffer)
-	{
-		/*ÃüÁî*/
-		S_SleepPageBuffer->lcdinput[0] = pbuf[4];
-		S_SleepPageBuffer->lcdinput[0] = (S_SleepPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	S_SleepPageBuffer->lcdinput[0] = pbuf[4];
+	S_SleepPageBuffer->lcdinput[0] = (S_SleepPageBuffer->lcdinput[0]<<8) + pbuf[5];
 		
-		/*ÉèÖÃ*/
-		if(S_SleepPageBuffer->lcdinput[0] == 0x1D70)
-		{
-			backToFatherActivity();
-		}
-	}
+	if(S_SleepPageBuffer->lcdinput[0] == 0x1D70)
+		backToFatherActivity();
 }
 static void activityFresh(void)
 {
@@ -103,7 +93,7 @@ static void activityResume(void)
 }
 static void activityDestroy(void)
 {
-	SetLEDLight(S_SleepPageBuffer->systemSetData.ledLightIntensity);
+	SetLEDLight(S_SleepPageBuffer->ledLightIntensity);
 	
 	activityBufferFree();
 }

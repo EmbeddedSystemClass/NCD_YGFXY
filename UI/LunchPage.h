@@ -7,11 +7,10 @@
 #include	"SystemSet_Data.h"
 
 typedef struct LunchPageBuffer_tag {
-	SystemSetData systemSetData;
+	unsigned short ledSleepTime;
 	Timer timer;
-	unsigned char presscount;
-	char buf[100];
-	unsigned short lcdinput[100];
+	char buf[20];
+	unsigned short lcdinput[30];
 	CreateTestErrorType error;
 }LunchPageBuffer;
 

@@ -395,8 +395,7 @@ void ethernetif_input( void * pvParameters )
 */
 err_t ethernetif_init(struct netif *netif)
 {
-	DeviceInfo * deviceinfo = NULL;
-	
+
 	LWIP_ASSERT("netif != NULL", (netif != NULL));
 	
 	

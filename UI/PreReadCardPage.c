@@ -119,44 +119,40 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_PreReadPageBuffer)
-	{
-		/*命令*/
-		S_PreReadPageBuffer->lcdinput[0] = pbuf[4];
-		S_PreReadPageBuffer->lcdinput[0] = (S_PreReadPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	S_PreReadPageBuffer->lcdinput[0] = pbuf[4];
+	S_PreReadPageBuffer->lcdinput[0] = (S_PreReadPageBuffer->lcdinput[0]<<8) + pbuf[5];
 		
-		/*二维码读取失败，过期，已使用*/
-		if((S_PreReadPageBuffer->lcdinput[0] >= 0x1400) && (S_PreReadPageBuffer->lcdinput[0] <= 0x1405))
-		{
-			/*数据*/
-			S_PreReadPageBuffer->lcdinput[1] = pbuf[7];
-			S_PreReadPageBuffer->lcdinput[1] = (S_PreReadPageBuffer->lcdinput[1]<<8) + pbuf[8];
+	/*二维码读取失败，过期，已使用*/
+	if((S_PreReadPageBuffer->lcdinput[0] >= 0x1400) && (S_PreReadPageBuffer->lcdinput[0] <= 0x1405))
+	{
+		/*数据*/
+		S_PreReadPageBuffer->lcdinput[1] = pbuf[7];
+		S_PreReadPageBuffer->lcdinput[1] = (S_PreReadPageBuffer->lcdinput[1]<<8) + pbuf[8];
 			
-			/*更换检测卡*/
-			if(S_PreReadPageBuffer->lcdinput[1] == 0x0001)
-			{
-				//如果是排队中的再次预读，则返回排队界面，状态切换回之前的状态
-				if(S_PreReadPageBuffer->currenttestdata->statues == status_prereadagain_n)
-					S_PreReadPageBuffer->currenttestdata->statues = status_incard_n;
-				else if(S_PreReadPageBuffer->currenttestdata->statues == status_prereadagain_o)
-					S_PreReadPageBuffer->currenttestdata->statues = status_incard_o;
-				//如果是第一次预读
-				else if(S_PreReadPageBuffer->currenttestdata->statues == status_wait1)
-					S_PreReadPageBuffer->currenttestdata->statues = status_wait1;
+		/*更换检测卡*/
+		if(S_PreReadPageBuffer->lcdinput[1] == 0x0001)
+		{
+			//如果是排队中的再次预读，则返回排队界面，状态切换回之前的状态
+			if(S_PreReadPageBuffer->currenttestdata->statues == status_prereadagain_n)
+				S_PreReadPageBuffer->currenttestdata->statues = status_incard_n;
+			else if(S_PreReadPageBuffer->currenttestdata->statues == status_prereadagain_o)
+				S_PreReadPageBuffer->currenttestdata->statues = status_incard_o;
+			//如果是第一次预读
+			else if(S_PreReadPageBuffer->currenttestdata->statues == status_wait1)
+				S_PreReadPageBuffer->currenttestdata->statues = status_wait1;
 				
-				backToFatherActivity();
-			}
-			//取消测试
-			else if(S_PreReadPageBuffer->lcdinput[1] == 0x0000)
-			{
-				DeleteCurrentTest();
+			backToFatherActivity();
+		}
+		//取消测试
+		else if(S_PreReadPageBuffer->lcdinput[1] == 0x0000)
+		{
+			DeleteCurrentTest();
 				
-				//如果还有卡在排队，说明这个界面是从排队界面过来的，只需返回到排队界面
-				if(IsPaiDuiTestting())
-					backToActivity(paiduiActivityName);	
-				else
-					backToActivity(lunchActivityName);
-			}
+			//如果还有卡在排队，说明这个界面是从排队界面过来的，只需返回到排队界面
+			if(IsPaiDuiTestting())
+				backToActivity(paiduiActivityName);	
+			else
+				backToActivity(lunchActivityName);
 		}
 	}
 }
@@ -413,16 +409,16 @@ static void clearPageText(void)
 
 static void ShowCardInfo(void)
 {
-	sprintf(S_PreReadPageBuffer->buf, "%s\0", S_PreReadPageBuffer->temperweima.ItemName);
+	sprintf(S_PreReadPageBuffer->buf, "%s", S_PreReadPageBuffer->temperweima.ItemName);
 	DisText(0x1420, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 		
-	sprintf(S_PreReadPageBuffer->buf, "%s-%s\0", S_PreReadPageBuffer->temperweima.PiHao, S_PreReadPageBuffer->temperweima.piNum);
+	sprintf(S_PreReadPageBuffer->buf, "%s-%s", S_PreReadPageBuffer->temperweima.PiHao, S_PreReadPageBuffer->temperweima.piNum);
 	DisText(0x1430, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 	
-	sprintf(S_PreReadPageBuffer->buf, "%d S\0", S_PreReadPageBuffer->temperweima.CardWaitTime*60);
+	sprintf(S_PreReadPageBuffer->buf, "%d S", S_PreReadPageBuffer->temperweima.CardWaitTime*60);
 	DisText(0x1440, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 		
-	sprintf(S_PreReadPageBuffer->buf, "20%02d-%02d-%02d\0", S_PreReadPageBuffer->temperweima.CardBaoZhiQi.year, 
+	sprintf(S_PreReadPageBuffer->buf, "20%02d-%02d-%02d", S_PreReadPageBuffer->temperweima.CardBaoZhiQi.year, 
 		S_PreReadPageBuffer->temperweima.CardBaoZhiQi.month, S_PreReadPageBuffer->temperweima.CardBaoZhiQi.day);
 	DisText(0x1450, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 }
@@ -433,10 +429,10 @@ static void showTemperature(void)
 	S_PreReadPageBuffer->currenttestdata->testdata.TestTemp.O_Temperature = GetCardTemperature();
 	S_PreReadPageBuffer->currenttestdata->testdata.TestTemp.E_Temperature = GetGB_EnTemperature();
 	
-	sprintf(S_PreReadPageBuffer->buf, "%2.1f ℃\0", S_PreReadPageBuffer->currenttestdata->testdata.TestTemp.O_Temperature);
+	sprintf(S_PreReadPageBuffer->buf, "%2.1f ℃", S_PreReadPageBuffer->currenttestdata->testdata.TestTemp.O_Temperature);
 	DisText(0x1460, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 	
-	sprintf(S_PreReadPageBuffer->buf, "%2.1f ℃\0",S_PreReadPageBuffer->currenttestdata->testdata.TestTemp.E_Temperature);
+	sprintf(S_PreReadPageBuffer->buf, "%2.1f ℃",S_PreReadPageBuffer->currenttestdata->testdata.TestTemp.E_Temperature);
 	DisText(0x1470, S_PreReadPageBuffer->buf, strlen(S_PreReadPageBuffer->buf)+1);
 }
 

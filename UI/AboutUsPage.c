@@ -33,6 +33,7 @@ static MyState_TypeDef activityBufferMalloc(void);
 static void activityBufferFree(void);
 
 static void dspPageText(void);
+static void freshRemoteSoftVersionText(void);
 /******************************************************************************************/
 /******************************************************************************************/
 /******************************************************************************************/
@@ -75,13 +76,9 @@ MyState_TypeDef createAboutUsActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_AboutUsPageBuffer)
-	{
-		
-		copyGBSystemSetData(&(S_AboutUsPageBuffer->systemSetData));
-		
-		dspPageText();
-	}
+	timer_set(&S_AboutUsPageBuffer->timer, 10);
+	
+	dspPageText();
 		
 	SelectPage(116);
 }
@@ -97,18 +94,12 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_AboutUsPageBuffer)
-	{
-		/*命令*/
-		S_AboutUsPageBuffer->lcdinput[0] = pbuf[4];
-		S_AboutUsPageBuffer->lcdinput[0] = (S_AboutUsPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	S_AboutUsPageBuffer->lcdinput[0] = pbuf[4];
+	S_AboutUsPageBuffer->lcdinput[0] = (S_AboutUsPageBuffer->lcdinput[0]<<8) + pbuf[5];
 		
-		//返回
-		if(S_AboutUsPageBuffer->lcdinput[0] == 0x2900)
-		{
-			backToFatherActivity();
-		}
-	}
+	//返回
+	if(S_AboutUsPageBuffer->lcdinput[0] == 0x2900)
+		backToFatherActivity();
 }
 
 /***************************************************************************************************
@@ -122,9 +113,10 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	if(S_AboutUsPageBuffer)
+	if(TimeOut == timer_expired(&S_AboutUsPageBuffer->timer))
 	{
-
+		freshRemoteSoftVersionText();
+		timer_restart(&S_AboutUsPageBuffer->timer);
 	}
 }
 
@@ -153,10 +145,7 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-	if(S_AboutUsPageBuffer)
-	{	
-		dspPageText();
-	}
+	dspPageText();
 	
 	SelectPage(116);
 }
@@ -220,17 +209,7 @@ static void activityBufferFree(void)
 
 static void dspPageText(void)
 {
-	if((getIsSuccessDownloadFirmware() == true) && (getGbRemoteFirmwareVersion() > GB_SoftVersion))
-	{
-		S_AboutUsPageBuffer->tempV = getGbRemoteFirmwareVersion();
-		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d (V%d.%d.%02d)\0", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100,
-			S_AboutUsPageBuffer->tempV/1000, S_AboutUsPageBuffer->tempV%1000/100, S_AboutUsPageBuffer->tempV%100);
-	}
-	else
-		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d\0", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100);
-	DisText(0x2910, S_AboutUsPageBuffer->buf, strlen(S_AboutUsPageBuffer->buf)+1);
-
-	sprintf(S_AboutUsPageBuffer->buf, "%s\0", GB_SoftVersion_Build);
+	sprintf(S_AboutUsPageBuffer->buf, "%s", GB_SoftVersion_Build);
 	DisText(0x2920, S_AboutUsPageBuffer->buf, strlen(S_AboutUsPageBuffer->buf)+1);
 	
 	//设置二维码x,y,像素点大小
@@ -243,7 +222,21 @@ static void dspPageText(void)
 	writeDataToLcd(0x2941, S_AboutUsPageBuffer->buf, 6);
 
 	//显示二维码
-	sprintf(S_AboutUsPageBuffer->buf, "http://www.whnewcando.com/?%s\0", S_AboutUsPageBuffer->systemSetData.deviceInfo.deviceid);
+	readDeviceId(S_AboutUsPageBuffer->deviceId);
+	sprintf(S_AboutUsPageBuffer->buf, "http://www.whnewcando.com/?%s", S_AboutUsPageBuffer->deviceId);
 	writeDataToLcd(0x2950, S_AboutUsPageBuffer->buf, strlen(S_AboutUsPageBuffer->buf)+1);
+}
+
+static void freshRemoteSoftVersionText(void)
+{
+	S_AboutUsPageBuffer->tempVersion = getGbRemoteFirmwareVersion();
+	if(getIsSuccessDownloadFirmware() == true && S_AboutUsPageBuffer->tempVersion > GB_SoftVersion)
+	{
+		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d (V%d.%d.%02d)", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100,
+			S_AboutUsPageBuffer->tempVersion/1000, S_AboutUsPageBuffer->tempVersion%1000/100, S_AboutUsPageBuffer->tempVersion%100);
+	}
+	else
+		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100);
+	DisText(0x2910, S_AboutUsPageBuffer->buf, strlen(S_AboutUsPageBuffer->buf)+1);
 }
 

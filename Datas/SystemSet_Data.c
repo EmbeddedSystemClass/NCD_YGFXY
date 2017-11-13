@@ -131,6 +131,14 @@ void getDeviceInfo(DeviceInfo * deviceinfo)
 	}
 }
 
+void readDeviceId(char * buf)
+{
+	if(GB_SystemSetData.crc != CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
+		setDefaultSystemSetData(&GB_SystemSetData);
+		
+	memcpy(buf, GB_SystemSetData.deviceInfo.deviceid, MaxDeviceIDLen);
+}
+
 /***************************************************************************************************
 *FunctionName: deviceInfoIsNew
 *Description: 设备信息是否有更新
@@ -288,6 +296,13 @@ void setUpLoadIndex(unsigned int index)
 	
 	GB_SystemSetData.upLoadIndex = index;
 	GB_SystemSetData.crc = CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2);
+}
+unsigned int getUpLoadIndex(void)
+{
+	if(GB_SystemSetData.crc != CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
+		setDefaultSystemSetData(&GB_SystemSetData);
+	
+	return GB_SystemSetData.upLoadIndex;
 }
 
 /***************************************************************************************************

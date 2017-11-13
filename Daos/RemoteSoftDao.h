@@ -1,6 +1,6 @@
 /****************************************file start****************************************************/
-#ifndef _REMOTESOFT_D_H
-#define	_REMOTESOFT_D_HS
+#ifndef _REMOTESOFT_DAO_H
+#define	_REMOTESOFT_DAO_H
 
 #include	"Define.h"
 #include	"RemoteSoft_Data.h"

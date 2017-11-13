@@ -77,20 +77,17 @@ MyState_TypeDef createWaittingCardActivity(Activity * thizActivity, Intent * pra
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_WaitPageData)
-	{
-		MotorMoveTo(1, 2, WaittingCardLocation, false);
+	MotorMoveTo(1, 2, WaittingCardLocation, false);
 		
-		S_WaitPageData->currenttestdata = GetCurrentTestItem();
-		S_WaitPageData->currenttestdata->statues = status_wait1;
+	S_WaitPageData->currenttestdata = GetCurrentTestItem();
+	S_WaitPageData->currenttestdata->statues = status_wait1;
 		
-		/*间隔一段时间提示插卡*/
-		timer_set(&(S_WaitPageData->timer2), 50);
+	/*间隔一段时间提示插卡*/
+	timer_set(&(S_WaitPageData->timer2), 50);
 		
-		//如果无卡，提示插卡
-		if(GetCardState() == NoCard)
-			AddNumOfSongToList(11, 0);
-	}
+	//如果无卡，提示插卡
+	if(GetCardState() == NoCard)
+		AddNumOfSongToList(11, 0);
 	
 	SelectPage(88);
 }
@@ -106,19 +103,15 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_WaitPageData)
-	{
-		/*命令*/
-		S_WaitPageData->lcdinput[0] = pbuf[4];
-		S_WaitPageData->lcdinput[0] = (S_WaitPageData->lcdinput[0]<<8) + pbuf[5];
+	S_WaitPageData->lcdinput[0] = pbuf[4];
+	S_WaitPageData->lcdinput[0] = (S_WaitPageData->lcdinput[0]<<8) + pbuf[5];
 		
-		/*返回*/
-		if(S_WaitPageData->lcdinput[0] == 0x1303)
-		{
-			S_WaitPageData->currenttestdata->statues = status_sample;
-			stopPlay();
-			backToFatherActivity();
-		}
+	/*返回*/
+	if(S_WaitPageData->lcdinput[0] == 0x1303)
+	{
+		S_WaitPageData->currenttestdata->statues = status_sample;
+		stopPlay();
+		backToFatherActivity();
 	}
 }
 

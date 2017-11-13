@@ -24,7 +24,6 @@
 
 #include	"LwipCom_Task.h"
 #include	"LwipDHCP_Task.h"
-#include	"BasicWEB_Task.h"
 #include	"LwipServerForLab_Task.h"
 
 /***************************************************************************************************/

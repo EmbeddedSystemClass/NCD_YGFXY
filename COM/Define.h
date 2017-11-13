@@ -11,8 +11,8 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1061
-#define	GB_SoftVersion_Build	"Build17100902\0"
+#define	GB_SoftVersion	(unsigned short)1062
+#define	GB_SoftVersion_Build	"Build17111101\0"
 
 #define	DEVICE_EN		100
 #define	DEVICE_CN		101
@@ -195,8 +195,8 @@ typedef struct QRCode_Tag
 
 
 #define	MaxLocation			6500						//最大行程
-#define	StartTestLocation	1250							//测试起始位置
-#define	EndTestLocation		4250						//测试结束为止
+#define	StartTestLocation	1300							//测试起始位置
+#define	EndTestLocation		4300						//测试结束为止
 #define	WaittingCardLocation	MaxLocation					//等待插卡的位置
 #define	AvregeNum		10								//平均值滤波个数
 #define	MaxPointLen		((EndTestLocation - StartTestLocation)/AvregeNum)	//测试点个数
@@ -473,8 +473,8 @@ typedef struct ItemData_tag {
 	unsigned short ledLight;														//测试时led的亮度，为系统设置中保存的校准led值
 }ItemData;
 
-
-
+#define	TestDataStructSize	sizeof(TestData)
+#define	TestDataStructCrcSize	TestDataStructSize - 2
 
 /*********************************************************************************************/
 /*********************************************************************************************/

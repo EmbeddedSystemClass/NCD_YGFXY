@@ -21,7 +21,7 @@ typedef struct Record_tag {
 	unsigned int tempvalue2;
 	TestData *tempdata;
 	unsigned short lcdinput[100];
-	SystemSetData systemSetData;
+	unsigned int testRecordNum;
 }RecordPageBuffer;
 
 MyState_TypeDef createRecordActivity(Activity * thizActivity, Intent * pram);

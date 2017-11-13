@@ -13,7 +13,7 @@ typedef struct UserPage_tag {
 	User_Type * tempUser;											//临时指针
 	User_Type * tempUser2;											//当前选中的操作人，null表示未选择
 	ItemData * currenttestdata;										//当前测试数据
-	unsigned short lcdinput[100];									//lcd输入解析
+	unsigned short lcdinput[30];									//lcd输入解析
 }UserPageBuffer;
 
 MyState_TypeDef createSelectUserActivity(Activity * thizActivity, Intent * pram);

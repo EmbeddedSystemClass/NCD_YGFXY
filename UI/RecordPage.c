@@ -80,15 +80,9 @@ MyState_TypeDef createRecordActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_RecordPageBuffer)
-	{
-		//读取系统设置
-		copyGBSystemSetData(&(S_RecordPageBuffer->systemSetData));
-
-		S_RecordPageBuffer->selectindex = 0;
-		S_RecordPageBuffer->pageindex = 1;
-		ShowRecord(S_RecordPageBuffer->pageindex);
-	}
+	S_RecordPageBuffer->selectindex = 0;
+	S_RecordPageBuffer->pageindex = 1;
+	ShowRecord(S_RecordPageBuffer->pageindex);
 	
 	SelectPage(114);
 }
@@ -104,67 +98,61 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_RecordPageBuffer)
-	{
-		/*命令*/
-		S_RecordPageBuffer->lcdinput[0] = pbuf[4];
-		S_RecordPageBuffer->lcdinput[0] = (S_RecordPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	S_RecordPageBuffer->lcdinput[0] = pbuf[4];
+	S_RecordPageBuffer->lcdinput[0] = (S_RecordPageBuffer->lcdinput[0]<<8) + pbuf[5];
 		
-		/*返回*/
-		if(S_RecordPageBuffer->lcdinput[0] == 0x2000)
-		{
-			backToFatherActivity();
-		}
-		//查看
-		else if(S_RecordPageBuffer->lcdinput[0] == 0x2001)
-		{
-			if((S_RecordPageBuffer->selectindex > 0) && (S_RecordPageBuffer->selectindex <= S_RecordPageBuffer->page.ElementsSize))
-				startActivity(createShowResultActivity, createIntent(&S_RecordPageBuffer->page.testData[S_RecordPageBuffer->page.ElementsSize - S_RecordPageBuffer->selectindex], sizeof(TestData)));
-		}
-		/*上一页*/
-		else if(S_RecordPageBuffer->lcdinput[0] == 0x2002)
-		{
-			if(S_RecordPageBuffer->pageindex > 1)
-				S_RecordPageBuffer->pageindex -= 1;
-			else
-				S_RecordPageBuffer->pageindex = S_RecordPageBuffer->maxpagenum;
-				
-			ShowRecord(S_RecordPageBuffer->pageindex);
-		}
-		/*下一页*/
-		else if(S_RecordPageBuffer->lcdinput[0] == 0x2003)
-		{
-			if(S_RecordPageBuffer->pageindex < S_RecordPageBuffer->maxpagenum)
-				S_RecordPageBuffer->pageindex += 1;
-			else
-				S_RecordPageBuffer->pageindex = 1;
-				
-			ShowRecord(S_RecordPageBuffer->pageindex);
-		}
-		//选择数据
-		else if((S_RecordPageBuffer->lcdinput[0] >= 0x2004)&&(S_RecordPageBuffer->lcdinput[0] <= 0x200b))
-		{
-			
-			S_RecordPageBuffer->tempvalue1 = S_RecordPageBuffer->lcdinput[0] - 0x2004 + 1;
-			if(S_RecordPageBuffer->tempvalue1 <= S_RecordPageBuffer->page.ElementsSize)
-			{
-				S_RecordPageBuffer->selectindex = S_RecordPageBuffer->tempvalue1;
-				BasicPic(0x2020, 1, 137, 83, 417, 1012, 454, 38, 149+(S_RecordPageBuffer->selectindex - 1)*40);
-				startActivity(createShowResultActivity, createIntent(&S_RecordPageBuffer->page.testData[S_RecordPageBuffer->page.ElementsSize - S_RecordPageBuffer->selectindex], sizeof(TestData)));
-			}
-		}
-		//跳页
-		else if(S_RecordPageBuffer->lcdinput[0] == 0x2010)
-		{
-			S_RecordPageBuffer->tempvalue1 = strtol((char *)(&pbuf[7]), NULL, 10);
-			if( (S_RecordPageBuffer->tempvalue1 > 0) && (S_RecordPageBuffer->tempvalue1 <= S_RecordPageBuffer->maxpagenum))
-			{
-				S_RecordPageBuffer->pageindex = S_RecordPageBuffer->tempvalue1;
-		
-				S_RecordPageBuffer->selectindex = 0;
+	/*返回*/
+	if(S_RecordPageBuffer->lcdinput[0] == 0x2000)
+		backToFatherActivity();
 
-				ShowRecord(S_RecordPageBuffer->pageindex);
-			}
+	//查看
+	else if(S_RecordPageBuffer->lcdinput[0] == 0x2001)
+	{
+		if((S_RecordPageBuffer->selectindex > 0) && (S_RecordPageBuffer->selectindex <= S_RecordPageBuffer->page.ElementsSize))
+			startActivity(createShowResultActivity, createIntent(&S_RecordPageBuffer->page.testData[S_RecordPageBuffer->page.ElementsSize - S_RecordPageBuffer->selectindex], sizeof(TestData)));
+	}
+	/*上一页*/
+	else if(S_RecordPageBuffer->lcdinput[0] == 0x2002)
+	{
+		if(S_RecordPageBuffer->pageindex > 1)
+			S_RecordPageBuffer->pageindex -= 1;
+		else
+			S_RecordPageBuffer->pageindex = S_RecordPageBuffer->maxpagenum;
+				
+		ShowRecord(S_RecordPageBuffer->pageindex);
+	}
+	/*下一页*/
+	else if(S_RecordPageBuffer->lcdinput[0] == 0x2003)
+	{
+		if(S_RecordPageBuffer->pageindex < S_RecordPageBuffer->maxpagenum)
+			S_RecordPageBuffer->pageindex += 1;
+		else
+			S_RecordPageBuffer->pageindex = 1;
+			
+		ShowRecord(S_RecordPageBuffer->pageindex);
+	}
+	//选择数据
+	else if((S_RecordPageBuffer->lcdinput[0] >= 0x2004)&&(S_RecordPageBuffer->lcdinput[0] <= 0x200b))
+	{	
+		S_RecordPageBuffer->tempvalue1 = S_RecordPageBuffer->lcdinput[0] - 0x2004 + 1;
+		if(S_RecordPageBuffer->tempvalue1 <= S_RecordPageBuffer->page.ElementsSize)
+		{
+			S_RecordPageBuffer->selectindex = S_RecordPageBuffer->tempvalue1;
+			BasicPic(0x2020, 1, 137, 83, 417, 1012, 454, 38, 149+(S_RecordPageBuffer->selectindex - 1)*40);
+			startActivity(createShowResultActivity, createIntent(&S_RecordPageBuffer->page.testData[S_RecordPageBuffer->page.ElementsSize - S_RecordPageBuffer->selectindex], sizeof(TestData)));
+		}
+	}
+	//跳页
+	else if(S_RecordPageBuffer->lcdinput[0] == 0x2010)
+	{
+		S_RecordPageBuffer->tempvalue1 = strtol((char *)(&pbuf[7]), NULL, 10);
+		if( (S_RecordPageBuffer->tempvalue1 > 0) && (S_RecordPageBuffer->tempvalue1 <= S_RecordPageBuffer->maxpagenum))
+		{
+			S_RecordPageBuffer->pageindex = S_RecordPageBuffer->tempvalue1;
+		
+			S_RecordPageBuffer->selectindex = 0;
+
+			ShowRecord(S_RecordPageBuffer->pageindex);
 		}
 	}
 }
@@ -293,14 +281,14 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 	S_RecordPageBuffer->pageRequest.pageSize = DataShowNumInPage;
 	S_RecordPageBuffer->pageRequest.orderType = ASC;
 		
-	//再次读取系统设置数据，主要是为了读取数据总数
-	copyGBSystemSetData(&(S_RecordPageBuffer->systemSetData));
+	//读取数据总数
+	S_RecordPageBuffer->testRecordNum = getTestDataTotalNum();
 		
 	//读取数据
-	ReadTestData(&(S_RecordPageBuffer->pageRequest), &(S_RecordPageBuffer->page), &(S_RecordPageBuffer->systemSetData));
+	ReadTestData(&(S_RecordPageBuffer->pageRequest), &(S_RecordPageBuffer->page), S_RecordPageBuffer->testRecordNum);
 	
-	S_RecordPageBuffer->maxpagenum = ((S_RecordPageBuffer->systemSetData.testDataNum % DataShowNumInPage) == 0)?(S_RecordPageBuffer->systemSetData.testDataNum / DataShowNumInPage):
-	((S_RecordPageBuffer->systemSetData.testDataNum / DataShowNumInPage)+1);
+	S_RecordPageBuffer->maxpagenum = ((S_RecordPageBuffer->testRecordNum % DataShowNumInPage) == 0)?(S_RecordPageBuffer->testRecordNum / DataShowNumInPage):
+	((S_RecordPageBuffer->testRecordNum / DataShowNumInPage)+1);
 		
 	BasicPic(0x2020, 0, 100, 39, 522, 968, 556, 39, 140+(S_RecordPageBuffer->selectindex)*36);
 	

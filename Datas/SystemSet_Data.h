@@ -31,6 +31,7 @@ void setSystemSetData(SystemSetData * systemSetData);
 
 bool deviceInfoIsNew(void);
 void getDeviceInfo(DeviceInfo * deviceinfo);
+void readDeviceId(char * buf);
 void getNetSet(NetSet * netSet);
 bool isAutoPrint(void);
 bool isMute(void);
@@ -39,8 +40,8 @@ unsigned char getLedLightIntensity(void);
 
 void plusTestDataTotalNum(unsigned char num);
 unsigned int getTestDataTotalNum(void);
-
 void setUpLoadIndex(unsigned int index);
+unsigned int getUpLoadIndex(void);
 
 void setTestLedLightIntensity(SystemSetData * systemSetData, unsigned short value);
 unsigned short getTestLedLightIntensity(SystemSetData * systemSetData);

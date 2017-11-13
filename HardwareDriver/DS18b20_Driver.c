@@ -45,7 +45,6 @@ static bool DS18B20_Rst(void);
 static void DS18B20_Write_Byte(const unsigned char dat);
 static unsigned char DS18B20_Read_Byte(void);
 static void DS18B20_Read_Bytes(unsigned char *buf, unsigned char len);
-static unsigned char CRC8(unsigned char * buf);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -347,7 +346,7 @@ void startDS18B20(void)
  */
 float readDS18B20Temp(void)
 {
-	uint8_t value[9], i=0;
+	uint8_t value[9];
 	
 	short s_tem;
 	float f_tem = 300;

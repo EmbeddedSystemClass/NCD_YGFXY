@@ -45,9 +45,7 @@ static xQueueHandle xSelfTestStatusQueue = NULL;							//保存每个自检状态
 static MyState_TypeDef sendSelfTestStatus(ERROR_SelfTest selfTest);
 static MyState_TypeDef loadSystemData(void);
 static MyState_TypeDef testLed(void);
-static MyState_TypeDef testADModel(void);
 static MyState_TypeDef testMotol(void);
-MyState_TypeDef testErWeiMa(void);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************正文********************************************************/
@@ -114,15 +112,6 @@ void SelfTest_Function(void)
 		return;
 	}
 	
-	//测试采集模块
-	if(My_Pass == testADModel())
-		sendSelfTestStatus(AD_OK);
-	else
-	{
-		sendSelfTestStatus(AD_ERROR);
-		return;
-	}
-	
 	//检测led
 	if(My_Pass == testLed())
 		sendSelfTestStatus(Light_OK);
@@ -131,15 +120,6 @@ void SelfTest_Function(void)
 		sendSelfTestStatus(Light_Error);
 		return;
 	}
-	
-/*	//测试二维码
-	if(My_Pass == testErWeiMa())
-		sendSelfTestStatus(Erweima_OK);
-	else
-	{
-		sendSelfTestStatus(Erweima_ERROR);
-		return;
-	}*/
 
 	//测试传动模块
 	if(My_Pass == testMotol())
@@ -234,48 +214,6 @@ static MyState_TypeDef testLed(void)
 	}
 }
 
-/***************************************************************************************************
-*FunctionName: testADModel
-*Description: 测试采集模块， 比较不同通道的采集值
-*Input: 
-*Output: 
-*Return: 
-*Author: xsx
-*Date: 2016年12月23日16:14:18
-***************************************************************************************************/
-static MyState_TypeDef testADModel(void)
-{
-	double tempvalue1 = 0.0, tempvalue2 = 0.0;
-	float bili[7] = {1.874, 2.725, 3.656, 4.835, 5.878, 6.973, 8.328};
-	unsigned char i=0;
-	
-	SetGB_LedValue(300);
-	vTaskDelay(100 / portTICK_RATE_MS);
-	
-	for(i=1; i<8; i++)
-	{
-		SelectChannel(0);
-		vTaskDelay(100 / portTICK_RATE_MS);
-		tempvalue1 = ADS8325();
-
-		SelectChannel(i);
-		vTaskDelay(100 / portTICK_RATE_MS);
-		tempvalue2 = ADS8325();
-		
-		tempvalue2 /= tempvalue1;
-		
-		tempvalue1 = bili[i-1];
-		
-		tempvalue2 /= tempvalue1;
-		
-		if(tempvalue2 > 1.1)
-			;//return My_Fail;
-		//else if(tempvalue2 < 0.9)
-		//	return My_Fail;	
-	}
-	
-	return My_Pass;
-}
 
 /***************************************************************************************************
 *FunctionName: testMotol
@@ -319,82 +257,4 @@ static MyState_TypeDef testMotol(void)
 		return My_Fail;
 	
 	return My_Pass;
-}
-
-/***************************************************************************************************
-*FunctionName：ErWeiMaSelfTest
-*Description：测试二维码是否正常
-*Input：None
-*Output：None
-*Author：xsx
-*Data：2016年5月2日16:59:09
-***************************************************************************************************/
-MyState_TypeDef testErWeiMa(void)
-{
-	unsigned char *temp1, *temp2;
-	unsigned char *p;
-	unsigned short *tempdata = NULL;
-	unsigned char i=0, j=0;
-	MyState_TypeDef result = My_Fail;
-	
-	temp1 = MyMalloc(50);
-	temp2 = MyMalloc(50);
-	tempdata = MyMalloc(sizeof(unsigned short)*20);
-	
-	if((temp1 == NULL)||(temp2 == NULL)||(tempdata == NULL))
-		goto END;
-	
-	memset(temp1, 0, 50);
-	memset(temp2, 0, 50);
-	memset(tempdata, 0, sizeof(unsigned short)*20);
-	
-	/*读取波特率*/
-	p = temp1;
-/*	*p++ = 0x7e;
-	*p++ = 0x00;
-	*p++ = 0x07;
-	*p++ = 0x01;
-	*p++ = 0x00;
-	*p++ = 0x2a;
-	*p++ = 0x02;
-	*p++ = 0xd8;
-	*p++ = 0x0f;*/
-	
-	*p++ = 0x7e;
-	*p++ = 0x00;
-	*p++ = 0x07;
-	*p++ = 0x01;
-	*p++ = 0x00;
-	*p++ = 0x0a;
-	*p++ = 0x01;
-	*p++ = 0xee;
-	*p++ = 0xa8;
-/*
-	for(i=0; i<3; i++)
-	{
-		if(pdPASS == SendDataToQueue(GetUsart2TXQueue(), GetUsart2TXMutex(),temp1, 9, 1, 500/portTICK_RATE_MS, EnableUsart2TXInterrupt))
-		{
-			p = temp2;
-			while(pdPASS == ReceiveDataFromQueue(GetUsart2RXQueue(), GetUsart2RXMutex(), p+j, 1, 1, 50/portTICK_RATE_MS))
-					j++;
-			
-			if(j > 0)
-			{
-				tempdata[1] = temp2[5];
-				tempdata[1] = (tempdata[1]<<8) + temp2[4];
-				j = 0;
-				if(tempdata[1] == 0x0139)
-				{
-					result = My_Pass;
-					goto END;
-				}
-			}
-		}	
-	}
-	*/
-	END:
-		MyFree(temp1);
-		MyFree(temp2);
-		MyFree(tempdata);
-		return result;
 }

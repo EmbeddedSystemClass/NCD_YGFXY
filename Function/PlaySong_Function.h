@@ -6,62 +6,7 @@
 #include 	"FreeRTOS.h"
 #include	"semphr.h"
 
-#define	DataBlockSize	4096
-
-/* Audio Parsing Constants */
-#define  RIFFChunkID         0x46464952  /* correspond to the letters 'RIFF' */
-#define  FileFormat          0x45564157  /* correspond to the letters 'WAVE' */
-#define  FormatID            0x20746d66  /* correspond to the letters 'fmt ' */
-#define  DataID              0x61746164 /* correspond to the letters 'data' */
-#define  FactID              0x74636166 /* correspond to the letters 'fact' */
-
-//RIFF¿é
-typedef __packed struct
-{
-    unsigned int ChunkID;
-    unsigned int ChunkSize;
-    unsigned int Format;
-}ChunkRIFF;
-//fmt¿é
-typedef __packed struct
-{
-    unsigned int ChunkID;
-    unsigned int ChunkSize ;
-    unsigned short AudioFormat;
-	unsigned short NumOfChannels;
-	unsigned int SampleRate;
-	unsigned int ByteRate;
-	unsigned short BlockAlign;
-	unsigned short BitsPerSample;
-}ChunkFMT;	   
-//fact¿é 
-typedef __packed struct 
-{
-    unsigned int ChunkID;
-    unsigned int ChunkSize ;
-    unsigned int NumOfSamples;
-}ChunkFACT;
-//LIST¿é 
-typedef __packed struct 
-{
-    unsigned int ChunkID;
-    unsigned int ChunkSize ;
-}ChunkLIST;
-
-//data¿é 
-typedef __packed struct 
-{
-    unsigned int ChunkID;
-    unsigned int ChunkSize ;
-}ChunkDATA;
-
-//wavÍ·
-typedef __packed struct
-{ 
-	ChunkRIFF riff;
-	ChunkFMT fmt;
-	ChunkDATA data;		 
-}__WaveHeader; 
+#define	DataBlockSize	2048
 
 
 typedef __packed struct

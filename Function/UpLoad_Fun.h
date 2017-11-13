@@ -6,6 +6,8 @@
 #include	"SystemSet_Data.h"
 #include	"RemoteSoft_Data.h"
 
+
+
 #define	UPLOADSENDBUFLEN	4096
 #define	UPLOADRECVBUFLEN	1024
 #define	UPLOADTEMPBUFLEN	2048
@@ -14,12 +16,12 @@
 typedef struct UpLoadDeviceDataBuffer_Tag
 {
 	SystemSetData systemSetData;
-	char sendBuf[UPLOADSENDBUFLEN];
-	char recvBuf[UPLOADRECVBUFLEN];
-	char tempBuf[UPLOADTEMPBUFLEN];
+	char sendBuf[1024];
+	char recvBuf[1024];
+	char tempBuf[1024];
 	RemoteSoftInfo remoteSoftInfo;
 	unsigned short tempValue;
-	unsigned char * tempP;
+	char * tempP;
 	unsigned short i;
 	unsigned short j;
 }UpLoadDeviceDataBuffer;

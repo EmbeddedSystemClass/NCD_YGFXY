@@ -74,12 +74,9 @@ MyState_TypeDef createWelcomeActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_WelcomePageBuffer)
-	{
-		timer_set(&(S_WelcomePageBuffer->timer), 2);
+	timer_set(&(S_WelcomePageBuffer->timer), 2);
 		
-		//AddNumOfSongToList(0, 0);
-	}
+	//AddNumOfSongToList(0, 0);
 
 	SelectPage(1);
 }
@@ -95,28 +92,24 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_WelcomePageBuffer)
+	S_WelcomePageBuffer->lcdinput[0] = pbuf[4];
+	S_WelcomePageBuffer->lcdinput[0] = (S_WelcomePageBuffer->lcdinput[0]<<8) + pbuf[5];
+		
+	S_WelcomePageBuffer->lcdinput[1] = pbuf[6];
+	S_WelcomePageBuffer->lcdinput[1] = (S_WelcomePageBuffer->lcdinput[1]<<8) + pbuf[7];
+		
+	if(0x81 == pbuf[3])
 	{
-		/*命令*/
-		S_WelcomePageBuffer->lcdinput[0] = pbuf[4];
-		S_WelcomePageBuffer->lcdinput[0] = (S_WelcomePageBuffer->lcdinput[0]<<8) + pbuf[5];
-		
-		S_WelcomePageBuffer->lcdinput[1] = pbuf[6];
-		S_WelcomePageBuffer->lcdinput[1] = (S_WelcomePageBuffer->lcdinput[1]<<8) + pbuf[7];
-		
-		if(0x81 == pbuf[3])
+		//页面id
+		if(0x03 == pbuf[4])
 		{
-			//页面id
-			if(0x03 == pbuf[4])
-			{
-				S_WelcomePageBuffer->currentPageId = S_WelcomePageBuffer->lcdinput[1];	
-			}
+			S_WelcomePageBuffer->currentPageId = S_WelcomePageBuffer->lcdinput[1];	
 		}
-		else if(0x83 == pbuf[3])
-		{
-			if((S_WelcomePageBuffer->lcdinput[0] >= 0x1010) && (S_WelcomePageBuffer->lcdinput[0] <= 0x1014))
-				while(1);
-		}
+	}
+	else if(0x83 == pbuf[3])
+	{
+		if((S_WelcomePageBuffer->lcdinput[0] >= 0x1010) && (S_WelcomePageBuffer->lcdinput[0] <= 0x1014))
+			while(1);
 	}
 }
 
@@ -131,85 +124,82 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	if(S_WelcomePageBuffer)
+	if(My_Pass == readSelfTestStatus(&(S_WelcomePageBuffer->selfTestStatus)))
 	{
-		if(My_Pass == readSelfTestStatus(&(S_WelcomePageBuffer->selfTestStatus)))
+		if(SystemData_OK == S_WelcomePageBuffer->selfTestStatus)
 		{
-			if(SystemData_OK == S_WelcomePageBuffer->selfTestStatus)
-			{
-				copyGBSystemSetData(&(S_WelcomePageBuffer->systemSetData));
-				SetLEDLight(S_WelcomePageBuffer->systemSetData.ledLightIntensity);
-			}
+			S_WelcomePageBuffer->ledLightIntensity = getLedLightIntensity();	
+			SetLEDLight(S_WelcomePageBuffer->ledLightIntensity);
 		}
+	}
 		
-		if(80 == S_WelcomePageBuffer->currentPageId)
-		{
+	if(80 == S_WelcomePageBuffer->currentPageId)
+	{
 			//自检完成
-			if(SelfTest_OK == S_WelcomePageBuffer->selfTestStatus)
-			{
-				/*开启测试任务*/
-				StartvTestTask();
-					
-				/*开启网络任务*/
-				StartEthernet();
-
-				/*上传任务*/
-				StartvNormalUpLoadTask();
-					
-				/*开启读二维码任务*/
-				StartCodeScanTask();
-					
-				//开始排队任务
-				StartPaiduiTask();
-					
-				destroyTopActivity();
-				startActivity(createLunchActivity, NULL);
-				
-				return;
-			}
-			//加载数据错误，说明sd异常
-			else if(SystemData_ERROR == S_WelcomePageBuffer->selfTestStatus)
-			{
-				SelectPage(81);
-				
-				vTaskDelay(1000 / portTICK_RATE_MS);
-				
-				SendKeyCode(5);
-				
-				AddNumOfSongToList(5, 0);
-			}
-			//led异常，告警发光模块错误
-			else if(Light_Error == S_WelcomePageBuffer->selfTestStatus)
-			{
-				SelectPage(81);
-				vTaskDelay(1000 / portTICK_RATE_MS);
-				SendKeyCode(4);
-				AddNumOfSongToList(4, 0);
-			}
-			//采集异常，告警采集模块错误
-			else if(AD_ERROR == S_WelcomePageBuffer->selfTestStatus)
-			{
-				SelectPage(81);
-				vTaskDelay(1000 / portTICK_RATE_MS);
-				SendKeyCode(3);
-				AddNumOfSongToList(3, 0);
-			}
-			//传动异常，告警传动模块错误
-			else if(Motol_ERROR == S_WelcomePageBuffer->selfTestStatus)
-			{
-				SelectPage(81);
-				vTaskDelay(1000 / portTICK_RATE_MS);
-				SendKeyCode(1);
-				AddNumOfSongToList(1, 0);
-			}
-		}
-		
-		if((81 != S_WelcomePageBuffer->currentPageId) && (TimeOut == timer_expired(&(S_WelcomePageBuffer->timer))))
+		if(SelfTest_OK == S_WelcomePageBuffer->selfTestStatus)
 		{
-			ReadCurrentPageId();
+			/*开启测试任务*/
+			StartvTestTask();
+					
+			/*开启网络任务*/
+			StartEthernet();
 
-			timer_reset(&(S_WelcomePageBuffer->timer));
+			/*上传任务*/
+			StartvNormalUpLoadTask();
+					
+			/*开启读二维码任务*/
+			StartCodeScanTask();
+					
+			//开始排队任务
+			StartPaiduiTask();
+					
+			destroyTopActivity();
+			startActivity(createLunchActivity, NULL);
+				
+			return;
 		}
+		//加载数据错误，说明sd异常
+		else if(SystemData_ERROR == S_WelcomePageBuffer->selfTestStatus)
+		{
+			SelectPage(81);
+				
+			vTaskDelay(1000 / portTICK_RATE_MS);
+				
+			SendKeyCode(5);
+				
+			AddNumOfSongToList(5, 0);
+		}
+		//led异常，告警发光模块错误
+		else if(Light_Error == S_WelcomePageBuffer->selfTestStatus)
+		{
+			SelectPage(81);
+			vTaskDelay(1000 / portTICK_RATE_MS);
+			SendKeyCode(4);
+			AddNumOfSongToList(4, 0);
+		}
+		//采集异常，告警采集模块错误
+		else if(AD_ERROR == S_WelcomePageBuffer->selfTestStatus)
+		{
+			SelectPage(81);
+			vTaskDelay(1000 / portTICK_RATE_MS);
+			SendKeyCode(3);
+			AddNumOfSongToList(3, 0);
+		}
+		//传动异常，告警传动模块错误
+		else if(Motol_ERROR == S_WelcomePageBuffer->selfTestStatus)
+		{
+			SelectPage(81);
+			vTaskDelay(1000 / portTICK_RATE_MS);
+			SendKeyCode(1);
+			AddNumOfSongToList(1, 0);
+		}
+	}
+		
+	if((81 != S_WelcomePageBuffer->currentPageId) && (TimeOut == timer_expired(&(S_WelcomePageBuffer->timer))))
+	{
+		ReadCurrentPageId();
+
+		timer_reset(&(S_WelcomePageBuffer->timer));
 	}
 }
 

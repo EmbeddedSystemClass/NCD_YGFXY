@@ -83,18 +83,14 @@ MyState_TypeDef createSampleActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_SampleIDPage)
-	{
-		S_SampleIDPage->currenttestdata = GetCurrentTestItem();
-		S_SampleIDPage->currenttestdata->statues = status_sample;
+	S_SampleIDPage->currenttestdata = GetCurrentTestItem();
+	S_SampleIDPage->currenttestdata->statues = status_sample;
 	
-		while(ReadBarCodeFunction((char *)(S_SampleIDPage->tempbuf), 100) > 0)
-			;
+	clearBarQueue();
 		
-		RefreshSampleID();
+	RefreshSampleID();
 		
-		AddNumOfSongToList(10, 0);
-	}
+	AddNumOfSongToList(10, 0);
 	
 	SelectPage(86);
 }
@@ -110,45 +106,39 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_SampleIDPage)
+	S_SampleIDPage->lcdinput[0] = pbuf[4];
+	S_SampleIDPage->lcdinput[0] = (S_SampleIDPage->lcdinput[0]<<8) + pbuf[5];
+		
+	/*返回*/
+	if(S_SampleIDPage->lcdinput[0] == 0x1300)
 	{
-		/*命令*/
-		S_SampleIDPage->lcdinput[0] = pbuf[4];
-		S_SampleIDPage->lcdinput[0] = (S_SampleIDPage->lcdinput[0]<<8) + pbuf[5];
-		
-		/*返回*/
-		if(S_SampleIDPage->lcdinput[0] == 0x1300)
+		if(checkFatherActivityIs(paiduiActivityName))
 		{
-			if(checkFatherActivityIs(paiduiActivityName))
-			{
-				MotorMoveTo(1, 2, MaxLocation, false);
-				DeleteCurrentTest();
-			}
-			else
-				S_SampleIDPage->currenttestdata->statues = status_user;
+			MotorMoveTo(1, 2, MaxLocation, false);
+			DeleteCurrentTest();
+		}
+		else
+			S_SampleIDPage->currenttestdata->statues = status_user;
 			
-			backToFatherActivity();
-		}
+		backToFatherActivity();
+	}
 		
-		/*确定*/
-		else if(S_SampleIDPage->lcdinput[0] == 0x1301)
+	/*确定*/
+	else if(S_SampleIDPage->lcdinput[0] == 0x1301)
+	{
+		if(strlen(S_SampleIDPage->currenttestdata->testdata.sampleid) == 0)
 		{
-			if(strlen(S_SampleIDPage->currenttestdata->testdata.sampleid) == 0)
-			{
-				SendKeyCode(1);
-				AddNumOfSongToList(10, 0);
-			}
-			else
-			{
-				startActivity(createWaittingCardActivity, NULL);
-			}
+			SendKeyCode(1);
+			AddNumOfSongToList(10, 0);
 		}
-		/*获取输入的id*/
-		else if(S_SampleIDPage->lcdinput[0] == 0x1310)
-		{
-			memset(S_SampleIDPage->currenttestdata->testdata.sampleid, 0, MaxSampleIDLen);
-			memcpy(S_SampleIDPage->currenttestdata->testdata.sampleid, &pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
-		}
+		else
+			startActivity(createWaittingCardActivity, NULL);
+	}
+	/*获取输入的id*/
+	else if(S_SampleIDPage->lcdinput[0] == 0x1310)
+	{
+		memset(S_SampleIDPage->currenttestdata->testdata.sampleid, 0, MaxSampleIDLen);
+		memcpy(S_SampleIDPage->currenttestdata->testdata.sampleid, &pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
 	}
 }
 
@@ -164,7 +154,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 static void activityFresh(void)
 {
 	//从条码枪读取样品编号
-	if(ReadBarCodeFunction((char *)(S_SampleIDPage->tempbuf), 100) > 0)
+	if(ReadBarCodeFunction((char *)(S_SampleIDPage->tempbuf), 50) > 0)
 	{
 		memcpy(S_SampleIDPage->currenttestdata->testdata.sampleid, S_SampleIDPage->tempbuf, MaxSampleIDLen);
 		RefreshSampleID();
@@ -205,12 +195,9 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-	if(S_SampleIDPage)
-	{
-		AddNumOfSongToList(10, 0);
+	AddNumOfSongToList(10, 0);
 		
-		RefreshSampleID();
-	}
+	RefreshSampleID();
 	
 	SelectPage(86);
 }

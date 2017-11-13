@@ -90,9 +90,6 @@ void SetGB_DHCPState(DHCP_State_TypeDef NewState)
 ***************************************************************************************************/
 static void vLwipDHCPTask( void *pvParameters )
 {
-	struct ip_addr ipaddr;
-	struct ip_addr netmask;
-	struct ip_addr gw;
 	unsigned int IPaddress;
 	struct netif * tempnetif = (struct netif *)pvParameters;
   

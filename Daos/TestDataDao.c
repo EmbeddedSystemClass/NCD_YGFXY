@@ -59,11 +59,11 @@ MyState_TypeDef WriteTestData(TestData * testdata, unsigned int writeIndex)
 			
 		if(FR_OK == myfile->res)
 		{
-			myfile->res = f_lseek(&(myfile->file), writeIndex*sizeof(TestData));
+			myfile->res = f_lseek(&(myfile->file), writeIndex*TestDataStructSize);
 			//写入数据
-			testdata->crc = CalModbusCRC16Fun1(testdata, sizeof(TestData)-2);
+			testdata->crc = CalModbusCRC16Fun1(testdata, TestDataStructCrcSize);
 			
-			myfile->res = f_write(&(myfile->file), testdata, sizeof(TestData), &(myfile->bw));
+			myfile->res = f_write(&(myfile->file), testdata, TestDataStructSize, &(myfile->bw));
 			if(myfile->res == FR_OK)
 				statues = My_Pass;
 			
@@ -86,7 +86,7 @@ MyState_TypeDef WriteTestData(TestData * testdata, unsigned int writeIndex)
 *Author: xsx
 *Date: 2016年12月8日11:25:18
 ***************************************************************************************************/
-MyState_TypeDef ReadTestData(PageRequest * pageRequest, Page * page, SystemSetData * systemSetData)
+MyState_TypeDef ReadTestData(PageRequest * pageRequest, Page * page, unsigned int recordNum)
 {
 	FatfsFileInfo_Def * myfile = NULL;
 	MyState_TypeDef statues = My_Fail;
@@ -107,21 +107,21 @@ MyState_TypeDef ReadTestData(PageRequest * pageRequest, Page * page, SystemSetDa
 		{
 			myfile->size = f_size(&(myfile->file));
 			
-			if(pageRequest->startElementIndex < systemSetData->testDataNum)
+			if(pageRequest->startElementIndex < recordNum)
 			{
-				if(pageRequest->pageSize > (systemSetData->testDataNum - pageRequest->startElementIndex))
-					pageRequest->pageSize = (systemSetData->testDataNum - pageRequest->startElementIndex);
+				if(pageRequest->pageSize > (recordNum - pageRequest->startElementIndex))
+					pageRequest->pageSize = (recordNum - pageRequest->startElementIndex);
 				
 				if(pageRequest->orderType == DESC)
-					myfile->res = f_lseek(&(myfile->file), (pageRequest->startElementIndex)*sizeof(TestData));
+					myfile->res = f_lseek(&(myfile->file), (pageRequest->startElementIndex)*TestDataStructSize);
 				else
-					myfile->res = f_lseek(&(myfile->file), ( systemSetData->testDataNum - (pageRequest->pageSize + pageRequest->startElementIndex))*sizeof(TestData));
+					myfile->res = f_lseek(&(myfile->file), ( recordNum - (pageRequest->pageSize + pageRequest->startElementIndex))*TestDataStructSize);
 				
-				myfile->res = f_read(&(myfile->file), page->testData, pageRequest->pageSize * sizeof(TestData), &(myfile->br));
+				myfile->res = f_read(&(myfile->file), page->testData, pageRequest->pageSize * TestDataStructSize, &(myfile->br));
 				
 				for(i=0; i<pageRequest->pageSize; i++)
 				{
-					if(page->testData[i].crc == CalModbusCRC16Fun1(&(page->testData[i]), sizeof(TestData)-2))
+					if(page->testData[i].crc == CalModbusCRC16Fun1(&(page->testData[i]), TestDataStructCrcSize))
 						page->ElementsSize++;
 				}
 

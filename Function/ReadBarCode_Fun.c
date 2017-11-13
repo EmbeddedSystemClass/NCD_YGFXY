@@ -68,5 +68,10 @@ unsigned char ReadBarCodeFunction(char * codebuf, unsigned char len)
 	return 0;
 }
 
+void clearBarQueue(void)
+{
+	xQueueReset(GetUsart1RXQueue());
+}
+
 
 /****************************************end of file************************************************/

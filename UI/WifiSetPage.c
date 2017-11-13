@@ -25,7 +25,6 @@ static WifiPageBuffer * S_WifiPageBuffer = NULL;
 static void RefreshWifi(void);
 static void DisListText(void);
 static void CheckIsNeedKey(void);
-static MyState_TypeDef connectWifiFun(void);
 
 static void activityStart(void);
 static void activityInput(unsigned char *pbuf , unsigned short len);
@@ -410,23 +409,3 @@ static void CheckIsNeedKey(void)
 	}
 }
 
-static MyState_TypeDef connectWifiFun(void)
-{
-	unsigned char i = 0;
-	
-	SendKeyCode(4);
-
-	if(My_Fail == ConnectWifi(S_WifiPageBuffer->wifip))
-	{
-		SendKeyCode(16);
-		vTaskDelay(100 / portTICK_RATE_MS);
-		SendKeyCode(2);
-	}
-	else
-	{
-		SendKeyCode(16);
-
-		SendKeyCode(1);
-		
-	}
-}

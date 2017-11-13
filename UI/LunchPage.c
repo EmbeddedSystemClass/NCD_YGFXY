@@ -79,15 +79,11 @@ MyState_TypeDef createLunchActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_LunchPageBuffer)
-	{
-		//读取系统设置
-		copyGBSystemSetData(&(S_LunchPageBuffer->systemSetData));
+	S_LunchPageBuffer->ledSleepTime = getLedSleepTime();
 		
-		timer_set(&(S_LunchPageBuffer->timer), S_LunchPageBuffer->systemSetData.ledSleepTime);
+	timer_set(&(S_LunchPageBuffer->timer), S_LunchPageBuffer->ledSleepTime);
 	
-		DspPageText();
-	}
+	DspPageText();
 	
 	SelectPage(82);
 
@@ -104,76 +100,67 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_LunchPageBuffer)
-	{
-		/*命令*/
-		S_LunchPageBuffer->lcdinput[0] = pbuf[4];
-		S_LunchPageBuffer->lcdinput[0] = (S_LunchPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	S_LunchPageBuffer->lcdinput[0] = pbuf[4];
+	S_LunchPageBuffer->lcdinput[0] = (S_LunchPageBuffer->lcdinput[0]<<8) + pbuf[5];
 		
-		//重置休眠时间
-		timer_restart(&(S_LunchPageBuffer->timer));
+	//重置休眠时间
+	timer_restart(&(S_LunchPageBuffer->timer));
 		
-		//设置
-		if(S_LunchPageBuffer->lcdinput[0] == 0x1103)
+	//设置
+	if(S_LunchPageBuffer->lcdinput[0] == 0x1103)
+		startActivity(createSystemSetActivity, NULL);
+
+	//查看数据
+	else if(S_LunchPageBuffer->lcdinput[0] == 0x1102)	
+		startActivity(createRecordActivity, NULL);
+
+	//常规测试
+	else if(S_LunchPageBuffer->lcdinput[0] == 0x1100)
+	{	
+		S_LunchPageBuffer->error = CreateANewTest(NormalTestType);
+		//创建成功
+		if(Error_OK == S_LunchPageBuffer->error)
+			startActivity(createSelectUserActivity, NULL);
+
+		//禁止常规测试
+		else if(Error_StopNormalTest == S_LunchPageBuffer->error)
 		{
-			startActivity(createSystemSetActivity, NULL);
+			SendKeyCode(1);
+			AddNumOfSongToList(8, 0);
 		}
-		//查看数据
-		else if(S_LunchPageBuffer->lcdinput[0] == 0x1102)
-		{	
-			startActivity(createRecordActivity, NULL);
+		//创建失败
+		else if(Error_Mem == S_LunchPageBuffer->error)
+		{
+			SendKeyCode(2);
+			AddNumOfSongToList(7, 0);
 		}
-		//常规测试
-		else if(S_LunchPageBuffer->lcdinput[0] == 0x1100)
-		{	
-			S_LunchPageBuffer->error = CreateANewTest(NormalTestType);
+	}
+	//批量测试
+	else if(S_LunchPageBuffer->lcdinput[0] == 0x1101)
+	{
+		//有卡排队，则进入排队界面
+		if(true == IsPaiDuiTestting())
+			startActivity(createPaiDuiActivity, NULL);
+
+		//无卡排队则开始创建
+		else
+		{
+			S_LunchPageBuffer->error = CreateANewTest(PaiDuiTestType);
 			//创建成功
 			if(Error_OK == S_LunchPageBuffer->error)
-			{
 				startActivity(createSelectUserActivity, NULL);
-			}
-			//禁止常规测试
-			else if(Error_StopNormalTest == S_LunchPageBuffer->error)
-			{
-				SendKeyCode(1);
-				AddNumOfSongToList(8, 0);
-			}
+
 			//创建失败
 			else if(Error_Mem == S_LunchPageBuffer->error)
 			{
 				SendKeyCode(2);
 				AddNumOfSongToList(7, 0);
 			}
-		}
-		//批量测试
-		else if(S_LunchPageBuffer->lcdinput[0] == 0x1101)
-		{
-			//有卡排队，则进入排队界面
-			if(true == IsPaiDuiTestting())
+			//排队模块失联
+			else if(Error_PaiduiDisconnect == S_LunchPageBuffer->error)
 			{
-				startActivity(createPaiDuiActivity, NULL);
-			}
-			//无卡排队则开始创建
-			else
-			{
-				S_LunchPageBuffer->error = CreateANewTest(PaiDuiTestType);
-				//创建成功
-				if(Error_OK == S_LunchPageBuffer->error)
-				{
-					startActivity(createSelectUserActivity, NULL);
-				}
-				//创建失败
-				else if(Error_Mem == S_LunchPageBuffer->error)
-				{
-					SendKeyCode(2);
-					AddNumOfSongToList(7, 0);
-				}
-				//排队模块失联
-				else if(Error_PaiduiDisconnect == S_LunchPageBuffer->error)
-				{
-					SendKeyCode(3);
-					AddNumOfSongToList(58, 0);
-				}
+				SendKeyCode(3);
+				AddNumOfSongToList(58, 0);
 			}
 		}
 	}
@@ -221,10 +208,7 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-	if(S_LunchPageBuffer)
-	{
-		timer_restart(&(S_LunchPageBuffer->timer));
-	}
+	timer_restart(&(S_LunchPageBuffer->timer));
 	
 	SelectPage(82);
 }
@@ -296,11 +280,7 @@ static void activityBufferFree(void)
 ***************************************************************************************************/
 static void DspPageText(void)
 {
-	if(S_LunchPageBuffer)
-	{
-		memset(S_LunchPageBuffer->buf, 0, 100);
-		sprintf(S_LunchPageBuffer->buf, "V%d.%d.%02d", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100);
-		DisText(0x1110, S_LunchPageBuffer->buf, 30);
-	}
+	sprintf(S_LunchPageBuffer->buf, "V%d.%d.%02d", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100);
+	DisText(0x1110, S_LunchPageBuffer->buf, strlen(S_LunchPageBuffer->buf)+1);
 }
 

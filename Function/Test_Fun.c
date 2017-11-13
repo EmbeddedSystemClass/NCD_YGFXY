@@ -63,7 +63,7 @@ MyState_TypeDef InitTestFunData(void)
 {
 	/*曲线队列*/
 	if(xTestCurveQueue == NULL)
-		xTestCurveQueue = xQueueCreate( 310, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
+		xTestCurveQueue = xQueueCreate( 150, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 	
 	if(xTestCurveQueue == NULL)
 		return My_Fail;
@@ -168,7 +168,7 @@ ResultState TestFunction(void * parm)
 			S_TempCalData->resultstatues = NoResult;
 			S_TempCalData->tempvalue1 = 0;
 			
-			MotorMoveTo(11, 21, EndTestLocation, false);
+			MotorMoveTo(10, 20, EndTestLocation, false);
 			
 			for(i=1; i<= steps; i++)
 			{
@@ -409,14 +409,13 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		}
 		
 		S_TempCalData->itemData->testdata.testline.CMdifyNum = (unsigned char)(S_TempCalData->tempvalue1 * 10);
-		
 		/*计算结果*/
-		S_TempCalData->tempvalue2 = (S_TempCalData->itemData->testdata.testline.T_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
-		S_TempCalData->tempvalue2 /= (S_TempCalData->itemData->testdata.testline.C_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
+		S_TempCalData->tempvalue1 = (S_TempCalData->itemData->testdata.testline.T_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
+		S_TempCalData->tempvalue2 = (S_TempCalData->itemData->testdata.testline.C_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
 		S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
-		
+
 		/*原始峰高比*/
-		S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue2;
+		S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / S_TempCalData->tempvalue2;
 				
 		/*根据分段，计算原始结果*/
 		if((S_TempCalData->itemData->testdata.testline.BasicBili < S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[0]) || (S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[0] == 0))

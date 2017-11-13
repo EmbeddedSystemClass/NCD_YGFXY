@@ -413,7 +413,7 @@ MyState_TypeDef RTC_SetTimeData2(char * buf)
 		memset(tempbuf, 0, 64);
 		memcpy(tempbuf, buf+8, 2);
 		temp = strtol(tempbuf, NULL, 10);
-		if((temp >= 0) && (temp <= 23))
+		if(temp <= 23)
 			temptime.hour = temp;
 		else
 			goto END;
@@ -421,7 +421,7 @@ MyState_TypeDef RTC_SetTimeData2(char * buf)
 		memset(tempbuf, 0, 64);
 		memcpy(tempbuf, buf+10, 2);
 		temp = strtol(tempbuf, NULL, 10);
-		if((temp >= 0) && (temp <= 59))
+		if(temp <= 59)
 			temptime.min = temp;
 		else
 			goto END;
@@ -429,7 +429,7 @@ MyState_TypeDef RTC_SetTimeData2(char * buf)
 		memset(tempbuf, 0, 64);
 		memcpy(tempbuf, buf+12, 2);
 		temp = strtol(tempbuf, NULL, 10);
-		if((temp >= 0) && (temp <= 59))
+		if(temp <= 59)
 			temptime.sec = temp+2;
 		else
 			goto END;

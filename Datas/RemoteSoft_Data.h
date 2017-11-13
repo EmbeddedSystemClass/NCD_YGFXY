@@ -14,6 +14,8 @@ typedef struct
 }RemoteSoftInfo;
 #pragma pack()
 
+#define	RemoteSoftInfoStructSize	sizeof(RemoteSoftInfo)
+
 void setGbRemoteFirmwareVersion(unsigned short version);
 unsigned short getGbRemoteFirmwareVersion(void);
 void setIsSuccessDownloadFirmware(bool status);

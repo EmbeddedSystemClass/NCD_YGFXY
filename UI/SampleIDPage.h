@@ -7,10 +7,10 @@
 #include	"UI_Data.h"
 
 typedef struct SampleIDPage_tag {
-	unsigned char tempbuf[150];
+	unsigned char tempbuf[50];
 	unsigned int tempv1;
 	ItemData * currenttestdata;												//当前测试数据
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[30];
 }SampleIDPage;
 
 MyState_TypeDef createSampleActivity(Activity * thizActivity, Intent * pram);

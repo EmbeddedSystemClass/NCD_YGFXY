@@ -3,6 +3,14 @@
 
 #include	"Define.h"
 
+#define		DeviceTypeString	"YGFXY_1\0"
+
+#if(DeviceLanguage == DEVICE_CN)
+	#define	DeviceLanguageString	"CH"
+#elif(DeviceLanguage == DEVICE_EN)
+	#define	DeviceLanguageString	"EN"
+#endif
+
 #define		AdminPassWord		"201300\0"								//管理员密码，用于修改设备id
 #define		TestPassWord		"201302\0"								//老化测试密码
 #define		CheckQRPassWord		"201303\0"								//测试二维码密码
@@ -10,6 +18,23 @@
 #define		FactoryResetPassWord	"201305\0"							//恢复出厂设置密码
 #define		ChangeValueShowTypePassWord	"201306\0"						//切换结果显示模式，是否显示真实值
 #define		UnlockLCDPassWord	"201307\0"								//解锁屏幕一次
+#define		EnableUSBPassWord	"201308\0"								//解锁屏幕一次
+
+#define		HttpPostTypeString					"POST\0"
+#define		HttpGetTypeString					"GET\0"
+#define		HttpVersionString					"HTTP/1.1\0"
+#define		HttpHostString						"Host:\0"
+#define		HttpConnectionString				"Connection\0"
+#define		HttpContentLengthString				"Content-Length:\0"
+#define		HttpContentTypeString				"Content-Type:application/x-www-form-urlencoded;charset=GBK\0"
+#define		HttpAcceptLanguageString			"Accept-Language: zh-CN,zh;q=0.8\0"
+
+#define		NcdServerReadTimeUrlStr				"/NCD_Server/up_dtime\0"
+#define		NcdServerUpDeviceUrlStr				"/NCD_Server/up_device\0"
+#define		NcdServerUpTestDataUrlStr			"/NCD_Server/UpLoadYGFXY\0"
+#define		NcdServerQuerySoftUrlStr			"/NCD_Server/deviceSoftInfo\0"
+#define		NcdServerDownSoftUrlStr				"/NCD_Server/DownloadSoftFile\0"
+
 
 #if(DeviceLanguage == DEVICE_CN)
 	#define	DeviceNameStr 		"荧光免疫定量分析仪\0"
