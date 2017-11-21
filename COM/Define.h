@@ -11,16 +11,20 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1066
-#define	GB_SoftVersion_Build	"Build17111502\0"
+#define	GB_SoftVersion	(unsigned short)1067
+#define	GB_SoftVersion_Build	"Build17112101\0"
 
-#define	DEVICE_EN		100
-#define	DEVICE_CN		101
-#define	DeviceLanguage	DEVICE_CN
+#define	DEVICE_EN						100
+#define	DEVICE_CN						101
+#define	DeviceLanguage					DEVICE_CN
 
-#define	Device_Final	0x27
-#define	Device_Demo		0x28
-#define	DeviceUseType	Device_Final
+#define	Device_Final					0x27
+#define	Device_Demo						0x28
+#define	DeviceUseType					Device_Final
+
+#define	NCDServerFinal					0x88
+#define	NCDServerDebug					0x89
+#define	NCDServerType					NCDServerFinal
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116

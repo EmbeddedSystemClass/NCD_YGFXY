@@ -56,22 +56,14 @@ void UpLoadFunction(void)
 		httpBuffer = MyMalloc(HttpBufferStructSize);
 		if(httpBuffer)
 		{
-			if(My_Pass == ReadTime(httpBuffer))
-			{
-				vTaskDelay(1000 / portTICK_RATE_MS);
+			UpLoadDeviceInfo(httpBuffer);
+			vTaskDelay(1000 / portTICK_RATE_MS);
 				
-				UpLoadDeviceInfo(httpBuffer);
-				vTaskDelay(1000 / portTICK_RATE_MS);
+			UpLoadTestData(httpBuffer);	
+			vTaskDelay(1000 / portTICK_RATE_MS);
 				
-				UpLoadTestData(httpBuffer);	
-				vTaskDelay(1000 / portTICK_RATE_MS);
-				
-				readRemoteFirmwareVersion(httpBuffer);
-				vTaskDelay(1000 / portTICK_RATE_MS);
-				
-				DownLoadFirmware(httpBuffer);
-				vTaskDelay(1000 / portTICK_RATE_MS);
-			}
+			DownLoadFirmware(httpBuffer);
+			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
 		
 		MyFree(httpBuffer);
@@ -111,30 +103,68 @@ static void UpLoadDeviceInfo(HttpBuffer * httpBuffer)
 	
 	getDeviceInfo(httpBuffer->device);
 	
-	if(httpBuffer->device->isnew)
+	sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ndid=%s&dversion=%d&addr=%s&name=%s&age=%s&sex=%s&phone=%s&job=%s&dsc=%s&type=%s&lang=%s", 
+		NcdServerUpDeviceUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, httpBuffer->device->deviceid,  
+		GB_SoftVersion, httpBuffer->device->deviceunit, httpBuffer->device->deviceuser.user_name, 
+		httpBuffer->device->deviceuser.user_age, httpBuffer->device->deviceuser.user_sex,	
+		httpBuffer->device->deviceuser.user_phone, httpBuffer->device->deviceuser.user_job, 
+		httpBuffer->device->deviceuser.user_desc, DeviceTypeString, DeviceLanguageString);
+		
+	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "zh;q=0.8\n\n");
+	httpBuffer->sendDataLen = strlen(httpBuffer->tempP)-10;	
+	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "[##]");
+	sprintf(httpBuffer->tempBuf, "%04d", httpBuffer->sendDataLen);
+	memcpy(httpBuffer->tempP, httpBuffer->tempBuf, 4);
+	httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
+	httpBuffer->isPost = true;
+		
+	if(My_Pass == UpLoadData(httpBuffer))
 	{
-		sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ndid=%s&dversion=%d&addr=%s&name=%s&age=%s&sex=%s&phone=%s&job=%s&dsc=%s&status=ok", 
-			NcdServerUpDeviceUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, httpBuffer->device->deviceid,  
-			GB_SoftVersion, httpBuffer->device->deviceunit, httpBuffer->device->deviceuser.user_name, 
-			httpBuffer->device->deviceuser.user_age, httpBuffer->device->deviceuser.user_sex,	
-			httpBuffer->device->deviceuser.user_phone, httpBuffer->device->deviceuser.user_job, 
-			httpBuffer->device->deviceuser.user_desc);
-		
-		httpBuffer->tempP = strstr(httpBuffer->sendBuf, "zh;q=0.8\n\n");
-		httpBuffer->sendDataLen = strlen(httpBuffer->tempP)-10;	
-		httpBuffer->tempP = strstr(httpBuffer->sendBuf, "[##]");
-		sprintf(httpBuffer->tempBuf, "%04d", httpBuffer->sendDataLen);
-		memcpy(httpBuffer->tempP, httpBuffer->tempBuf, 4);
-		httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
-		httpBuffer->isPost = true;
-		
-		if(My_Pass == UpLoadData(httpBuffer))
+		httpBuffer->tempP2 = strtok(httpBuffer->tempP, "#");
+		if(httpBuffer->tempP2 == NULL)
+				return;
+			
+		//timedate
+		httpBuffer->tempP2 = strtok(NULL, "#");
+		if(httpBuffer->tempP2)
 		{
-			httpBuffer->systemSetData = (SystemSetData *)httpBuffer->sendBuf;
-			copyGBSystemSetData(httpBuffer->systemSetData);
-			httpBuffer->systemSetData->deviceInfo.isnew = false ;
-			SaveSystemSetData(httpBuffer->systemSetData);
+			RTC_SetTimeData2(httpBuffer->tempP2+5);
 		}
+		else
+			return;
+			
+		//version
+		httpBuffer->tempP2 = strtok(NULL, "#");
+		if(httpBuffer->tempP2)
+		{
+			httpBuffer->remoteSoftInfo = (RemoteSoftInfo *)httpBuffer->sendBuf;
+			memset(httpBuffer->remoteSoftInfo, 0, RemoteSoftInfoStructSize);
+			httpBuffer->remoteSoftInfo->RemoteFirmwareVersion = strtol(httpBuffer->tempP2+8, NULL, 10);
+					
+			//如果读取到的版本，大于当前版本，且大于当前保存的最新远程版本，则此次读取的是最新的
+			if((httpBuffer->remoteSoftInfo->RemoteFirmwareVersion > GB_SoftVersion) &&
+				(httpBuffer->remoteSoftInfo->RemoteFirmwareVersion > getGbRemoteFirmwareVersion()))
+			{
+				//md5
+				httpBuffer->tempP2 = strtok(NULL, "#");
+				if(httpBuffer->tempP2)
+				{
+					memcpy(httpBuffer->remoteSoftInfo->md5, httpBuffer->tempP2+4, 32);
+					if(My_Pass == WriteRemoteSoftInfo(httpBuffer->remoteSoftInfo))
+					{
+						//md5保存成功后，才更新最新版本号，保存最新固件版本
+						setGbRemoteFirmwareVersion(httpBuffer->remoteSoftInfo->RemoteFirmwareVersion);
+						setGbRemoteFirmwareMd5(httpBuffer->remoteSoftInfo->md5);
+								
+						setIsSuccessDownloadFirmware(false);
+					}
+				}
+				else
+					return;
+			}	
+		}
+		else
+			return;
 	}
 }
 

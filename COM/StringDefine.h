@@ -20,20 +20,19 @@
 #define		UnlockLCDPassWord	"201307\0"								//Ω‚À¯∆¡ƒª“ª¥Œ
 #define		EnableUSBPassWord	"201308\0"								//π“‘ÿUSB
 
-#define		HttpPostTypeString					"POST\0"
-#define		HttpGetTypeString					"GET\0"
-#define		HttpVersionString					"HTTP/1.1\0"
-#define		HttpHostString						"Host:\0"
-#define		HttpConnectionString				"Connection\0"
-#define		HttpContentLengthString				"Content-Length:\0"
-#define		HttpContentTypeString				"Content-Type:application/x-www-form-urlencoded;charset=GBK\0"
-#define		HttpAcceptLanguageString			"Accept-Language: zh-CN,zh;q=0.8\0"
-
+#if (NCDServerType == NCDServerFinal)
 #define		NcdServerReadTimeUrlStr				"/NCD_Server/up_dtime\0"
 #define		NcdServerUpDeviceUrlStr				"/NCD_Server/up_device\0"
 #define		NcdServerUpTestDataUrlStr			"/NCD_Server/UpLoadYGFXY\0"
 #define		NcdServerQuerySoftUrlStr			"/NCD_Server/deviceSoftInfo\0"
 #define		NcdServerDownSoftUrlStr				"/NCD_Server/DownloadSoftFile\0"
+#elif (NCDServerType == NCDServerDebug)
+#define		NcdServerReadTimeUrlStr				"/NCD_ServerDebug/up_dtime\0"
+#define		NcdServerUpDeviceUrlStr				"/NCD_ServerDebug/up_device\0"
+#define		NcdServerUpTestDataUrlStr			"/NCD_ServerDebug/UpLoadYGFXY\0"
+#define		NcdServerQuerySoftUrlStr			"/NCD_ServerDebug/deviceSoftInfo\0"
+#define		NcdServerDownSoftUrlStr				"/NCD_ServerDebug/DownloadSoftFile\0"
+#endif
 
 
 #if(DeviceLanguage == DEVICE_CN)
