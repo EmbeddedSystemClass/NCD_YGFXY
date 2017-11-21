@@ -217,7 +217,6 @@ static void activityFresh(void)
 			}
 		}
 			
-		
 		//500ms刷新一次界面
 		if(S_PaiDuiPageBuffer->count2 % 5 == 0)
 		{

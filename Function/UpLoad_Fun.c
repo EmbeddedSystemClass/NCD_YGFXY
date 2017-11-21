@@ -257,8 +257,11 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 ***************************************************************************************************/
 static void readRemoteFirmwareVersion(HttpBuffer * httpBuffer)
 {
+	memset(httpBuffer->tempBuf, 0, 100);
+	readDeviceId(httpBuffer->tempBuf);
+	
 	sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\nsoftName=%s&lang=%s", 
-		NcdServerQuerySoftUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, DeviceTypeString, DeviceLanguageString);
+		NcdServerQuerySoftUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, httpBuffer->tempBuf, DeviceLanguageString);
 	
 	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "zh;q=0.8\n\n");
 	httpBuffer->sendDataLen = strlen(httpBuffer->tempP)-10;	
@@ -305,8 +308,11 @@ static void DownLoadFirmware(HttpBuffer * httpBuffer)
 	//检查是否有更新，且未成功下载，则需要下载
 	if((getGbRemoteFirmwareVersion() > GB_SoftVersion) && (false == getIsSuccessDownloadFirmware()))
 	{
+		memset(httpBuffer->tempBuf, 0, 100);
+		readDeviceId(httpBuffer->tempBuf);
+		
 		sprintf(httpBuffer->sendBuf, "GET %s?softName=%s&lang=%s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\n\n", 
-			NcdServerDownSoftUrlStr, DeviceTypeString, DeviceLanguageString, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort);
+			NcdServerDownSoftUrlStr, httpBuffer->tempBuf, DeviceLanguageString, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort);
 		
 		httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
 		httpBuffer->isPost = false;

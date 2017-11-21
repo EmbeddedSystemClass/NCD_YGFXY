@@ -11,8 +11,8 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1062
-#define	GB_SoftVersion_Build	"Build17111101\0"
+#define	GB_SoftVersion	(unsigned short)1066
+#define	GB_SoftVersion_Build	"Build17111502\0"
 
 #define	DEVICE_EN		100
 #define	DEVICE_CN		101
@@ -27,7 +27,6 @@
 #define	GB_ServerIp_2		62
 #define	GB_ServerIp_3		108
 #define	GB_ServerIp_4		201
-
 
 #define	GB_ServerPort		8080
 /**********************************************************************************************************/
@@ -195,11 +194,12 @@ typedef struct QRCode_Tag
 
 
 #define	MaxLocation			6500						//最大行程
-#define	StartTestLocation	1300							//测试起始位置
+#define	StartTestLocation	1250							//测试起始位置
 #define	EndTestLocation		4300						//测试结束为止
 #define	WaittingCardLocation	MaxLocation					//等待插卡的位置
 #define	AvregeNum		10								//平均值滤波个数
-#define	MaxPointLen		((EndTestLocation - StartTestLocation)/AvregeNum)	//测试点个数
+#define	FilterNum		5								//??????
+#define	MaxPointLen	((EndTestLocation - StartTestLocation)/AvregeNum - FilterNum) //测试点个数
 
 
 /**********************************************************************************************************/

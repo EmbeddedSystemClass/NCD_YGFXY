@@ -50,7 +50,7 @@ void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int loc
 		SetDRVDir(Forward);
 	else
 		SetDRVDir(Reverse);
-	vTaskDelay(10 / portTICK_RATE_MS);
+	//vTaskDelay(10 / portTICK_RATE_MS);
 	
 	GB_Motors.periodCnt = 0;
 	GB_Motors.parm1 = 0;
@@ -61,7 +61,7 @@ void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int loc
 
 	while(isWait && GB_Motors.motorLocation != GB_Motors.motorTargetLocation)
 	{
-		vTaskDelay(100 / portTICK_RATE_MS);
+		vTaskDelay(1 / portTICK_RATE_MS);
 	}
 }
 

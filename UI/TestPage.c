@@ -166,28 +166,25 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	if(S_TestPageBuffer)
+	if(S_TestPageBuffer->currenttestdata->testdata.testResultDesc == NoResult)
+		RefreshCurve();
+	else
 	{
-		if(S_TestPageBuffer->currenttestdata->testdata.testResultDesc == NoResult)
-			RefreshCurve();
-		else
+		//如果打印完毕，且卡拔出，则退出
+		if((S_TestPageBuffer->isPrintfData == 0) &&(MaxLocation == GetGB_MotorLocation()))
 		{
-			//如果打印完毕，且卡拔出，则退出
-			if((S_TestPageBuffer->isPrintfData == 0) &&(MaxLocation == GetGB_MotorLocation()))
+			//删除当前测试
+			if(S_TestPageBuffer->currenttestdata)
 			{
-				//删除当前测试
-				if(S_TestPageBuffer->currenttestdata)
-				{
-					DeleteCurrentTest();
-					S_TestPageBuffer->currenttestdata = NULL;
-				}
-				else if(GetCardState() == NoCard)
-				{
-					backToActivity(lunchActivityName);
+				DeleteCurrentTest();
+				S_TestPageBuffer->currenttestdata = NULL;
+			}
+			else if(!CardPinIn)
+			{
+				backToActivity(lunchActivityName);
 				
-					if(IsPaiDuiTestting())
-						startActivity(createPaiDuiActivity, NULL);
-				}
+				if(IsPaiDuiTestting())
+					startActivity(createPaiDuiActivity, NULL);
 			}
 		}
 	}

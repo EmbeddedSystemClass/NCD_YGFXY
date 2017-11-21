@@ -125,7 +125,7 @@ MyState_TypeDef TakeTestPointData(void * data)
 ResultState TestFunction(void * parm)
 {
 	unsigned short steps = EndTestLocation - StartTestLocation;
-	unsigned short i = 0;
+	unsigned short i = 0, j;
 	unsigned short index;
 	TempCalData * S_TempCalData = NULL;															//测试过程中使用的变量
 	ResultState S_ResultState = NoResult;
@@ -168,10 +168,13 @@ ResultState TestFunction(void * parm)
 			S_TempCalData->resultstatues = NoResult;
 			S_TempCalData->tempvalue1 = 0;
 			
-			MotorMoveTo(10, 20, EndTestLocation, false);
-			
+			//MotorMoveTo(10, 20, EndTestLocation, false);
+
+			S_TempCalData->motorLocation = GetGB_MotorLocation();
+			S_TempCalData->tempvalue1 = 0;
 			for(i=1; i<= steps; i++)
 			{
+				MotorMoveTo(1, 2, S_TempCalData->motorLocation + i, true);
 				vTaskDelay(1 / portTICK_RATE_MS);				
 				S_TempCalData->tempvalue1 += ADS8325();
 				
@@ -181,12 +184,22 @@ ResultState TestFunction(void * parm)
 					index = i/AvregeNum;
 					
 					S_TempCalData->tempvalue1 /= AvregeNum;
-
+					
 					S_TempCalData->tempSeries[index-1] = (unsigned short)(S_TempCalData->tempvalue1);
-					S_TempCalData->itemData->testdata.testline.TestPoint[index - 1] = S_TempCalData->tempSeries[index-1];
-							
-					SendTestPointData(&(S_TempCalData->itemData->testdata.testline.TestPoint[index - 1]));
+
+					if(index >= FilterNum)
+					{
+						S_TempCalData->tempvalue2 = 0;
+						for(j=index-FilterNum; j<index; j++)
+						{
+							S_TempCalData->tempvalue2 += S_TempCalData->tempSeries[j];
+						}
+						S_TempCalData->tempvalue2 /= FilterNum;
 						
+						S_TempCalData->itemData->testdata.testline.TestPoint[index - FilterNum] = S_TempCalData->tempvalue2;
+						SendTestPointData(&S_TempCalData->itemData->testdata.testline.TestPoint[index - FilterNum]);
+					}
+	
 					S_TempCalData->tempvalue1 = 0;
 				}
 			}
@@ -383,25 +396,26 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		}
 		
 		//step 9 判断微球是否过少，，补偿
+		S_TempCalData->maxdata = S_TempCalData->itemData->testdata.testline.C_Point.y;
 		S_TempCalData->tempvalue1 = 0;
-		if(S_TempCalData->CV_T < 0.02 && (S_TempCalData->CV_C + S_TempCalData->CV_T) < 0.3)
+		if(S_TempCalData->CV_T < 0.02 && (S_TempCalData->CV_C + S_TempCalData->CV_T) < 0.35)
 		{
 			S_TempCalData->tempvalue1 = 1.1;
 
-			for(i=0; i<20; i++)
+			for(i=0; i<24; i++)
 			{
 				S_TempCalData->tempvalue2 = S_TempCalData->tempvalue1;
-				S_TempCalData->tempvalue2 *= S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
+				S_TempCalData->tempvalue2 *= S_TempCalData->maxdata;
 				S_TempCalData->itemData->testdata.testline.C_Point.y = (unsigned short)S_TempCalData->tempvalue2;
-				S_TempCalData->tempSeries[S_TempCalData->itemData->testdata.testline.C_Point.x] = S_TempCalData->itemData->testdata.testline.C_Point.y;
+				S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x] = S_TempCalData->itemData->testdata.testline.C_Point.y;
 				
 				S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.testline.C_Point.x-15;
 				if(S_TempCalData->itemData->testdata.testline.C_Point.x < 284)
-					S_TempCalData->CV_C = calculateDataCV(&S_TempCalData->tempSeries[S_TempCalData->tempvalue3], 31, 0);
+					S_TempCalData->CV_C = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], 31, 0);
 				else
-					S_TempCalData->CV_C = calculateDataCV(&S_TempCalData->tempSeries[S_TempCalData->tempvalue3], (300 - S_TempCalData->tempvalue3), 0);
+					S_TempCalData->CV_C = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], (300 - S_TempCalData->tempvalue3), 0);
 				
-				if((S_TempCalData->CV_C + S_TempCalData->CV_T) >= 0.3)
+				if((S_TempCalData->CV_C + S_TempCalData->CV_T) >= 0.35)
 					break;
 				
 				S_TempCalData->tempvalue1 += 0.1;
@@ -412,8 +426,66 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		/*计算结果*/
 		S_TempCalData->tempvalue1 = (S_TempCalData->itemData->testdata.testline.T_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
 		S_TempCalData->tempvalue2 = (S_TempCalData->itemData->testdata.testline.C_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
+		S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x] = S_TempCalData->maxdata;
 		S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
 
+		//针对开立公司
+		readDeviceId(S_TempCalData->tempBuf);
+		if(strstr(S_TempCalData->tempBuf, "NCD13011703018"))
+		{
+			if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.ItemName, "NT-proBNP", 9))
+			{
+				S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
+				if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.129)
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * 10640.0f - 214.46;
+				else
+					S_TempCalData->itemData->testdata.testline.BasicResult = 566.49 * exp(4.9057*S_TempCalData->itemData->testdata.testline.BasicBili);
+				
+				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
+					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
+				
+				S_TempCalData->resultstatues = ResultIsOK;
+			
+				return;
+			}
+			else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.ItemName, "cTnI", 4))
+			{
+				S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
+				if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.0919)
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * 16.814f - 0.5512;
+				else if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.6127)
+					S_TempCalData->itemData->testdata.testline.BasicResult = 21.093*S_TempCalData->itemData->testdata.testline.BasicBili*S_TempCalData->itemData->testdata.testline.BasicBili + 
+						12.558f * S_TempCalData->itemData->testdata.testline.BasicBili - 0.4594;
+				else
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * 125.66f - 62.903;
+				
+				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
+					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
+				
+				S_TempCalData->resultstatues = ResultIsOK;
+			
+				return;
+			}
+			else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.ItemName, "CK-MB", 5))
+			{
+				S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
+				
+				if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.3153)
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.testline.BasicBili * 90.414f 
+						+ S_TempCalData->itemData->testdata.testline.BasicBili * 25.522f - 2.8215f;
+				else
+					S_TempCalData->itemData->testdata.testline.BasicResult = 396.69f*S_TempCalData->itemData->testdata.testline.BasicBili*S_TempCalData->itemData->testdata.testline.BasicBili - 
+						138.72f * S_TempCalData->itemData->testdata.testline.BasicBili + 19.677;
+
+				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
+					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
+				
+				S_TempCalData->resultstatues = ResultIsOK;
+			
+				return;
+			}
+		}
+		
 		/*原始峰高比*/
 		S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / S_TempCalData->tempvalue2;
 				
@@ -471,11 +543,17 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		return;
 		
 		END1:
+			S_TempCalData->itemData->testdata.testline.B_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.B_Point.x];
+			S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
+			S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
 			S_TempCalData->resultstatues = NoSample;
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
 			return;
 		
 		END2:
+			S_TempCalData->itemData->testdata.testline.B_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.B_Point.x];
+			S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
+			S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
 			S_TempCalData->resultstatues = PeakError;
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
 			return;

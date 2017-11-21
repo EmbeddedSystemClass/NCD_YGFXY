@@ -18,7 +18,7 @@
 #define		FactoryResetPassWord	"201305\0"							//恢复出厂设置密码
 #define		ChangeValueShowTypePassWord	"201306\0"						//切换结果显示模式，是否显示真实值
 #define		UnlockLCDPassWord	"201307\0"								//解锁屏幕一次
-#define		EnableUSBPassWord	"201308\0"								//解锁屏幕一次
+#define		EnableUSBPassWord	"201308\0"								//挂载USB
 
 #define		HttpPostTypeString					"POST\0"
 #define		HttpGetTypeString					"GET\0"

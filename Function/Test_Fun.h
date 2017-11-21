@@ -19,9 +19,9 @@ typedef struct TempCalData_tag{
 	double CV_C;															//变异系数1
 	double CV_0;															//变异系数1
 	unsigned short tempvalue3;
-	unsigned short tempSeries[MaxPointLen];
-	double lastdata;														//记录上次滤波数据
-	
+	unsigned short tempSeries[MaxPointLen+FilterNum];
+	unsigned int motorLocation;														//当前电机位置
+	char tempBuf[100];
 	unsigned short maxdata;
 	ItemData * itemData;												//测试数据指针
 	ResultState resultstatues;											//测试结果状态

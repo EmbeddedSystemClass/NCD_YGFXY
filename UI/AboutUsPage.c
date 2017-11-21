@@ -79,6 +79,7 @@ static void activityStart(void)
 	timer_set(&S_AboutUsPageBuffer->timer, 10);
 	
 	dspPageText();
+	freshRemoteSoftVersionText();
 		
 	SelectPage(116);
 }

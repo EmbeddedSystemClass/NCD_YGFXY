@@ -303,7 +303,7 @@ static void CheckQRCode(void)
 				#elif(DeviceUseType == Device_Demo)
 				
 					//设置倒计时时间
-					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*10);
+					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*1);
 				
 					/*跳过验证加样功能，直接测试*/
 					//如果是排队模式，则进入排队界面
