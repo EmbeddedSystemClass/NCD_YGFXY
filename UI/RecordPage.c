@@ -232,11 +232,11 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 				sprintf(S_RecordPageBuffer->buf, "%5d   %10s%15s  \0", (pageindex-1)*DataNumInPage+i+1, S_RecordPageBuffer->tempdata->temperweima.ItemName,
 				S_RecordPageBuffer->tempdata->sampleid);
 				
-				/*if(S_RecordPageBuffer->tempdata->testline.AdjustResult <= S_RecordPageBuffer->tempdata->temperweima.LowstResult)
+				if(S_RecordPageBuffer->tempdata->testline.AdjustResult <= S_RecordPageBuffer->tempdata->temperweima.LowstResult)
 					sprintf(S_RecordPageBuffer->buf2, "<%.2f\0", S_RecordPageBuffer->tempdata->temperweima.LowstResult);
-				else if(S_RecordPageBuffer->tempdata->testline.AdjustResult >= S_RecordPageBuffer->tempdata->temperweima.HighestResult)
-					sprintf(S_RecordPageBuffer->buf2, ">%.2f\0", S_RecordPageBuffer->tempdata->temperweima.HighestResult);
-				else*/
+				/*else if(S_RecordPageBuffer->tempdata->testline.AdjustResult >= S_RecordPageBuffer->tempdata->temperweima.HighestResult)
+					sprintf(S_RecordPageBuffer->buf2, ">%.2f\0", S_RecordPageBuffer->tempdata->temperweima.HighestResult);*/
+				else
 					sprintf(S_RecordPageBuffer->buf2, "%.2f\0", S_RecordPageBuffer->tempdata->testline.AdjustResult);
 				strcat(S_RecordPageBuffer->buf, S_RecordPageBuffer->buf2);
 				

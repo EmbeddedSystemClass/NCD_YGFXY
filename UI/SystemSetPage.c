@@ -15,6 +15,7 @@
 #include	"RecordPage.h"
 #include	"OtherSetPage.h"
 #include	"MyTools.h"
+#include	"BackDoorData.h"
 
 #include 	"FreeRTOS.h"
 #include 	"task.h"
@@ -106,6 +107,14 @@ static void Input(unsigned char *pbuf , unsigned short len)
 			{
 				SetGBChildPage(DspReTestPage);
 				GotoGBChildPage(NULL);
+			}
+			else if(pdPASS == CheckStrIsSame(&pbuf[7] , WifiResultWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+			{
+				setValueType(1);
+			}
+			else if(pdPASS == CheckStrIsSame(&pbuf[7] , SelectResultWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+			{
+				setValueType(0);
 			}
 			else
 				SendKeyCode(1);

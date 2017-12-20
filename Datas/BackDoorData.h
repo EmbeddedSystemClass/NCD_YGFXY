@@ -20,6 +20,7 @@ typedef struct BackDoorData_tag {
 #define	data5_t	9											//Åú¼ä²î
 
 void SetS_TestItemName(void * name);
+void getLowestAndHighestByName(char * name, float * low, float * high);
 void SetS_ItemIndex(unsigned char index);
 unsigned char GetS_ItemIndex(void);
 void SetS_CategoryIndex(unsigned char index);
@@ -30,6 +31,8 @@ double GetCurrentData(void);
 
 void setwifiResult(double data);
 double getwifiResult(void);
+void setValueType(unsigned char isWifi);
+unsigned char isWifiGetData(void);
 #endif
 
 /****************************************end of file************************************************/

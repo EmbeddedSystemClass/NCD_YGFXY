@@ -12,6 +12,8 @@
 #define		AdminPassWord	"123456"								//管理员密码，用于修改设备id
 #define		AdjustPassWord	"111111"								//校准密码
 #define		TestPassWord	"222222"								//老化测试密码
+#define		WifiResultWord	"201310"								//测试结果从wifi获取
+#define		SelectResultWord	"201311"								//测试结果从屏幕选择
 
 #define		MY_SUCCESS	1
 #define		MY_FALSE	0

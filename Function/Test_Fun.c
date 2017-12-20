@@ -199,10 +199,10 @@ MyState_TypeDef TakeTestPointData(void * data)
 
 static void AnalysisTestData(void)
 {
-	unsigned short i=0, j=0;
-
-	//		S_TestTaskData->testdata->testline.AdjustResult = GetCurrentData();
-	S_TestTaskData->testdata->testline.AdjustResult = getwifiResult();
+	if(0 == isWifiGetData())
+		S_TestTaskData->testdata->testline.AdjustResult = GetCurrentData();
+	else
+		S_TestTaskData->testdata->testline.AdjustResult = getwifiResult();
 			
 			S_TempCalData->resultstatues = ResultIsOK;
 	

@@ -127,6 +127,8 @@ static unsigned char S_CategoryIndex = 0;								//??j??????
 static unsigned char S_TestIndex = 0;									//??j??????J???
 
 static double wifiResult = 0;											//从wifi接收的结果
+
+static unsigned char isReadDataFromWifi = 1;
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -166,6 +168,39 @@ void SetS_TestItemName(void * name)
 		SetS_ItemIndex(11);
 }
 
+void getLowestAndHighestByName(char * name, float * low, float * high)
+{
+	unsigned char i = 0;
+	if(CheckStrIsSame("PCT", name, strlen(name)))
+		i =  0;
+	else if(CheckStrIsSame("CRP", name, strlen(name)))
+		i =  1;
+	else if(CheckStrIsSame("D-Dimer", name, strlen(name)))
+		i = 2;
+	else if(CheckStrIsSame("CysC", name, strlen(name)))
+		i =  3;
+	else if(CheckStrIsSame("β-HCG", name, strlen(name)))
+		i =  4;
+	else if(CheckStrIsSame("PGI", name, strlen(name)))
+		i =  5;
+	else if(CheckStrIsSame("PGII", name, strlen(name)))
+		i =  6;
+	else if(CheckStrIsSame("NGAL", name, strlen(name)))
+		i =  7;
+	else if(CheckStrIsSame("MPO", name, strlen(name)))
+		i =  8;
+	else if(CheckStrIsSame("β2-MG", name, strlen(name)))
+		i =  9;
+	else if(CheckStrIsSame("H-FABP", name, strlen(name)))
+		i =  10;
+	else if(CheckStrIsSame("LP-PLA2", name, strlen(name)))
+		i =  11;
+	
+	*low = s_BackDoorData[i].data1;
+	*high = s_BackDoorData[i].data2[5];
+}
+
+
 void SetS_ItemIndex(unsigned char index)
 {
 	S_ItemIndex = index;
@@ -199,14 +234,14 @@ unsigned char GetS_TestIndex(void)
 }
 
 
-void SetGB_Value(double value)
+void setValueType(unsigned char isWifi)
 {
-	GB_Value = value;
+	isReadDataFromWifi = isWifi;
 }
 
-double GetGB_Value(void)
+unsigned char isWifiGetData(void)
 {
-	return GB_Value;
+	return isReadDataFromWifi;
 }
 
 double GetCurrentData(void)

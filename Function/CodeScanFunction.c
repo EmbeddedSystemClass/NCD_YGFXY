@@ -11,6 +11,7 @@
 #include	"Motor_Data.h"
 #include	"CardStatues_Data.h"
 #include	"System_Data.h"
+#include	"BackDoorData.h"
 #include	"ItemConstData.h"
 
 #include	"Define.h"
@@ -214,18 +215,18 @@ static void AnalysisCode(void *pbuf , unsigned short len)
 	//读取检测卡上的最低检测值
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
-		S_ScanQRTaskData->cardQR->LowstResult = strtod(S_ReadCodeBuffer->pbuf1 , NULL );
+		getLowestAndHighestByName(S_ScanQRTaskData->cardQR->ItemName, &S_ScanQRTaskData->cardQR->LowstResult, &S_ScanQRTaskData->cardQR->HighestResult);
 	else
 		goto END;
 		
 	//读取检测卡上的最高检测值
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)
-		S_ScanQRTaskData->cardQR->HighestResult = strtod(S_ReadCodeBuffer->pbuf1 , NULL );
+		;//S_ScanQRTaskData->cardQR->HighestResult = strtod(S_ReadCodeBuffer->pbuf1 , NULL );
 	else
 		goto END;	
 	
-	getItemMaxMinValue(S_ScanQRTaskData->cardQR);
+	//getItemMaxMinValue(S_ScanQRTaskData->cardQR);
 	//读取测试项目的单位
 	S_ReadCodeBuffer->pbuf1 = strtok(NULL , "#");
 	if(S_ReadCodeBuffer->pbuf1)

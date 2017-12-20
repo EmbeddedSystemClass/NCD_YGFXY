@@ -174,10 +174,14 @@ static void RefreshText(void)
 				
 		sprintf(S_ShowPageBuffer->tempbuf, "%s", S_ShowPageBuffer->testdata->temperweima.CardPiCi);
 		DisText(0x2b40, S_ShowPageBuffer->tempbuf, strlen(S_ShowPageBuffer->tempbuf));
-				
-		sprintf(S_ShowPageBuffer->tempbuf, "%.2f", S_ShowPageBuffer->testdata->testline.AdjustResult);
+			
+		if(S_ShowPageBuffer->testdata->testline.AdjustResult <= S_ShowPageBuffer->testdata->temperweima.LowstResult)
+			sprintf(S_ShowPageBuffer->tempbuf, "<%.2f\0", S_ShowPageBuffer->testdata->temperweima.LowstResult);
+		/*else if(S_ShowPageBuffer->testdata->testline.AdjustResult >= S_ShowPageBuffer->testdata->temperweima.HighestResult)
+			sprintf(S_ShowPageBuffer->tempbuf, ">%.2f\0", S_ShowPageBuffer->testdata->temperweima.HighestResult);*/
+		else
+			sprintf(S_ShowPageBuffer->tempbuf, "%.2f", S_ShowPageBuffer->testdata->testline.AdjustResult);
 		DisText(0x2b50, S_ShowPageBuffer->tempbuf, strlen(S_ShowPageBuffer->tempbuf));
-
 	}
 }
 

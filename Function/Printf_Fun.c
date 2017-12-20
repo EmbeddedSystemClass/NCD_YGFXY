@@ -139,11 +139,11 @@ void PrintfData(void *data)
 		memset(printfbuf, 0, 100);
 		
 		tempvalue = testd->testline.AdjustResult;
-		/*if(tempvalue <= testd->temperweima.LowstResult)
+		if(tempvalue <= testd->temperweima.LowstResult)
 			sprintf(printfbuf, "测试结果: <%.2f %-8.8s\r", testd->temperweima.LowstResult, testd->temperweima.ItemMeasure);
-		else if(tempvalue >= testd->temperweima.HighestResult)
-			sprintf(printfbuf, "测试结果: >%.2f %-8.8s\r", testd->temperweima.HighestResult, testd->temperweima.ItemMeasure);
-		else*/
+		/*else if(tempvalue >= testd->temperweima.HighestResult)
+			sprintf(printfbuf, "测试结果: >%.2f %-8.8s\r", testd->temperweima.HighestResult, testd->temperweima.ItemMeasure);*/
+		else
 			sprintf(printfbuf, "测试结果: %.2f %-8.8s\r", testd->testline.AdjustResult, testd->temperweima.ItemMeasure);
 		
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, EnableUsart3TXInterrupt);

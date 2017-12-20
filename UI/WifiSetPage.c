@@ -292,27 +292,6 @@ static void CheckIsNeedKey(void)
 				SendKeyCode(1);
 			}
 		}
-		/*“—±£¥Ê√‹¬Î*/
-		else if(My_Pass == ReadWifiData(S_WifiPageBuffer->wifip))
-		{
-			SendKeyCode(6);
-			vTaskDelay(1000 / portTICK_RATE_MS);
-			if(My_Fail == ConnectWifi(S_WifiPageBuffer->wifip))
-			{
-				SendKeyCode(7);
-				vTaskDelay(100 / portTICK_RATE_MS);
-				SendKeyCode(3);
-				ClearWifiData(S_WifiPageBuffer->wifip);
-			}
-			else
-			{
-				RestartWifi();
-				vTaskDelay(2000/portTICK_RATE_MS);
-				SendKeyCode(7);
-				vTaskDelay(100 / portTICK_RATE_MS);
-				SendKeyCode(1);	
-			}
-		}
 		/* ‰»Î√‹¬Î*/
 		else
 			SendKeyCode(3);
