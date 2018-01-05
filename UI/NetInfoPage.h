@@ -13,7 +13,7 @@ typedef struct NetInfoPageBuffer_tag {
 	char tempbuffer1[100];
 	Basic_ICO lineico;
 	Basic_ICO wifiico;
-	bool isGetWifiControl;								//是否已获取wifi控制权
+	MyBool isGetWifiControl;								//是否已获取wifi控制权
 	IP_Def WifiIP;										//wifi的ip
 	char WifiSSID[30];									//所链接wifi的名字
 	char WifiMAC[13];									//wifi模块的mac

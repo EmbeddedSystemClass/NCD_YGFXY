@@ -31,6 +31,7 @@
 #include "usbd_req.h"
 #include "usbd_conf.h"
 #include "usb_regs.h"
+#include	"stm32f4xx.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -54,21 +55,24 @@
   * @{
   */ 
 
-#define USBD_VID                   0x0483
-#define USBD_PID                   0x5720
+#define USBD_VID                     0x0911							//every ncd device is same
+#define USBD_PID                     0x5757							//
+uint32_t UserPid = 0;// *(vu32*)(0x1FFF7A10);
 
-#define USBD_LANGID_STRING         0x409
-#define USBD_MANUFACTURER_STRING   "NEWCANDO"
+#define USBD_LANGID_STRING            0x409
+#define USBD_MANUFACTURER_STRING      "STMicroelectronics"
 
+#define USBD_PRODUCT_HS_STRING        "USB HID in HS mode"
+#define USBD_SERIALNUMBER_HS_STRING   "00000000011B"
 
-#define USBD_PRODUCT_HS_STRING        "Mass Storage in HS Mode"
-#define USBD_SERIALNUMBER_HS_STRING   "00000000001A"
-#define USBD_PRODUCT_FS_STRING        "NEW CAN DO"
-#define USBD_SERIALNUMBER_FS_STRING   "00000000001B"
-#define USBD_CONFIGURATION_HS_STRING  "MSC Config"
-#define USBD_INTERFACE_HS_STRING      "MSC Interface"
-#define USBD_CONFIGURATION_FS_STRING  "MSC Config"
-#define USBD_INTERFACE_FS_STRING      "MSC Interface"
+#define USBD_PRODUCT_FS_STRING        "USB HID in FS Mode"
+#define USBD_SERIALNUMBER_FS_STRING   "00000000011C"
+
+#define USBD_CONFIGURATION_HS_STRING  "HID Config"
+#define USBD_INTERFACE_HS_STRING      "HID Interface"
+
+#define USBD_CONFIGURATION_FS_STRING  "HID Config"
+#define USBD_INTERFACE_FS_STRING      "HID Interface"
 /**
   * @}
   */ 
@@ -95,7 +99,6 @@ USBD_DEVICE USR_desc =
   USBD_USR_SerialStrDescriptor,
   USBD_USR_ConfigStrDescriptor,
   USBD_USR_InterfaceStrDescriptor,
-  
 };
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
@@ -185,6 +188,9 @@ __ALIGN_BEGIN uint8_t USBD_LangIDDesc[USB_SIZ_STRING_LANGID] __ALIGN_END =
 */
 uint8_t *  USBD_USR_DeviceDescriptor( uint8_t speed , uint16_t *length)
 {
+	UserPid = *(__IO uint32_t*)(0x1FFF7A10);
+	USBD_DeviceDesc[11] = UserPid & 0xff;
+	USBD_DeviceDesc[10] = (UserPid >> 8) & 0xff;
   *length = sizeof(USBD_DeviceDesc);
   return USBD_DeviceDesc;
 }
@@ -212,8 +218,6 @@ uint8_t *  USBD_USR_LangIDStrDescriptor( uint8_t speed , uint16_t *length)
 */
 uint8_t *  USBD_USR_ProductStrDescriptor( uint8_t speed , uint16_t *length)
 {
- 
-  
   if(speed == 0)
   {   
     USBD_GetString (USBD_PRODUCT_HS_STRING, USBD_StrDesc, length);

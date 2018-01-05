@@ -7,9 +7,7 @@
 #include	"HttpBuf.h"
 
 
-void CommunicateWithServerByLineNet(HttpBuffer * httpBuffer);
-void CommunicateWithServerByWifi(HttpBuffer * httpBuffer);
-
-MyState_TypeDef UpLoadData(HttpBuffer * httpBuffer);
-
+MyState_TypeDef CommunicateWithServerByLineNet(HttpBuffer * httpBuffer);
+MyState_TypeDef CommunicateWithServerByWifi(HttpBuffer * httpBuffer);
+MyState_TypeDef CommunicateWithServerByUSB(HttpBuffer * httpBuffer);
 #endif

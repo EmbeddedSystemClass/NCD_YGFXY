@@ -19,20 +19,10 @@
 #include	"AdjustLedPage.h"
 #include	"AboutUsPage.h"
 #include	"SystemResetFun.h"
-/*
-#include	"usbd_msc_core.h"
-#include	"usbd_usr.h"
-#include	"usbd_desc.h"
-#include	"usb_conf.h"
-*/
+
 #include 	"FreeRTOS.h"
 #include 	"task.h"
 #include 	"queue.h"
-
-#include	"usbd_msc_core.h"
-#include	"usbd_usr.h"
-#include	"usbd_desc.h"
-#include	"usb_conf.h"
 
 #include	<string.h>
 #include	"stdio.h"
@@ -163,36 +153,36 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		{
 			if(GetBufLen(&pbuf[7] , 2*pbuf[6]) == 6)
 			{
-				if(pdPASS == CheckStrIsSame(&pbuf[7] , TestPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				if(pdPASS == CheckStrIsSame(&pbuf[7], TestPassWord, 6))
 				{
 					startActivity(createReTestActivity, NULL);
 				}
-				else if(pdPASS == CheckStrIsSame(&pbuf[7] , CheckQRPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				else if(pdPASS == CheckStrIsSame(&pbuf[7], CheckQRPassWord, 6))
 				{
 					startActivity(createCheckQRActivity, NULL);
 				}
-				else if(pdPASS == CheckStrIsSame(&pbuf[7] , AdjLedPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				else if(pdPASS == CheckStrIsSame(&pbuf[7], AdjLedPassWord, 6))
 				{
 					startActivity(createAdjustLedActivity, NULL);
 				}
-				else if(pdPASS == CheckStrIsSame(&pbuf[7] , FactoryResetPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				else if(pdPASS == CheckStrIsSame(&pbuf[7], FactoryResetPassWord, 6))
 				{
 					if(My_Pass == SystemReset())
 						SendKeyCode(2);
 					else
 						SendKeyCode(1);
 				}
-				else if(pdPASS == CheckStrIsSame(&pbuf[7] , ChangeValueShowTypePassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				else if(pdPASS == CheckStrIsSame(&pbuf[7], ChangeValueShowTypePassWord, 6))
 				{
-					setIsShowRealValue(true);
+					setIsShowRealValue(TRUE);
 					SendKeyCode(2);
 				}
-				else if(pdPASS == CheckStrIsSame(&pbuf[7] , UnlockLCDPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				else if(pdPASS == CheckStrIsSame(&pbuf[7], UnlockLCDPassWord, 6))
 				{
 					unLockLCDOneTime();
 					SendKeyCode(2);
 				}
-				/*else if(pdPASS == CheckStrIsSame(&pbuf[7] , EnableUSBPassWord ,GetBufLen(&pbuf[7] , 2*pbuf[6])))
+				/*else if(pdPASS == CheckStrIsSame(&pbuf[7], EnableUSBPassWord, 6))
 				{
 					USBD_Init(&USB_OTG_dev,USB_OTG_FS_CORE_ID,&USR_desc,&USBD_MSC_cb,&USR_cb);
 				}*/

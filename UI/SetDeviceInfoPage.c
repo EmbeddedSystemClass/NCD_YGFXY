@@ -120,7 +120,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		
 				memcpy(S_SetDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceunit, S_SetDeviceInfoPageBuffer->deviceunit, MaxDeviceUnitLen);
 				
-				S_SetDeviceInfoPageBuffer->systemSetData.deviceInfo.isnew = true;
+				S_SetDeviceInfoPageBuffer->systemSetData.deviceInfo.isnew = TRUE;
 				if(My_Pass == SaveSystemSetData(&(S_SetDeviceInfoPageBuffer->systemSetData)))
 				{
 					SendKeyCode(1);

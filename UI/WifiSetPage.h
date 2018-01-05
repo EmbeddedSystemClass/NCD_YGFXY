@@ -13,7 +13,7 @@ typedef struct WifiPageBuffer_tag {
 	unsigned short wifinum;
 	Basic_ICO myico[PageWifiNum];
 	unsigned short lcdinput[100];
-	bool isGetWifiControl;								//是否已获取wifi控制权
+	MyBool isGetWifiControl;								//是否已获取wifi控制权
 	char buf[100];
 }WifiPageBuffer;
 

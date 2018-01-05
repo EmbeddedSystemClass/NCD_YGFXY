@@ -8,7 +8,7 @@
 typedef struct AdjustLedPageBuffer_tag {
 	unsigned short lcdinput[20];
 	char buf[100];
-	bool isTestting;									//是否正在测试中
+	MyBool isTestting;									//是否正在测试中
 	ResultState cardpretestresult;
 	ItemData itemData;
 	unsigned short targetValue;							//目标值

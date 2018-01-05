@@ -289,7 +289,7 @@ static void RefreshWifi(void)
 	S_WifiPageBuffer->pageindex = 0;
 	S_WifiPageBuffer->selectindex = 0;
 	
-	if(S_WifiPageBuffer->isGetWifiControl == false)
+	if(S_WifiPageBuffer->isGetWifiControl == FALSE)
 	{
 		if(My_Fail == takeWifiMutex(10000 / portTICK_RATE_MS))
 		{
@@ -297,7 +297,7 @@ static void RefreshWifi(void)
 			return;
 		}
 		else
-			S_WifiPageBuffer->isGetWifiControl = true;
+			S_WifiPageBuffer->isGetWifiControl = TRUE;
 	}
 	
 	/*如果不是at模式，则进入at模式*/

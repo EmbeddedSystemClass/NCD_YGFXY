@@ -235,7 +235,7 @@ static void RefreshText(void)
 {
 	if(S_ShowPageBuffer)
 	{
-		sprintf(S_ShowPageBuffer->tempbuf, "%s\0", S_ShowPageBuffer->testdata.temperweima.ItemName);
+		sprintf(S_ShowPageBuffer->tempbuf, "%s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.itemName);
 		DisText(0x2310, S_ShowPageBuffer->tempbuf, strlen(S_ShowPageBuffer->tempbuf)+1);
 				
 		sprintf(S_ShowPageBuffer->tempbuf, "%s\0", S_ShowPageBuffer->testdata.sampleid);
@@ -250,7 +250,7 @@ static void RefreshText(void)
 		
 		if(S_ShowPageBuffer->testdata.testResultDesc != ResultIsOK)
 			sprintf(S_ShowPageBuffer->tempbuf, "Error\0");
-		else if(IsShowRealValue() == true)
+		else if(IsShowRealValue())
 			sprintf(S_ShowPageBuffer->tempbuf, "%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum,
 				S_ShowPageBuffer->testdata.testline.BasicResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
 		else if(S_ShowPageBuffer->testdata.testline.BasicResult <= S_ShowPageBuffer->testdata.temperweima.itemConstData.lowstResult)

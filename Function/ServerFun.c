@@ -19,6 +19,12 @@
 #include	"RemoteSoft_Data.h"
 #include	"WifiFunction.h"
 #include	"MyMem.h"
+#include	"StringDefine.h"
+
+#include 	"usbd_hid_core.h"
+#include 	"usbd_usr.h"
+#include 	"usbd_desc.h"
+#include 	"usb_conf.h" 
 
 #include	"FreeRTOS.h"
 #include 	"task.h"
@@ -32,6 +38,8 @@
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
 const char * fileStartStr = "i am zhangxiong^*^!";
+extern USB_OTG_CORE_HANDLE USB_OTG_dev;
+extern uint8_t UsbHidReceiveComplete ;
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -43,24 +51,20 @@ const char * fileStartStr = "i am zhangxiong^*^!";
 /***************************************************************************************************/
 /***************************************************************************************************/
 
-void CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
+MyState_TypeDef CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
 {
 	err_t err;
 	struct pbuf *p = NULL;
-	unsigned char i=0;
-	char * tempPoint = NULL;
-	unsigned short tempValue = 0;
 	
-	SetGB_LineNetStatus(0);
+	httpBuffer->status = My_Fail;
 	
-	IP4_ADDR(&httpBuffer->server_ipaddr,GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4);
-	//IP4_ADDR(&httpBuffer->server_ipaddr, 192,168,0,28);
+	IP4_ADDR(&httpBuffer->server_ipaddr,GB_UserServerIp_1, GB_UserServerIp_2, GB_UserServerIp_3, GB_UserServerIp_4);
 
 	//创建连接
 	httpBuffer->clientconn = netconn_new(NETCONN_TCP);
 	//创建失败
 	if(httpBuffer->clientconn == NULL)
-		return;
+		return httpBuffer->status;
 
 	//绑定本地ip
 	err = netconn_bind(httpBuffer->clientconn, IP_ADDR_ANY, 0);
@@ -69,7 +73,7 @@ void CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
 		goto END2;
 
 	//尝试连接远程服务器
-	err = netconn_connect(httpBuffer->clientconn, &httpBuffer->server_ipaddr, GB_ServerPort);
+	err = netconn_connect(httpBuffer->clientconn, &httpBuffer->server_ipaddr, GB_UserServerPort);
 	//连接失败
 	if(err != ERR_OK)
 		goto END2;
@@ -85,83 +89,53 @@ void CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
 		
 	//接收数据
 	httpBuffer->recvDataLen = 0;
+	memset(httpBuffer->recvBuf, 0, HttpRecvBufLen);
 	while(ERR_OK == netconn_recv(httpBuffer->clientconn, &httpBuffer->tcpRecvBuf))
 	{
-		SetGB_LineNetStatus(1);
-		//如果发生的是GET请求，则说明是下载固件，需要保存
-		if(!httpBuffer->isPost)
-		{
-			p = httpBuffer->tcpRecvBuf->p;
-			while(p)
-			{
-				if(i == 0)
-				{
-					//查找文件头
-					tempPoint = strstr(p->payload, fileStartStr);
-					if(tempPoint)
-					{
-						tempValue = tempPoint - ((char *)p->payload) + strlen(fileStartStr);
-						WriteAppFile((char *)(p->payload) + tempValue, p->len-tempValue, true);
-						i++;
-					}
-				}
-				else
-				{
-					WriteAppFile(p->payload, p->len, false);
-				}
-				p = p->next;
-			}
-			
-			vTaskDelay(10 / portTICK_RATE_MS);
-		}
-		else
-		{
-			httpBuffer->recvDataLen += netbuf_copy(httpBuffer->tcpRecvBuf, httpBuffer->recvBuf + httpBuffer->recvDataLen ,
-				HttpRecvBufLen - httpBuffer->recvDataLen);
-		}
+		httpBuffer->recvDataLen += netbuf_copy(httpBuffer->tcpRecvBuf, httpBuffer->recvBuf + httpBuffer->recvDataLen ,
+			HttpRecvBufLen - httpBuffer->recvDataLen);
 		
 		netbuf_delete(httpBuffer->tcpRecvBuf);
 	}
-		
+	
+	httpBuffer->tempP = strstr(httpBuffer->recvBuf, SuccessStr);
+	if(httpBuffer->tempP)
+		httpBuffer->status = My_Pass;
+			
 	END1:
 		netconn_close(httpBuffer->clientconn);
 		netconn_delete(httpBuffer->clientconn);
-		return;
+		return httpBuffer->status;
 		
 	END2:
 		netconn_delete(httpBuffer->clientconn);
-		return;
+		return httpBuffer->status;
 }
 
-void CommunicateWithServerByWifi(HttpBuffer * httpBuffer)
+MyState_TypeDef CommunicateWithServerByWifi(HttpBuffer * httpBuffer)
 {
-	unsigned short i = 0;
-	unsigned short readSize = 0;
-	unsigned short tempValue = 0;
-	char * tempPoint = NULL;
-	
 	if(My_Pass == takeWifiMutex(1000 / portTICK_RATE_MS))
 	{
 		xQueueReset(GetUsart4RXQueue());
-		
+		memset(httpBuffer->recvBuf, 0, HttpRecvBufLen);
 		//发送数据
-		readSize = httpBuffer->sendDataLen;
-		while(readSize > 800)
+		httpBuffer->tempInt1 = httpBuffer->sendDataLen;
+		while(httpBuffer->tempInt1 > 800)
 		{
-			if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, httpBuffer->sendBuf + (httpBuffer->sendDataLen - readSize), 
+			if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, httpBuffer->sendBuf + (httpBuffer->sendDataLen - httpBuffer->tempInt1), 
 				800, 1, 1000 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
 			{
-				readSize -= 800;
+				httpBuffer->tempInt1 -= 800;
 				vTaskDelay(100 / portTICK_RATE_MS);
 			}
 			else
 				goto END;
 		}
 		
-		if(readSize > 0)
+		if(httpBuffer->tempInt1 > 0)
 		{
-			if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, httpBuffer->sendBuf + (httpBuffer->sendDataLen - readSize), 
-				readSize, 1, 1000 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
+			if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, httpBuffer->sendBuf + (httpBuffer->sendDataLen - httpBuffer->tempInt1), 
+				httpBuffer->tempInt1, 1, 1000 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
 			{
 				;
 			}
@@ -171,78 +145,83 @@ void CommunicateWithServerByWifi(HttpBuffer * httpBuffer)
 		
 		//接收数据,最好等待1s
 		httpBuffer->recvDataLen = 0;
+		httpBuffer->i = 0;
 		while(pdPASS == ReceiveDataFromQueue(GetUsart4RXQueue(), NULL, httpBuffer->recvBuf, 1000, 
-			&readSize, 1, 1000 / portTICK_RATE_MS, 1000 / portTICK_RATE_MS))
+			&httpBuffer->readSize, 1, 1000 / portTICK_RATE_MS, 1000 / portTICK_RATE_MS))
 		{
-			//如果发生的是GET请求，则说明是下载固件，需要保存
-			if(!httpBuffer->isPost)
+			if(httpBuffer->isPost)
 			{
-				if(i == 0)
+				httpBuffer->recvDataLen += httpBuffer->readSize;
+				break;
+			}
+			//如果发生的是GET请求，则说明是下载固件，需要保存
+			else
+			{
+				if(httpBuffer->i == 0)
 				{
 					//查找文件头
-					tempPoint = strstr(httpBuffer->recvBuf, fileStartStr);
-					if(tempPoint)
+					httpBuffer->tempP = strstr(httpBuffer->recvBuf, fileStartStr);
+					if(httpBuffer->tempP)
 					{
-						tempValue = tempPoint - httpBuffer->recvBuf + strlen(fileStartStr);
-						readSize -= tempValue;
-						WriteAppFile(httpBuffer->recvBuf + tempValue, readSize, true);
-						i++;
+						httpBuffer->httpHeadLen = httpBuffer->tempP - httpBuffer->recvBuf + strlen(fileStartStr);
+						httpBuffer->readSize -= httpBuffer->httpHeadLen;
+						WriteAppFile(httpBuffer->recvBuf + httpBuffer->httpHeadLen, httpBuffer->readSize, TRUE);
+						httpBuffer->recvDataLen += httpBuffer->readSize;
+						httpBuffer->i++;
 					}
 				}
 				else
 				{
-					WriteAppFile(httpBuffer->recvBuf, readSize, false);
+					WriteAppFile(httpBuffer->recvBuf, httpBuffer->readSize, FALSE);
+					httpBuffer->recvDataLen += httpBuffer->readSize;
 				}
-				
-				
 			}
-			
-			httpBuffer->recvDataLen += readSize;
 		}
 		
 		END:
 			giveWifixMutex();
+			if(httpBuffer->isPost)
+			{
+				httpBuffer->tempP = strstr(httpBuffer->recvBuf, SuccessStr);
+				if(httpBuffer->tempP)
+					return My_Pass;
+			}
+			else if(My_Pass == checkNewFirmwareIsSuccessDownload())
+			{
+				setIsSuccessDownloadFirmware(TRUE);
+				return My_Pass;
+			}
 	}
-}
-
-/***************************************************************************************************
-*FunctionName：
-*Description：
-*Input：None
-*Output：None
-*Author：xsx
-*Data：
-***************************************************************************************************/
-MyState_TypeDef UpLoadData(HttpBuffer * httpBuffer)
-{
-/*	memset(httpBuffer->recvBuf, 0, HttpRecvBufLen);
-	//CommunicateWithServerByLineNet(httpBuffer);
-	if(httpBuffer->isPost)
-	{
-		httpBuffer->tempP = strstr(httpBuffer->recvBuf, "success");
-		if(httpBuffer->tempP)
-			return My_Pass;
-	}
-	else if(My_Pass == checkNewFirmwareIsSuccessDownload())
-	{
-		setIsSuccessDownloadFirmware(true);
-		return My_Pass;
-	}
-	*/	
-	memset(httpBuffer->recvBuf, 0, HttpRecvBufLen);
-	CommunicateWithServerByWifi(httpBuffer);
-	if(httpBuffer->isPost)
-	{
-		httpBuffer->tempP = strstr(httpBuffer->recvBuf, "success");
-		if(httpBuffer->tempP)
-			return My_Pass;
-	}
-	else if(My_Pass == checkNewFirmwareIsSuccessDownload())
-	{
-		setIsSuccessDownloadFirmware(true);
-		return My_Pass;
-	}
-		
+	
 	return My_Fail;
 }
 
+MyState_TypeDef CommunicateWithServerByUSB(HttpBuffer * httpBuffer)
+{
+	xQueueReset(GetUSBRXQueue());
+	memset(httpBuffer->recvBuf, 0, HttpRecvBufLen);
+	
+	//start send data
+	httpBuffer->tempP = httpBuffer->sendBuf;
+
+	while(httpBuffer->sendDataLen > 0)
+	{
+		if(httpBuffer->sendDataLen > 64)
+			httpBuffer->readSize = 64;
+		else
+			httpBuffer->readSize = httpBuffer->sendDataLen;
+			
+		USBD_HID_SendReport(&USB_OTG_dev, httpBuffer->tempP, 64);
+		httpBuffer->sendDataLen -= httpBuffer->readSize;
+		httpBuffer->tempP += httpBuffer->readSize;
+	}
+	
+	//data send end ,wait host result
+	ReceiveDataFromQueue(GetUSBRXQueue(), NULL, httpBuffer->recvBuf, 64, &httpBuffer->readSize, 1, 1000 / portTICK_RATE_MS, 1000 / portTICK_RATE_MS);
+		
+	httpBuffer->tempP = strstr(httpBuffer->recvBuf, SuccessStr);
+	if(httpBuffer->tempP)
+		return My_Pass;
+	else
+		return My_Fail;
+}

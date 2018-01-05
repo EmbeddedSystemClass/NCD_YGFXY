@@ -119,7 +119,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 				
 				//更新副本中的is
 				memcpy(S_SetDeviceIDPage->systemSetData.deviceInfo.deviceid, S_SetDeviceIDPage->deviceId, MaxDeviceIDLen);
-				S_SetDeviceIDPage->systemSetData.deviceInfo.isnew = true;
+				S_SetDeviceIDPage->systemSetData.deviceInfo.isnew = TRUE;
 				if(My_Pass == SaveSystemSetData(&(S_SetDeviceIDPage->systemSetData)))
 				{
 					SendKeyCode(1);

@@ -21,7 +21,7 @@
 static SystemSetData GB_SystemSetData;								//系统参数
 
 
-static bool isShowRealValue = false;								//是否显示真实数据
+static MyBool isShowRealValue = FALSE;								//是否显示真实数据
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -46,14 +46,14 @@ void setDefaultSystemSetData(SystemSetData * systemSetData)
 {
 	if(systemSetData)
 	{
-		systemSetData->isAutoPrint = true;
-		systemSetData->isMute = false;
+		systemSetData->isAutoPrint = TRUE;
+		systemSetData->isMute = FALSE;
 		systemSetData->ledLightIntensity = 100;
 		systemSetData->ledSleepTime = 60;
 		
 		memset(&(systemSetData->deviceInfo), 0, sizeof(DeviceInfo));
 		sprintf(systemSetData->deviceInfo.deviceid, "ncd-device");
-		systemSetData->deviceInfo.isnew = true;
+		systemSetData->deviceInfo.isnew = TRUE;
 		systemSetData->deviceInfo.crc = CalModbusCRC16Fun1(&(systemSetData->deviceInfo), sizeof(DeviceInfo) - 2);
 		
 		memset(&(systemSetData->netSet), 0, sizeof(NetSet));
@@ -148,12 +148,12 @@ void readDeviceId(char * buf)
 *Author: xsx
 *Date: 2016年12月16日16:59:16
 ***************************************************************************************************/
-bool deviceInfoIsNew(void)
+MyBool deviceInfoIsNew(void)
 {
 	if(GB_SystemSetData.crc == CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
 		return GB_SystemSetData.deviceInfo.isnew;
 	else
-		return false;
+		return FALSE;
 }
 
 /***************************************************************************************************
@@ -186,12 +186,12 @@ void getNetSet(NetSet * netSet)
 *Author: xsx
 *Date: 2016年12月16日16:43:04
 ***************************************************************************************************/
-bool isAutoPrint(void)
+MyBool isAutoPrint(void)
 {
 	if(GB_SystemSetData.crc == CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
 		return GB_SystemSetData.isAutoPrint;
 	else
-		return false;
+		return FALSE;
 }
 
 /***************************************************************************************************
@@ -203,12 +203,12 @@ bool isAutoPrint(void)
 *Author: xsx
 *Date: 2016年12月16日16:43:47
 ***************************************************************************************************/
-bool isMute(void)
+MyBool isMute(void)
 {
 	if(GB_SystemSetData.crc == CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
 		return GB_SystemSetData.isMute;
 	else
-		return false;
+		return FALSE;
 }
 
 /***************************************************************************************************
@@ -305,6 +305,14 @@ unsigned int getUpLoadIndex(void)
 	return GB_SystemSetData.upLoadIndex;
 }
 
+unsigned int getUserUpLoadIndex(void)
+{
+	if(GB_SystemSetData.crc != CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
+		setDefaultSystemSetData(&GB_SystemSetData);
+	
+	return GB_SystemSetData.userUpLoadIndex;
+}
+
 /***************************************************************************************************
 *FunctionName: setTestLedLightIntensity
 *Description: 设置测试时的LED 亮度值
@@ -355,12 +363,12 @@ unsigned short getTestLedLightIntensity(SystemSetData * systemSetData)
 *Author: xsx
 *Date: 2017年2月27日14:04:02
 ***************************************************************************************************/
-void setIsShowRealValue(bool isShow)
+void setIsShowRealValue(MyBool isShow)
 {
 	isShowRealValue = isShow;
 }
 
-bool IsShowRealValue(void)
+MyBool IsShowRealValue(void)
 {
 	return isShowRealValue;
 }

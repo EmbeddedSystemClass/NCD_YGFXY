@@ -17,6 +17,8 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
+
+//can not change item index
 const ItemConstData GB_ItemConstData[ITEM_NUM]=
 {
 	{
@@ -64,6 +66,51 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.normalResult = {"<=0.5 mg/L\0"},
 		.itemMeasure = {"mg/L\0"}
 	},
+	{
+		.itemName = "CRP\0",
+		.icoIndex = 3,
+		.pointNum = 2,
+		.lowstResult = 0.44,
+		.highestResult = 200,
+		.normalResult = {"<=1.0 mg/L\0"},
+		.itemMeasure = {"mg/L\0"}
+	},
+	{
+		.itemName = "PCT\0",
+		.icoIndex = 3,
+		.pointNum = 2,
+		.lowstResult = 0.22,
+		.highestResult = 100,
+		.normalResult = {"<=0.5 ng/mL\0"},
+		.itemMeasure = {"ng/mL\0"}
+	},
+	{
+		.itemName = "CysC\0",
+		.icoIndex = 3,
+		.pointNum = 2,
+		.lowstResult = 0.46,
+		.highestResult = 8,
+		.normalResult = {"0.5-1.3 mg/L\0"},
+		.itemMeasure = {"mg/L\0"}
+	},
+	{
+		.itemName = "¦Â-HCG\0",
+		.icoIndex = 3,
+		.pointNum = 2,
+		.lowstResult = 2,
+		.highestResult = 25000,
+		.normalResult = {"<=5 mIU/mL\0"},
+		.itemMeasure = {"mIU/mL\0"}
+	},
+	{
+		.itemName = "NGAL\0",
+		.icoIndex = 3,
+		.pointNum = 2,
+		.lowstResult = 10,
+		.highestResult = 1500,
+		.normalResult = {"<=170 ng/mL\0"},
+		.itemMeasure = {"ng/mL\0"}
+	},
 };
 /***************************************************************************************************/
 /***************************************************************************************************/
@@ -75,6 +122,15 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 /****************************************File Start*************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
+
+MyState_TypeDef getItemNameByIndex(unsigned char index, char * itemName)
+{
+	if(index >= ITEM_NUM || itemName == NULL)
+		return My_Fail;
+	
+	memcpy(itemName, GB_ItemConstData[index].itemName, ItemNameLen);
+	return My_Pass;
+}
 
 MyState_TypeDef getItemConstData(ItemConstData * itemConstData, char * itemName)
 {
@@ -93,6 +149,16 @@ MyState_TypeDef getItemConstData(ItemConstData * itemConstData, char * itemName)
 	}
 	
 	return My_Fail;
+}
+
+MyState_TypeDef getItemConstDataByIndex(ItemConstData * itemConstData, unsigned char index)
+{	
+	if(index >= ITEM_NUM || itemConstData == NULL)
+		return My_Fail;
+	
+	memcpy(itemConstData, &GB_ItemConstData[index], sizeof(ItemConstData));
+	
+	return My_Pass;
 }
 
 /****************************************end of file************************************************/

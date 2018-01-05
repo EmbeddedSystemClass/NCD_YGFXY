@@ -139,7 +139,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 	else if(S_LunchPageBuffer->lcdinput[0] == 0x1101)
 	{
 		//有卡排队，则进入排队界面
-		if(true == IsPaiDuiTestting())
+		if(IsPaiDuiTestting())
 			startActivity(createPaiDuiActivity, NULL);
 
 		//无卡排队则开始创建

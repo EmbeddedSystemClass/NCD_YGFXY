@@ -47,17 +47,17 @@ static TestBuffer GB_TestBuffer = {
 *Author: xsx
 *Date: 2016年12月2日15:10:07
 ***************************************************************************************************/
-bool IsPaiDuiTestting(void)
+MyBool IsPaiDuiTestting(void)
 {
 	unsigned char i=0;
 
 	for(i=0; i<PaiDuiWeiNum; i++)
 	{
 		if(GB_TestBuffer.PaiduiTestDataBuffer[i] != NULL)
-			return true;
+			return TRUE;
 	}
 	
-	return false;
+	return FALSE;
 }
 
 CreateTestErrorType CreateANewTest(TestType testtype)
@@ -71,7 +71,7 @@ CreateTestErrorType CreateANewTest(TestType testtype)
 	if(testtype == NormalTestType)
 	{
 		//如果批量测试功能在使用中，则禁止常规测试
-		if(true == IsPaiDuiTestting())
+		if(IsPaiDuiTestting())
 			return Error_StopNormalTest;
 		
 		//申请测试内存
@@ -100,7 +100,7 @@ CreateTestErrorType CreateANewTest(TestType testtype)
 		if(40 > GetMinWaitTime())
 			return Error_PaiDuiBusy;
 		
-		if(true == isSomePaiduiInOutTimeStatus())
+		if(isSomePaiduiInOutTimeStatus())
 			return Error_PaiDuiBusy;
 		
 		for(i=0; i<PaiDuiWeiNum; i++)
@@ -150,7 +150,7 @@ ItemData * GetTestItemByIndex(unsigned char index)
 *Author:  xsx
 *Date: 16:20:57
 ***************************************************************************************************/
-bool isSomePaiduiInOutTimeStatus(void)
+MyBool isSomePaiduiInOutTimeStatus(void)
 {
 	unsigned char index = 0;
 	
@@ -159,11 +159,11 @@ bool isSomePaiduiInOutTimeStatus(void)
 		if((GB_TestBuffer.PaiduiTestDataBuffer[index])&&
 			(GB_TestBuffer.PaiduiTestDataBuffer[index]->timer2.start != 0))
 		{
-			return true;
+			return TRUE;
 		}
 	}
 	
-	return false;
+	return FALSE;
 }
 
 unsigned short GetMinWaitTime(void)
@@ -195,12 +195,12 @@ unsigned short GetMinWaitTime(void)
 *Author:  xsx
 *Date: 2017年3月22日 11:31:48
 ***************************************************************************************************/
-bool isInTimeOutStatus(ItemData * itemData)
+MyBool isInTimeOutStatus(ItemData * itemData)
 {
 	if(itemData && (itemData->timer2.start != 0))
-		return true;
+		return TRUE;
 	else
-		return false;
+		return FALSE;
 }
 
 /***************************************************************************************************

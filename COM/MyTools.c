@@ -53,22 +53,22 @@
 ** 时  间:  
 ** 作  者：xsx                                                 
 ************************************************************************/
-bool CheckStrIsSame(void *str1 , void * str2 , unsigned short len)
+MyBool CheckStrIsSame(void *str1 , void * str2 , unsigned short len)
 {
 	unsigned char *p = (unsigned char *)str1;
 	unsigned char *q = (unsigned char *)str2;
 	unsigned short i=0;
 	
 	if((NULL == p) || (NULL == q))
-		return false;
+		return FALSE;
 	
 	for(i=0; i<len; i++)
 	{
 		if(*q++ != *p++)
-			return false;
+			return FALSE;
 	}
 	
-	return true;
+	return TRUE;
 }
 
 /***************************************************************************************************

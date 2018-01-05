@@ -119,7 +119,7 @@ static void ProcessCMD(unsigned char *buf, unsigned short len, struct netconn *p
 			strcat(pxbuf1, pxbuf2);
 			
 			if(0 == GetTestStatusFlorLab())
-				MotorMoveTo(1, 2, MaxLocation, true);
+				MotorMoveTo(1, 2, MaxLocation, TRUE);
 		}
 
 		netconn_write( pxNetCon, pxbuf1, strlen(pxbuf1), NETCONN_COPY );

@@ -23,13 +23,13 @@ typedef struct TestBuffer_tag{
 	ItemData * CurrentTestDataBuffer;												//µ±«∞≤‚ ‘
 }TestBuffer;
 
-bool IsPaiDuiTestting(void);
+MyBool IsPaiDuiTestting(void);
 CreateTestErrorType CreateANewTest(TestType testtype);
 MyState_TypeDef DeleteCurrentTest(void);
 ItemData * GetTestItemByIndex(unsigned char index);
 unsigned short GetMinWaitTime(void);
-bool isSomePaiduiInOutTimeStatus(void);
-bool isInTimeOutStatus(ItemData * itemData);
+MyBool isSomePaiduiInOutTimeStatus(void);
+MyBool isInTimeOutStatus(ItemData * itemData);
 void SetCurrentTestItem(ItemData * s_itemdata);
 ItemData * GetCurrentTestItem(void);
 

@@ -20,6 +20,7 @@
 #include	<string.h>
 #include	"stdio.h"
 #include 	"stdlib.h"
+#include	"math.h"
 /******************************************************************************************/
 /*****************************************局部变量声明*************************************/
 static CheckQRPageBuffer *S_CheckQRPageBuffer = NULL;
@@ -110,10 +111,10 @@ static void activityFresh(void)
 		/*是否插卡*/
 		if(GetCardState() == CardIN)
 		{
-			if(S_CheckQRPageBuffer->isScanning == false)
+			if(S_CheckQRPageBuffer->isScanning == FALSE)
 			{
 				clearPageText();
-				S_CheckQRPageBuffer->isScanning = true;
+				S_CheckQRPageBuffer->isScanning = TRUE;
 				S_CheckQRPageBuffer->scancode = CardCodeScanning;
 				StartScanQRCode(&(S_CheckQRPageBuffer->qrCode));
 				
@@ -122,16 +123,16 @@ static void activityFresh(void)
 		}
 		else
 		{
-			if(S_CheckQRPageBuffer->isScanning == true)
+			if(S_CheckQRPageBuffer->isScanning)
 			{
-				S_CheckQRPageBuffer->isScanning = false;
+				S_CheckQRPageBuffer->isScanning = FALSE;
 				dspScanStatus("Waitting\0");
 			}
 		}
 
 		if(My_Pass == TakeScanQRCodeResult(&(S_CheckQRPageBuffer->scancode)))
 		{	
-			MotorMoveTo(1, 2, MaxLocation, false);
+			MotorMoveTo(1, 2, MaxLocation, FALSE);
 			
 			//二维码读取失败
 			if((S_CheckQRPageBuffer->scancode == CardCodeScanFail) || (S_CheckQRPageBuffer->scancode == CardCodeCardOut) ||
@@ -236,7 +237,7 @@ static void DspPageText(void)
 	sprintf(S_CheckQRPageBuffer->buf, "%-20s", S_CheckQRPageBuffer->qrCode.piNum);
 	DisText(0x2508, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
-	sprintf(S_CheckQRPageBuffer->buf, "%-20s", S_CheckQRPageBuffer->qrCode.ItemName);
+	sprintf(S_CheckQRPageBuffer->buf, "%-20s", S_CheckQRPageBuffer->qrCode.itemConstData.itemName);
 	DisText(0x2510, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
 	sprintf(S_CheckQRPageBuffer->buf, "%-20s", S_CheckQRPageBuffer->qrCode.itemConstData.normalResult);
@@ -270,25 +271,34 @@ static void DspPageText(void)
 	sprintf(S_CheckQRPageBuffer->buf, "%d", S_CheckQRPageBuffer->qrCode.ChannelNum);
 	DisText(0x2560, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
-	memset(S_CheckQRPageBuffer->buf, 0, 50);
-	sprintf(S_CheckQRPageBuffer->buf, "%.4f*x^2+%.4f*x+%.4f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][1], 
-		S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][2]);
+	if(S_CheckQRPageBuffer->qrCode.qu1Ise == 0)
+		sprintf(S_CheckQRPageBuffer->buf, "%.3f*x^2+%.3f*x+%.3f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][1], 
+			S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][2]);
+	else
+		sprintf(S_CheckQRPageBuffer->buf, "%.3f*e(%.3f*x+%.3f)+%.3f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][1], 
+			S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][2], S_CheckQRPageBuffer->qrCode.qu1_d);
 	DisText(0x2568, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
 	sprintf(S_CheckQRPageBuffer->buf, "%-20f", S_CheckQRPageBuffer->qrCode.ItemFenDuan[0]);
 	DisText(0x2578, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
-	memset(S_CheckQRPageBuffer->buf, 0, 50);
-	sprintf(S_CheckQRPageBuffer->buf, "%.4f*x^2+%.4f*x+%.4f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][1], 
-		S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][2]);
+	if(S_CheckQRPageBuffer->qrCode.qu2Ise == 0)
+		sprintf(S_CheckQRPageBuffer->buf, "%.3f*x^2+%.3f*x+%.3f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][1], 
+			S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][2]);
+	else
+		sprintf(S_CheckQRPageBuffer->buf, "%.3f*e(%.3f*x+%.3f)+%.3f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][1], 
+			S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][2], S_CheckQRPageBuffer->qrCode.qu2_d);
 	DisText(0x2580, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
 	sprintf(S_CheckQRPageBuffer->buf, "%-20f", S_CheckQRPageBuffer->qrCode.ItemFenDuan[1]);
 	DisText(0x2590, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 	
-	memset(S_CheckQRPageBuffer->buf, 0, 50);
-	sprintf(S_CheckQRPageBuffer->buf, "%.4f*x^2+%.4f*x+%.4f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][1], 
-		S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][2]);
+	if(S_CheckQRPageBuffer->qrCode.qu3Ise == 0)
+		sprintf(S_CheckQRPageBuffer->buf, "%.3f*x^2+%.3f*x+%.3f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][1], 
+			S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][2]);
+	else
+		sprintf(S_CheckQRPageBuffer->buf, "%.3f*e(%.3f*x+%.3f)+%.3f", S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][0], S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][1], 
+			S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][2], S_CheckQRPageBuffer->qrCode.qu3_d);
 	DisText(0x2598, S_CheckQRPageBuffer->buf, strlen(S_CheckQRPageBuffer->buf));
 }
 
@@ -296,33 +306,44 @@ static void calculateResult(void)
 {
 	S_CheckQRPageBuffer->inputTC = strtod(S_CheckQRPageBuffer->buf , NULL);
 	
-	/*根据分段，计算原始结果*/
+	S_CheckQRPageBuffer->isE = FALSE;
 	if((S_CheckQRPageBuffer->inputTC < S_CheckQRPageBuffer->qrCode.ItemFenDuan[0]) || (S_CheckQRPageBuffer->qrCode.ItemFenDuan[0] == 0))
 	{
-		S_CheckQRPageBuffer->basicResult = S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->inputTC;
-		S_CheckQRPageBuffer->basicResult *= S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][0];
-					
-		S_CheckQRPageBuffer->basicResult += (S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][1]);
-					
-		S_CheckQRPageBuffer->basicResult += S_CheckQRPageBuffer->qrCode.ItemBiaoQu[0][2];
+		if(S_CheckQRPageBuffer->qrCode.qu1Ise)
+			S_CheckQRPageBuffer->isE = TRUE;
+		S_CheckQRPageBuffer->quNum = 0;
+		S_CheckQRPageBuffer->tempDouble = S_CheckQRPageBuffer->qrCode.qu1_d;
 	}
 	else if((S_CheckQRPageBuffer->inputTC < S_CheckQRPageBuffer->qrCode.ItemFenDuan[1]) || (S_CheckQRPageBuffer->qrCode.ItemFenDuan[1] == 0))
 	{
-		S_CheckQRPageBuffer->basicResult = S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->inputTC;
-		S_CheckQRPageBuffer->basicResult *= S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][0];
-					
-		S_CheckQRPageBuffer->basicResult += (S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][1]);
-					
-		S_CheckQRPageBuffer->basicResult += S_CheckQRPageBuffer->qrCode.ItemBiaoQu[1][2];
+		if(S_CheckQRPageBuffer->qrCode.qu2Ise)
+			S_CheckQRPageBuffer->isE = TRUE;
+		S_CheckQRPageBuffer->quNum = 1;
+		S_CheckQRPageBuffer->tempDouble = S_CheckQRPageBuffer->qrCode.qu2_d;
+	}
+	else
+	{
+		if(S_CheckQRPageBuffer->qrCode.qu3Ise)
+			S_CheckQRPageBuffer->isE = TRUE;
+		S_CheckQRPageBuffer->quNum = 2;
+		S_CheckQRPageBuffer->tempDouble = S_CheckQRPageBuffer->qrCode.qu3_d;
+	}
+			
+	if(S_CheckQRPageBuffer->isE)
+	{
+		S_CheckQRPageBuffer->basicResult = S_CheckQRPageBuffer->qrCode.ItemBiaoQu[S_CheckQRPageBuffer->quNum][0] 
+					* exp(S_CheckQRPageBuffer->qrCode.ItemBiaoQu[S_CheckQRPageBuffer->quNum][1] * S_CheckQRPageBuffer->inputTC + 
+					S_CheckQRPageBuffer->qrCode.ItemBiaoQu[S_CheckQRPageBuffer->quNum][2] ) + 
+					S_CheckQRPageBuffer->tempDouble;
 	}
 	else
 	{
 		S_CheckQRPageBuffer->basicResult = S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->inputTC;
-		S_CheckQRPageBuffer->basicResult *= S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][0];
+		S_CheckQRPageBuffer->basicResult *= S_CheckQRPageBuffer->qrCode.ItemBiaoQu[S_CheckQRPageBuffer->quNum][0];
 					
-		S_CheckQRPageBuffer->basicResult += (S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][1]);
+		S_CheckQRPageBuffer->basicResult += (S_CheckQRPageBuffer->inputTC * S_CheckQRPageBuffer->qrCode.ItemBiaoQu[S_CheckQRPageBuffer->quNum][1]);
 					
-		S_CheckQRPageBuffer->basicResult += S_CheckQRPageBuffer->qrCode.ItemBiaoQu[2][2];
+		S_CheckQRPageBuffer->basicResult += S_CheckQRPageBuffer->qrCode.ItemBiaoQu[S_CheckQRPageBuffer->quNum][2];
 	}
 			
 	sprintf(S_CheckQRPageBuffer->buf, "%.*f\0", S_CheckQRPageBuffer->qrCode.itemConstData.pointNum, S_CheckQRPageBuffer->basicResult);

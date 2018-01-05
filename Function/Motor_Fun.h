@@ -4,7 +4,7 @@
 
 #include	"Define.h"
 
-void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int location, bool isWait);
+void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int location, MyBool isWait);
 
 #endif
 

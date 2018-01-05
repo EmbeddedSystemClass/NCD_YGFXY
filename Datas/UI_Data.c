@@ -76,7 +76,7 @@ MyState_TypeDef startActivity(MyState_TypeDef (* pageCreate)(Activity * thizacti
 			}
 			//创建失败，则出栈此页面，并销毁
 			else
-				StackPop(&GB_ActivityLinkStack, true);
+				StackPop(&GB_ActivityLinkStack, TRUE);
 		}
 		
 		//入栈失败，则销毁
@@ -112,7 +112,7 @@ MyState_TypeDef backToActivity(char * pageName)
 			return My_Pass;
 		}
 		else
-			StackPop(&GB_ActivityLinkStack, false);
+			StackPop(&GB_ActivityLinkStack, FALSE);
 	}
 	
 	return My_Fail;
@@ -132,7 +132,7 @@ MyState_TypeDef backToFatherActivity(void)
 	Activity * activity = NULL;
 	
 	//出栈当前页面
-	StackPop(&GB_ActivityLinkStack, false);
+	StackPop(&GB_ActivityLinkStack, FALSE);
 	
 	if(My_Pass == StackTop(&GB_ActivityLinkStack, &activity))
 	{
@@ -188,7 +188,7 @@ char * getCurrentActivityName(void)
 *Author:  xsx
 *Date: 09:27:19
 ***************************************************************************************************/
-bool checkFatherActivityIs(char * pageName)
+MyBool checkFatherActivityIs(char * pageName)
 {
 	char * fatherActivityName = NULL;
 	
@@ -198,10 +198,10 @@ bool checkFatherActivityIs(char * pageName)
 	if(fatherActivityName && pageName)
 	{
 		if(CheckStrIsSame(fatherActivityName, pageName, strlen(pageName)))
-			return true;
+			return TRUE;
 	}
 	
-	return false;
+	return FALSE;
 }
 
 /***************************************************************************************************
@@ -215,7 +215,7 @@ bool checkFatherActivityIs(char * pageName)
 ***************************************************************************************************/
 void destroyTopActivity(void)
 {
-	StackPop(&GB_ActivityLinkStack, false);
+	StackPop(&GB_ActivityLinkStack, FALSE);
 }
 /***************************************************************************************************
 *FunctionName: InitActivity

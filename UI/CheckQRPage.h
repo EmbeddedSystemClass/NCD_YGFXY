@@ -9,9 +9,12 @@ typedef struct CheckQRPageBuffer_tag {
 	QRCode qrCode;						//二维码数据缓冲区
 	ScanCodeResult scancode;
 	Timer timer;						//间隔提示插卡
-	bool isScanning;				//是否正在扫描中
+	MyBool isScanning;				//是否正在扫描中
 	double inputTC;
 	double basicResult;				//计算结果
+	MyBool isE;						//是否指数函数
+	double tempDouble;
+	unsigned char quNum;
 }CheckQRPageBuffer;
 
 

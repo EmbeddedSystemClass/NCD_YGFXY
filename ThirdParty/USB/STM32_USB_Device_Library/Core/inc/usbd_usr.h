@@ -32,6 +32,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_core.h"
 
+#include	"FreeRTOS.h"
+#include 	"queue.h"
 
 /** @addtogroup USBD_USER
   * @{
@@ -109,6 +111,7 @@ void     USBD_USR_HS_DeviceResumed(void);
 void     USBD_USR_HS_DeviceConnected(void);
 void     USBD_USR_HS_DeviceDisconnected(void);  
 
+xQueueHandle GetUSBRXQueue(void);
 /**
   * @}
   */ 

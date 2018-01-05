@@ -41,7 +41,7 @@ static void DS18B20_GPIO_Config(void);
 static void DS18B20_Config(void);
 static void DS18B20_Mode_IPU(void);
 static void DS18B20_Mode_Out_PP(void);
-static bool DS18B20_Rst(void);
+static MyBool DS18B20_Rst(void);
 static void DS18B20_Write_Byte(const unsigned char dat);
 static unsigned char DS18B20_Read_Byte(void);
 static void DS18B20_Read_Bytes(unsigned char *buf, unsigned char len);
@@ -144,7 +144,7 @@ static void DS18B20_Mode_Out_PP(void)
 *Author: xsx
 *Date: 2017年1月18日11:10:32
 ***************************************************************************************************/
-static bool DS18B20_Rst(void)
+static MyBool DS18B20_Rst(void)
 {
 	uint8_t pulse_time = 0;
 	
@@ -167,9 +167,9 @@ static bool DS18B20_Rst(void)
 	delay_us(300);
 	
 	if(pulse_time == 0)
-		return true;
+		return TRUE;
 	else
-		return false;
+		return FALSE;
 	/* 等待存在脉冲的到来，存在脉冲为一个60~240us的低电平信号 
 	 * 如果存在脉冲没有来则做超时处理，从机接收到主机的复位信号后，会在15~60us后给主机发一个存在脉冲
 	 */
@@ -181,11 +181,11 @@ static bool DS18B20_Rst(void)
 	*/
 	/* 经过100us后，存在脉冲都还没有到来*/
 /*	if( pulse_time >= 200 )
-		return false;
+		return FALSE;
 	else
 	{
 		delay_us(240);
-		return true;
+		return TRUE;
 	}*/
 }
 

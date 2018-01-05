@@ -77,7 +77,7 @@ MyState_TypeDef createWaittingCardActivity(Activity * thizActivity, Intent * pra
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	MotorMoveTo(1, 2, WaittingCardLocation, false);
+	MotorMoveTo(1, 2, WaittingCardLocation, FALSE);
 		
 	S_WaitPageData->currenttestdata = GetCurrentTestItem();
 	S_WaitPageData->currenttestdata->statues = status_wait1;
@@ -151,7 +151,7 @@ static void activityFresh(void)
 	if(GetMinWaitTime() < 40)
 	{
 		stopPlay();
-		MotorMoveTo(1, 2, MaxLocation, false);
+		MotorMoveTo(1, 2, MaxLocation, FALSE);
 		DeleteCurrentTest();
 		
 		backToActivity(paiduiActivityName);

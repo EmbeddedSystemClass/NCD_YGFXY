@@ -8,7 +8,7 @@
 typedef struct OtherSetPageBuffer_tag {
 	MyTime_Def temptime;
 	SystemSetData systemSetData;
-	bool isChange;
+	MyBool isChange;
 	char buf[50];
 	unsigned short lcdinput[100];
 	unsigned short tempvalue;

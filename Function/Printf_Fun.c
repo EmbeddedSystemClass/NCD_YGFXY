@@ -59,12 +59,12 @@ void PrintfData(TestData * testd2)
 		sprintf(printfbuf, "%s: %s\n", SampleIdStr, tempTestData->sampleid);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "%s: %s\n", ItemNameStr, tempTestData->temperweima.ItemName);
+		sprintf(printfbuf, "%s: %s\n", ItemNameStr, tempTestData->temperweima.itemConstData.itemName);
 		SendDataToQueue(GetUsart3TXQueue(), GetUsart3Mutex(), printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
 		if(tempTestData->testResultDesc != ResultIsOK)
 			sprintf(printfbuf, "%s: ERROR\n", ResultStr);
-		else if(IsShowRealValue() == true)
+		else if(IsShowRealValue())
 			sprintf(printfbuf, "%s: %.*f %-8.8s\n", ResultStr, tempTestData->temperweima.itemConstData.pointNum, tempTestData->testline.BasicResult, tempTestData->temperweima.itemConstData.itemMeasure);
 		else if(tempTestData->testline.BasicResult <= tempTestData->temperweima.itemConstData.lowstResult)
 			sprintf(printfbuf, "%s: <%.*f %-8.8s\n", ResultStr, tempTestData->temperweima.itemConstData.pointNum, tempTestData->temperweima.itemConstData.lowstResult, tempTestData->temperweima.itemConstData.itemMeasure);

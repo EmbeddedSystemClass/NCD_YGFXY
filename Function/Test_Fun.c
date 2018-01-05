@@ -161,20 +161,20 @@ ResultState TestFunction(void * parm)
 		
 		repeat:
 				
-			MotorMoveTo(1, 2, 0, true);
+			MotorMoveTo(1, 2, 0, TRUE);
 				
-			MotorMoveTo(1, 2, StartTestLocation, true);
+			MotorMoveTo(1, 2, StartTestLocation, TRUE);
 		
 			S_TempCalData->resultstatues = NoResult;
 			S_TempCalData->tempvalue1 = 0;
 			
-			//MotorMoveTo(10, 20, EndTestLocation, false);
+			//MotorMoveTo(10, 20, EndTestLocation, FALSE);
 
 			S_TempCalData->motorLocation = GetGB_MotorLocation();
 			S_TempCalData->tempvalue1 = 0;
 			for(i=1; i<= steps; i++)
 			{
-				MotorMoveTo(1, 2, S_TempCalData->motorLocation + i, true);
+				MotorMoveTo(1, 2, S_TempCalData->motorLocation + i, TRUE);
 				vTaskDelay(1 / portTICK_RATE_MS);				
 				S_TempCalData->tempvalue1 += ADS8325();
 				
@@ -314,7 +314,7 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		        }
 			}
 		}
-		
+
 		S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
 
 		
@@ -395,6 +395,9 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		     goto END2;
 		}
 		
+		S_TempCalData->itemData->testdata.t_cv = S_TempCalData->CV_T;
+		S_TempCalData->itemData->testdata.c_cv = S_TempCalData->CV_C;
+		
 		//step 9 判断微球是否过少，，补偿
 		S_TempCalData->maxdata = S_TempCalData->itemData->testdata.testline.C_Point.y;
 		S_TempCalData->tempvalue1 = 0;
@@ -426,6 +429,10 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		/*计算结果*/
 		S_TempCalData->tempvalue1 = (S_TempCalData->itemData->testdata.testline.T_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
 		S_TempCalData->tempvalue2 = (S_TempCalData->itemData->testdata.testline.C_Point.y - S_TempCalData->itemData->testdata.testline.B_Point.y);
+		S_TempCalData->itemData->testdata.testline.t_cValue = S_TempCalData->tempvalue1 / S_TempCalData->tempvalue2;
+		S_TempCalData->itemData->testdata.t_tcValue = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
+		
+		//恢复被改的数据
 		S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x] = S_TempCalData->maxdata;
 		S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
 
@@ -433,13 +440,13 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		readDeviceId(S_TempCalData->tempBuf);
 		if(strstr(S_TempCalData->tempBuf, "NCD13011703018"))
 		{
-			if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.ItemName, "NT-proBNP", 9))
+			if(TRUE == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.itemConstData.itemName, "NT-proBNP", 9))
 			{
-				S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
-				if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.129)
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * 10640.0f - 214.46;
+				S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+				if(S_TempCalData->finalBili <= 0.129)
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * 10640.0f - 214.46;
 				else
-					S_TempCalData->itemData->testdata.testline.BasicResult = 566.49 * exp(4.9057*S_TempCalData->itemData->testdata.testline.BasicBili);
+					S_TempCalData->itemData->testdata.testline.BasicResult = 566.49 * exp(4.9057*S_TempCalData->finalBili);
 				
 				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
@@ -448,16 +455,16 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			
 				return;
 			}
-			else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.ItemName, "cTnI", 4))
+			else if(TRUE == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.itemConstData.itemName, "cTnI", 4))
 			{
-				S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
-				if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.0919)
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * 16.814f - 0.5512;
-				else if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.6127)
-					S_TempCalData->itemData->testdata.testline.BasicResult = 21.093*S_TempCalData->itemData->testdata.testline.BasicBili*S_TempCalData->itemData->testdata.testline.BasicBili + 
-						12.558f * S_TempCalData->itemData->testdata.testline.BasicBili - 0.4594;
+				S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+				if(S_TempCalData->finalBili <= 0.0919)
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * 16.814f - 0.5512;
+				else if(S_TempCalData->finalBili <= 0.6127)
+					S_TempCalData->itemData->testdata.testline.BasicResult = 21.093*S_TempCalData->finalBili*S_TempCalData->finalBili + 
+						12.558f * S_TempCalData->finalBili - 0.4594;
 				else
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * 125.66f - 62.903;
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * 125.66f - 62.903;
 				
 				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
@@ -466,16 +473,16 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			
 				return;
 			}
-			else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.ItemName, "CK-MB", 5))
+			else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.itemConstData.itemName, "CK-MB", 5))
 			{
-				S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / (S_TempCalData->tempvalue1 + S_TempCalData->tempvalue2);
+				S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
 				
-				if(S_TempCalData->itemData->testdata.testline.BasicBili <= 0.3153)
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.testline.BasicBili * 90.414f 
-						+ S_TempCalData->itemData->testdata.testline.BasicBili * 25.522f - 2.8215f;
+				if(S_TempCalData->finalBili <= 0.3153)
+					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 90.414f 
+						+ S_TempCalData->finalBili * 25.522f - 2.8215f;
 				else
-					S_TempCalData->itemData->testdata.testline.BasicResult = 396.69f*S_TempCalData->itemData->testdata.testline.BasicBili*S_TempCalData->itemData->testdata.testline.BasicBili - 
-						138.72f * S_TempCalData->itemData->testdata.testline.BasicBili + 19.677;
+					S_TempCalData->itemData->testdata.testline.BasicResult = 396.69f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
+						138.72f * S_TempCalData->finalBili + 19.677;
 
 				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
@@ -486,54 +493,95 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			}
 		}
 		
-		/*原始峰高比*/
-		S_TempCalData->itemData->testdata.testline.BasicBili = S_TempCalData->tempvalue1 / S_TempCalData->tempvalue2;
-				
-		/*根据分段，计算原始结果*/
-		if((S_TempCalData->itemData->testdata.testline.BasicBili < S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[0]) || (S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[0] == 0))
+		//选择最终进行计算的比例(T/C or T/T+C)
+		if(S_TempCalData->itemData->testdata.temperweima.calMode == 1)
+			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.testline.t_cValue;
+		else
+			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+		
+		//根据批次修改曲线
+		if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IM1711-01", 9))
 		{
-			S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.testline.BasicBili;
-			S_TempCalData->itemData->testdata.testline.BasicResult *= S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[0][0];
-					
-			S_TempCalData->itemData->testdata.testline.BasicResult += (S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[0][1]);
-					
-			S_TempCalData->itemData->testdata.testline.BasicResult += S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[0][2];
+			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+			
+			if(S_TempCalData->finalBili <= 0.2865f)
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 136.98f 
+					+ S_TempCalData->finalBili * 37.055f - 0.1029f;
+			else
+				S_TempCalData->itemData->testdata.testline.BasicResult = 616.26f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
+					272.15f * S_TempCalData->finalBili + 50.805;
 		}
-		else if((S_TempCalData->itemData->testdata.testline.BasicBili < S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[1]) || (S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[1] == 0))
+		else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IK1711-02", 9))
 		{
-			S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.testline.BasicBili;
-			S_TempCalData->itemData->testdata.testline.BasicResult *= S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[1][0];
-					
-			S_TempCalData->itemData->testdata.testline.BasicResult += (S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[1][1]);
-					
-			S_TempCalData->itemData->testdata.testline.BasicResult += S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[1][2];
+			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+			
+			if(S_TempCalData->finalBili <= 0.1577f)
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 1082.0f 
+					- S_TempCalData->finalBili * 92.803f + 2.0259f;
+			else
+				S_TempCalData->itemData->testdata.testline.BasicResult = 1015.9f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
+					282.47f * S_TempCalData->finalBili + 36.177f;
 		}
 		else
 		{
-			S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.testline.BasicBili;
-			S_TempCalData->itemData->testdata.testline.BasicResult *= S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[2][0];
-					
-			S_TempCalData->itemData->testdata.testline.BasicResult += (S_TempCalData->itemData->testdata.testline.BasicBili * S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[2][1]);
-					
-			S_TempCalData->itemData->testdata.testline.BasicResult += S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[2][2];
-		}
-
+			/*根据分段，计算原始结果*/
+			S_TempCalData->isE = FALSE;
+			if((S_TempCalData->finalBili < S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[0]) || (S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[0] == 0))
+			{
+				if(S_TempCalData->itemData->testdata.temperweima.qu1Ise)
+					S_TempCalData->isE = TRUE;
+				S_TempCalData->tempvalue3 = 0;
+				S_TempCalData->tempvalue2 = S_TempCalData->itemData->testdata.temperweima.qu1_d;
+			}
+			else if((S_TempCalData->finalBili < S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[1]) || (S_TempCalData->itemData->testdata.temperweima.ItemFenDuan[1] == 0))
+			{
+				if(S_TempCalData->itemData->testdata.temperweima.qu2Ise)
+					S_TempCalData->isE = TRUE;
+				S_TempCalData->tempvalue3 = 1;
+				S_TempCalData->tempvalue2 = S_TempCalData->itemData->testdata.temperweima.qu2_d;
+			}
+			else
+			{
+				if(S_TempCalData->itemData->testdata.temperweima.qu3Ise)
+					S_TempCalData->isE = TRUE;
+				S_TempCalData->tempvalue3 = 2;
+				S_TempCalData->tempvalue2 = S_TempCalData->itemData->testdata.temperweima.qu3_d;
+			}
+			
+			if(S_TempCalData->isE)
+			{
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][0] 
+					* exp(S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][1] * S_TempCalData->finalBili + 
+					S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][2] ) + 
+					S_TempCalData->tempvalue2;
+			}
+			else
+			{
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili;
+				S_TempCalData->itemData->testdata.testline.BasicResult *= S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][0];
+						
+				S_TempCalData->itemData->testdata.testline.BasicResult += (S_TempCalData->finalBili * S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][1]);
+						
+				S_TempCalData->itemData->testdata.testline.BasicResult += S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][2];
+			}
+		}			
+		
 		if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
 		
-		if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1705-01", 9))
+		if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1705-01", 9))
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult *= 0.6666;
 		}
-		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IK1705-01", 9))
+		else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IK1705-01", 9))
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 2.3;
 		}
-		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1708-01", 9))
+		else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1708-01", 9))
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 1.75;
 		}
-		else if(true == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IM1705-01", 9))
+		else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IM1705-01", 9))
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 5.0f;
 		}

@@ -34,6 +34,8 @@
 #include "usb_regs.h"
 #include "usb_defines.h"
 
+#include	"FreeRTOS.h"
+#include 	"queue.h"
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
@@ -244,8 +246,9 @@ typedef struct _USBD_USR_PROP
   void (*DeviceResumed)(void);  
   
   void (*DeviceConnected)(void);  
-  void (*DeviceDisconnected)(void);    
-  
+  void (*DeviceDisconnected)(void); 
+	
+  xQueueHandle queue;
 }
 USBD_Usr_cb_TypeDef;
 

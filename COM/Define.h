@@ -10,9 +10,15 @@
 /*****************************************软件版本**************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
-/*V1.0.03*/
-#define	GB_SoftVersion	(unsigned short)1067
-#define	GB_SoftVersion_Build	"Build17112101\0"
+#define QRVersion0Define		0								//二维码原始版本定义
+#define QRVersion2Define		'2'								//二维码版本2定义
+#define QRVersion3Define		'3'								//二维码版本3定义
+#define QRVersionUnDefine		0xff							//不支持二维码版本
+#define	GB_QRVersion			QRVersion3Define				//当前支持的二维码版本，往下兼容
+
+
+#define	GB_SoftVersion	(unsigned short)1070
+#define	GB_SoftVersion_Build	"Build17121401\0"
 
 #define	DEVICE_EN						100
 #define	DEVICE_CN						101
@@ -20,6 +26,7 @@
 
 #define	Device_Final					0x27
 #define	Device_Demo						0x28
+#define	Device_FastDemo					0x29
 #define	DeviceUseType					Device_Final
 
 #define	NCDServerFinal					0x88
@@ -31,22 +38,29 @@
 #define	GB_ServerIp_2		62
 #define	GB_ServerIp_3		108
 #define	GB_ServerIp_4		201
-
 #define	GB_ServerPort		8080
+
+/*用户服务器*/
+#define	GB_UserServerIp_1		192
+#define	GB_UserServerIp_2		168
+#define	GB_UserServerIp_3		0
+#define	GB_UserServerIp_4		37
+#define	GB_UserServerPort		9200
+#define	GBDefaultPoctServer				"/NCDPoctServer/UpHandler\0"
 /**********************************************************************************************************/
 /******************************************操作结果变量*************************************************/
 /**********************************************************************************************************/
 typedef enum
 { 
-	My_Pass = pdPASS,		//操作成功
+	My_Pass = pdPASS,			//操作成功
 	My_Fail = pdFAIL			//操作失败
 }MyState_TypeDef;
 
 typedef enum
 { 
-	true = 1,
-	false = 0
-}bool;
+	TRUE = 1,
+	FALSE = 0
+}MyBool;
 
 typedef enum
 { 
@@ -146,7 +160,7 @@ typedef struct
 /**********************************************************************************************************/
 
 
-#define	ITEM_NUM	5
+#define	ITEM_NUM	10
 #define	ItemNameLen						20			//????????
 #define	ItemMeasureLen					10			//????????
 
@@ -178,7 +192,13 @@ typedef enum
 #pragma pack(1)
 typedef struct QRCode_Tag
 {
-	char	ItemName[ItemNameLen];						//测试项目
+	unsigned char qu1Ise;									//曲线1是否是指数
+	unsigned char qu2Ise;									//曲线2是否是指数
+	unsigned char qu3Ise;									//曲线3是否是指数
+	float qu1_d;	
+	float qu2_d;
+	float qu3_d;
+	unsigned char parm[5];								//预留
 	unsigned short ItemLocation;						//T线位置
 	unsigned char ChannelNum;							//通道号(0-7)
 	float	ItemFenDuan[2];								//分段峰高比
@@ -189,9 +209,10 @@ typedef struct QRCode_Tag
 	unsigned short CLineLocation;						//c线位置
 	char	PiHao[15];									//批次号
 	char	piNum[10];
-	MyTime_Def	CardBaoZhiQi;						//保质期
+	MyTime_Def	CardBaoZhiQi;							//保质期
 	ItemConstData itemConstData;						//此项目的固定数据
-	unsigned short CRC16;								//crc
+	unsigned char qrVersion;							//qr version in qr version 2.0 inplace crc high byte in qr version 1.0
+	unsigned char calMode;								//calculate result mode(1:T/C, 2:T/T+C) in qr version 2.0 inplace crc low byte in qr version 1.0
 }QRCode;
 #pragma pack()
 
@@ -314,7 +335,7 @@ typedef struct DeviceInfo_Tag
 	char deviceid[MaxDeviceIDLen];													//设备id
 	char deviceunit[MaxDeviceUnitLen];												//设备使用单位
 	User_Type deviceuser;															//设备使用人
-	bool isnew;															//设备信息是否有更新
+	MyBool isnew;															//设备信息是否有更新
 	unsigned short crc;
 }DeviceInfo;
 #pragma pack()
@@ -443,7 +464,7 @@ typedef struct TestLine_tag {
 	Point C_Point;
 	Point T_Point;
 	Point B_Point;
-	float BasicBili;
+	float t_cValue;
 	float BasicResult;
 	unsigned char CMdifyNum;					//c线补偿倍数，*10
 	unsigned char parm[3];
@@ -455,7 +476,10 @@ typedef struct TestData_tag {
 	User_Type user;
 	char sampleid[MaxSampleIDLen];
 	QRCode temperweima;
-	unsigned char parm[14];
+	float t_tcValue;
+	float t_cv;
+	float c_cv;
+	unsigned char parm[2];
 	TestLine testline;
 	MyTime_Def TestTime;						//测试时间
 	MyTemp_Def TestTemp;						//测试温度

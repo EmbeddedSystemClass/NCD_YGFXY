@@ -10,7 +10,7 @@ typedef struct
 	unsigned short RemoteFirmwareVersion;
 	char md5[32];
 	char desc[200];
-	bool isSuccessDownloadFirmware;
+	MyBool isSuccessDownloadFirmware;
 }RemoteSoftInfo;
 #pragma pack()
 
@@ -18,10 +18,10 @@ typedef struct
 
 void setGbRemoteFirmwareVersion(unsigned short version);
 unsigned short getGbRemoteFirmwareVersion(void);
-void setIsSuccessDownloadFirmware(bool status);
-bool getIsSuccessDownloadFirmware(void);
+void setIsSuccessDownloadFirmware(MyBool status);
+MyBool getIsSuccessDownloadFirmware(void);
 void setGbRemoteFirmwareMd5(char * md5);
-bool checkMd5IsSame(char * sMd5, char * dMd5);
+MyBool checkMd5IsSame(char * sMd5, char * dMd5);
 
 #endif
 

@@ -72,7 +72,7 @@ MyState_TypeDef checkMd5(void)
 	md5sum(currentMd5);
 	
 	//¶Ô±ÈMD5
-	if(true == CheckStrIsSame(remoteSoftInfo->md5, currentMd5, 32))
+	if(CheckStrIsSame(remoteSoftInfo->md5, currentMd5, 32))
 		return My_Pass;
 	else
 		return My_Fail;

@@ -162,18 +162,14 @@ static MyState_TypeDef loadSystemData(void)
 		{
 			//恢复默认设置
 			setDefaultSystemSetData(systemSetData);
-			
-			//保存默认设置
-			if(My_Pass == SaveSystemSetData(systemSetData))
-			{
-				setSystemSetData(systemSetData);
-				status = My_Pass;
-			}
 		}
-		else
+		
+		//if(systemSetData->userUpLoadIndex > systemSetData->testDataNum)
+			systemSetData->userUpLoadIndex = 0;
+		
+		//保存默认设置
+		if(My_Pass == SaveSystemSetData(systemSetData))
 		{
-			//开机上传一次设备信息
-			systemSetData->deviceInfo.isnew = true;
 			setSystemSetData(systemSetData);
 			status = My_Pass;
 		}
@@ -227,10 +223,10 @@ static MyState_TypeDef testLed(void)
 static MyState_TypeDef testMotol(void)
 {
 	unsigned char count = 0;
-	
+
 	SetDRVPowerStatues(LowPower);
 
-	MotorMoveTo(1, 2, 0, false);
+	MotorMoveTo(1, 2, 0, FALSE);
 	vTaskDelay(100 / portTICK_RATE_MS);
 	
 	while(!BackLimited)
@@ -249,7 +245,7 @@ static MyState_TypeDef testMotol(void)
 	
 	SetDRVPowerStatues(NonamalPower);
 	vTaskDelay(100 / portTICK_RATE_MS);
-	MotorMoveTo(1, 2, MaxLocation, true);
+	MotorMoveTo(1, 2, MaxLocation, TRUE);
 	vTaskDelay(100 / portTICK_RATE_MS);
 	
 	//走到最大行程，如果前限位触发，则报异常

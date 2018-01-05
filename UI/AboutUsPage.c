@@ -231,7 +231,7 @@ static void dspPageText(void)
 static void freshRemoteSoftVersionText(void)
 {
 	S_AboutUsPageBuffer->tempVersion = getGbRemoteFirmwareVersion();
-	if(getIsSuccessDownloadFirmware() == true && S_AboutUsPageBuffer->tempVersion > GB_SoftVersion)
+	if(getIsSuccessDownloadFirmware() && S_AboutUsPageBuffer->tempVersion > GB_SoftVersion)
 	{
 		sprintf(S_AboutUsPageBuffer->buf, "V%d.%d.%02d (V%d.%d.%02d)", GB_SoftVersion/1000, GB_SoftVersion%1000/100, GB_SoftVersion%100,
 			S_AboutUsPageBuffer->tempVersion/1000, S_AboutUsPageBuffer->tempVersion%1000/100, S_AboutUsPageBuffer->tempVersion%100);

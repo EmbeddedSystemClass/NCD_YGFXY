@@ -258,14 +258,14 @@ static void ReadNetInfo(void)
 		
 	memset(S_NetInfoPageBuffer->WifiMAC, 0, 13);
 	
-	if(S_NetInfoPageBuffer->isGetWifiControl == false)
+	if(S_NetInfoPageBuffer->isGetWifiControl == FALSE)
 	{
 		if(My_Fail == takeWifiMutex(100 / portTICK_RATE_MS))
 		{
 			goto END;
 		}
 		else
-			S_NetInfoPageBuffer->isGetWifiControl = true;
+			S_NetInfoPageBuffer->isGetWifiControl = TRUE;
 	}
 	/*如果不是at模式，则进入at模式*/
 	SetWifiWorkInAT(AT_Mode);

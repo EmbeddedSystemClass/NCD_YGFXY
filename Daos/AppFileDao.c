@@ -45,7 +45,7 @@
 *Author: xsx
 *Date: 2016Äê12ÔÂ8ÈÕ10:55:53
 ***************************************************************************************************/
-MyState_TypeDef WriteAppFile(char * file, unsigned short len, bool isNew)
+MyState_TypeDef WriteAppFile(char * file, unsigned short len, MyBool isNew)
 {
 	FatfsFileInfo_Def * myfile = NULL;
 	MyState_TypeDef statues = My_Fail;
@@ -56,7 +56,7 @@ MyState_TypeDef WriteAppFile(char * file, unsigned short len, bool isNew)
 	{
 		memset(myfile, 0, sizeof(FatfsFileInfo_Def));
 		
-		if(isNew == true)
+		if(isNew)
 			myfile->res = f_open(&(myfile->file), "0:/UPDATE.BIN", FA_CREATE_ALWAYS | FA_WRITE | FA_READ);
 		else
 			myfile->res = f_open(&(myfile->file), "0:/UPDATE.BIN", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);

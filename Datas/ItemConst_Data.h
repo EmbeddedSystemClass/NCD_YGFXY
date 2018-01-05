@@ -5,6 +5,8 @@
 #include	"Define.h"
 
 MyState_TypeDef getItemConstData(ItemConstData * itemConstData, char * itemName);
+MyState_TypeDef getItemNameByIndex(unsigned char index, char * itemName);
+MyState_TypeDef getItemConstDataByIndex(ItemConstData * itemConstData, unsigned char index);
 
 #endif
 

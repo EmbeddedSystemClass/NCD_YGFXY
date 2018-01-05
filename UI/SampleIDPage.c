@@ -114,7 +114,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 	{
 		if(checkFatherActivityIs(paiduiActivityName))
 		{
-			MotorMoveTo(1, 2, MaxLocation, false);
+			MotorMoveTo(1, 2, MaxLocation, FALSE);
 			DeleteCurrentTest();
 		}
 		else
@@ -163,7 +163,7 @@ static void activityFresh(void)
 	//如果排队中，有卡接近测试时间，则删除当前测试创建任务，返回
 	if(GetMinWaitTime() < 40)
 	{
-		MotorMoveTo(1, 2, MaxLocation, false);
+		MotorMoveTo(1, 2, MaxLocation, FALSE);
 		DeleteCurrentTest();
 		
 		backToFatherActivity();

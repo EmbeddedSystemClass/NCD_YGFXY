@@ -127,7 +127,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 				SendKeyCode(3);
 				AddNumOfSongToList(20, 0);
 			}
-			else if(true == isSomePaiduiInOutTimeStatus())
+			else if(isSomePaiduiInOutTimeStatus())
 			{
 				SendKeyCode(3);
 				AddNumOfSongToList(20, 0);
@@ -204,7 +204,7 @@ static void activityFresh(void)
 		S_PaiDuiPageBuffer->count2++;
 		
 		//界面忙
-		S_PaiDuiPageBuffer->pageisbusy = true;
+		S_PaiDuiPageBuffer->pageisbusy = TRUE;
 
 		//检测一次排队模块是否正常
 		if(Connect_Error == getPaiduiModuleStatus())
@@ -238,7 +238,7 @@ static void activityFresh(void)
 					{
 						vTaskDelay(1000 / portTICK_RATE_MS);
 						//创建成功，则使电机远离，防止用户拔卡
-						MotorMoveTo(1, 2, 1000, false);			
+						MotorMoveTo(1, 2, 1000, FALSE);			
 						startActivity(createSampleActivity, NULL);		
 						return;
 					}
@@ -349,7 +349,7 @@ static void activityFresh(void)
 		}
 		
 		//界面空闲
-		S_PaiDuiPageBuffer->pageisbusy = false;
+		S_PaiDuiPageBuffer->pageisbusy = FALSE;
 	}
 }
 

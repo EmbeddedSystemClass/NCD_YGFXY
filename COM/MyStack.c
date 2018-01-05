@@ -90,7 +90,7 @@ MyState_TypeDef StackPush(LinkStack * linkStack, Activity * activity)
 *Author: xsx
 *Date: 2016Äê12ÔÂ20ÈÕ08:50:28
 ***************************************************************************************************/
-MyState_TypeDef StackPop(LinkStack * linkStack, bool isResume)
+MyState_TypeDef StackPop(LinkStack * linkStack, MyBool isResume)
 {
 	StackNode * stackNode = NULL;
 	

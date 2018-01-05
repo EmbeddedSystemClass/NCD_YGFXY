@@ -186,15 +186,15 @@ unsigned int timer_Count(Timer * t)
 *Author: xsx
 *Date: 2016Äê12ÔÂ8ÈÕ16:27:47
 ***************************************************************************************************/
-bool timerIsStartted(Timer * t)
+MyBool timerIsStartted(Timer * t)
 {
 	if(t)
 	{
 		if(t->start == 0)
-			return false;
+			return FALSE;
 		else
-			return true;
+			return TRUE;
 	}
 	
-	return false;
+	return FALSE;
 }

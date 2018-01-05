@@ -316,7 +316,28 @@ void md5sum(char * md5Buf)
 		sprintf(str, "%02x", digest[i]);				//上传服务器的为小写的md5字符串
 		sprintf(md5Buf+2*i, "%.2s", str);
 	}
-}  
+}
+
+
+void md5sumOneTime(char * md5Buf, void * dataBuf, unsigned short dataLen)  
+{  
+	MD5_CTX ctx;
+	unsigned char digest[16];
+	char str[10];
+	unsigned char i=0;
+  
+    MD5Init(&ctx);  
+    
+	MD5Update(&ctx, dataBuf, dataLen); 
+  
+    MD5Final(digest, &ctx);
+	
+	for(i=0; i<16; i++)
+	{
+		sprintf(str, "%02x", digest[i]);				//以小写md5保存
+		sprintf(md5Buf+2*i, "%.2s", str);
+	}
+}
 
   
 /****************************************end of file************************************************/

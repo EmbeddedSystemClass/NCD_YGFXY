@@ -447,7 +447,7 @@ static void CheckQRCode(void)
 			EndOneReTest("不支持的试剂卡\0");
 			S_ReTestPageBuffer->reTestData.retestsurpluscount = 0;
 			S_ReTestPageBuffer->reTestData.retestStep = 4;
-			MotorMoveTo(1, 2, MaxLocation, true);
+			MotorMoveTo(1, 2, MaxLocation, TRUE);
 		}
 		//过期
 		else if(S_ReTestPageBuffer->scancode == CardCodeTimeOut)
@@ -456,7 +456,7 @@ static void CheckQRCode(void)
 			EndOneReTest("二维码读取过期\0");
 			S_ReTestPageBuffer->reTestData.retestsurpluscount = 0;
 			S_ReTestPageBuffer->reTestData.retestStep = 4;
-			MotorMoveTo(1, 2, MaxLocation, true);
+			MotorMoveTo(1, 2, MaxLocation, TRUE);
 		}
 		//读取成功
 		else if(S_ReTestPageBuffer->scancode == CardCodeScanOK)
@@ -472,7 +472,7 @@ static void CheckQRCode(void)
 			EndOneReTest("二维码读取失败\0");
 			S_ReTestPageBuffer->reTestData.retestsurpluscount = 0;
 			S_ReTestPageBuffer->reTestData.retestStep = 4;
-			MotorMoveTo(1, 2, MaxLocation, true);
+			MotorMoveTo(1, 2, MaxLocation, TRUE);
 		}
 	}
 }
@@ -482,7 +482,7 @@ static void CheckTestCard(void)
 	if(My_Pass == TakeTestResult(&(S_ReTestPageBuffer->cardpretestresult)))
 	{
 		EndOneReTest("测试正常\0");
-		MotorMoveTo(1, 2, MaxLocation, true);
+		MotorMoveTo(1, 2, MaxLocation, TRUE);
 	}
 }
 

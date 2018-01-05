@@ -18,6 +18,7 @@ typedef struct TempCalData_tag{
 	double CV_T;															//变异系数1
 	double CV_C;															//变异系数1
 	double CV_0;															//变异系数1
+	double finalBili;														//根据二维码进行T/C 或 T/T+C的最终比例
 	unsigned short tempvalue3;
 	unsigned short tempSeries[MaxPointLen+FilterNum];
 	unsigned int motorLocation;														//当前电机位置
@@ -25,6 +26,7 @@ typedef struct TempCalData_tag{
 	unsigned short maxdata;
 	ItemData * itemData;												//测试数据指针
 	ResultState resultstatues;											//测试结果状态
+	MyBool isE;															//是否指数函数
 }TempCalData;
 #pragma pack()
 

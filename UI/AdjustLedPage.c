@@ -98,12 +98,12 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		//开始校准
 		if(S_AdjustLedPageBuffer->lcdinput[0] == 0x2602)
 		{
-			if(S_AdjustLedPageBuffer->isTestting == false)
+			if(S_AdjustLedPageBuffer->isTestting == FALSE)
 			{
 				//初始状态从200开始查找
 				S_AdjustLedPageBuffer->itemData.ledLight = 200;
 				
-				S_AdjustLedPageBuffer->isTestting = true;
+				S_AdjustLedPageBuffer->isTestting = TRUE;
 				S_AdjustLedPageBuffer->testCnt = 1;
 				StartTest(&(S_AdjustLedPageBuffer->itemData));
 				
@@ -154,7 +154,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		//取消返回
 		else if(S_AdjustLedPageBuffer->lcdinput[0] == 0x2601)
 		{
-			if(S_AdjustLedPageBuffer->isTestting == false)
+			if(S_AdjustLedPageBuffer->isTestting == FALSE)
 				backToFatherActivity();
 			else
 				SendKeyCode(3);
@@ -168,7 +168,7 @@ static void activityFresh(void)
 	{
 		if(GetCardState() == NoCard)
 		{
-			if(S_AdjustLedPageBuffer->isTestting == false)
+			if(S_AdjustLedPageBuffer->isTestting == FALSE)
 			{
 				dspTestStatus("Waitting\0");
 			}
@@ -270,8 +270,8 @@ static void analysisTestData(void)
 	if(abs(S_AdjustLedPageBuffer->targetValue - S_AdjustLedPageBuffer->maxPoint[0]) < S_AdjustLedPageBuffer->targetRange)
 	{
 		dspTestStatus("Success\0");
-		S_AdjustLedPageBuffer->isTestting = false;
-		MotorMoveTo(1, 2, MaxLocation, false);
+		S_AdjustLedPageBuffer->isTestting = FALSE;
+		MotorMoveTo(1, 2, MaxLocation, FALSE);
 		return;
 	}
 	else if(S_AdjustLedPageBuffer->targetValue > S_AdjustLedPageBuffer->maxPoint[0])
@@ -315,7 +315,7 @@ static void analysisTestData(void)
 	
 	sprintf(S_AdjustLedPageBuffer->buf, "Fail - %d\0", S_AdjustLedPageBuffer->cardpretestresult);
 	DisText(0x2620, S_AdjustLedPageBuffer->buf, strlen(S_AdjustLedPageBuffer->buf)+1);
-	S_AdjustLedPageBuffer->isTestting = false;
+	S_AdjustLedPageBuffer->isTestting = FALSE;
 	
-	MotorMoveTo(1, 2, MaxLocation, false);
+	MotorMoveTo(1, 2, MaxLocation, FALSE);
 }

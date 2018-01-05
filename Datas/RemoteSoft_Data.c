@@ -56,12 +56,12 @@ unsigned short getGbRemoteFirmwareVersion(void)
 *Author: xsx
 *Date: 2017Äê2ÔÂ21ÈÕ09:09:50
 ***************************************************************************************************/
-void setIsSuccessDownloadFirmware(bool status)
+void setIsSuccessDownloadFirmware(MyBool status)
 {
 	GB_RemoteSoftInfo.isSuccessDownloadFirmware = status;
 }
 
-bool getIsSuccessDownloadFirmware(void)
+MyBool getIsSuccessDownloadFirmware(void)
 {
 	return GB_RemoteSoftInfo.isSuccessDownloadFirmware;
 }
@@ -79,12 +79,9 @@ void setGbRemoteFirmwareMd5(char * md5)
 {
 	memcpy(GB_RemoteSoftInfo.md5, md5, 32);
 }
-bool checkMd5IsSame(char * sMd5, char * dMd5)
+MyBool checkMd5IsSame(char * sMd5, char * dMd5)
 {
-	if(true == CheckStrIsSame(sMd5, dMd5, 32))
-		return true;
-	else
-		return false;
+	return CheckStrIsSame(sMd5, dMd5, 32);
 }
 
 /****************************************end of file************************************************/

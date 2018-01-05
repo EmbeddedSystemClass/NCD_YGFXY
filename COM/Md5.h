@@ -23,7 +23,7 @@ typedef struct MD5Context MD5_CTX;
 
 
 void md5sum(char * md5Buf) ;  
-
+void md5sumOneTime(char * md5Buf, void * dataBuf, unsigned short dataLen);
 
 #endif
 

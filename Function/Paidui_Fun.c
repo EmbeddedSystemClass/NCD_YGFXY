@@ -77,7 +77,7 @@ void PaiDuiHandler(void)
 			}
 			
 			//如果正在倒计时
-			if(isInTimeOutStatus(temp) == false)
+			if(isInTimeOutStatus(temp) == FALSE)
 			{
 				tempvalue = timer_surplus(&(temp->timer));
 				
@@ -318,7 +318,7 @@ void PaiDuiHandler(void)
 				
 				if((tempvalue <= 40) && (GetCurrentTestItem() == NULL))
 				{
-					if(false == CheckStrIsSame(paiduiActivityName, getCurrentActivityName(), strlen(paiduiActivityName)))
+					if(FALSE == CheckStrIsSame(paiduiActivityName, getCurrentActivityName(), strlen(paiduiActivityName)))
 					{
 						backToActivity(lunchActivityName);
 						startActivity(createPaiDuiActivity, NULL);
@@ -477,7 +477,7 @@ void PaiDuiHandler(void)
 				
 				if((tempvalue > 40) && (GetCurrentTestItem() == NULL))
 				{
-					if(false == CheckStrIsSame(paiduiActivityName, getCurrentActivityName(), strlen(paiduiActivityName)))
+					if(FALSE == CheckStrIsSame(paiduiActivityName, getCurrentActivityName(), strlen(paiduiActivityName)))
 					{
 						backToActivity(lunchActivityName);
 						startActivity(createPaiDuiActivity, NULL);
@@ -487,10 +487,10 @@ void PaiDuiHandler(void)
 		}
 	}
 	
-	if((IsPaiDuiTestting() == true) && (Connect_Error == getPaiduiModuleStatus()))
+	if((IsPaiDuiTestting()) && (Connect_Error == getPaiduiModuleStatus()))
 	{
 		//如果当前不是排队界面
-		if(false == CheckStrIsSame(paiduiActivityName, getCurrentActivityName(), strlen(paiduiActivityName)))
+		if(FALSE == CheckStrIsSame(paiduiActivityName, getCurrentActivityName(), strlen(paiduiActivityName)))
 		{
 			//如果当前没在测试
 			if(GetCurrentTestItem() == NULL)

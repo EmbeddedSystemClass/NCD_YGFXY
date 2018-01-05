@@ -31,6 +31,7 @@
 #include "usbd_ioreq.h"
 #include "usb_dcd_int.h"
 #include "usb_bsp.h"
+#include "usbd_usr.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
@@ -152,6 +153,7 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
   
   /* Upon Init call usr callback */
   pdev->dev.usr_cb->Init();
+	pdev->dev.usr_cb->queue = GetUSBRXQueue();
   
   /* Enable Interrupts */
   USB_OTG_BSP_EnableInterrupt(pdev);

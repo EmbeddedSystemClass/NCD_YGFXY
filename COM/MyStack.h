@@ -37,7 +37,7 @@ typedef struct
 
 void InitLinkStack(LinkStack * linkStack);
 MyState_TypeDef StackPush(LinkStack * linkStack, Activity * nodeData);
-MyState_TypeDef StackPop(LinkStack * linkStack, bool isResume);
+MyState_TypeDef StackPop(LinkStack * linkStack, MyBool isResume);
 MyState_TypeDef StackTop(LinkStack * linkStack, Activity ** activity);
 
 #endif

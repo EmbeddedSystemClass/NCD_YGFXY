@@ -302,7 +302,7 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 		DisText(0x2030+(i)*0x40, S_RecordPageBuffer->buf, strlen(S_RecordPageBuffer->buf)+1);
 		
 		//显示项目
-		sprintf(S_RecordPageBuffer->buf, "%.11s\0", S_RecordPageBuffer->tempdata->temperweima.ItemName);
+		sprintf(S_RecordPageBuffer->buf, "%.11s\0", S_RecordPageBuffer->tempdata->temperweima.itemConstData.itemName);
 		DisText(0x2036+(i)*0x40, S_RecordPageBuffer->buf, strlen(S_RecordPageBuffer->buf)+1);
 		
 		//显示样品编号
@@ -312,7 +312,7 @@ static MyState_TypeDef ShowRecord(unsigned char pageindex)
 		//显示结果
 		if(S_RecordPageBuffer->tempdata->testResultDesc != ResultIsOK)
 			sprintf(S_RecordPageBuffer->buf, "Error\0");
-		else if(IsShowRealValue() == true)
+		else if(IsShowRealValue())
 			sprintf(S_RecordPageBuffer->buf, "%.*f %s\0", S_RecordPageBuffer->tempdata->temperweima.itemConstData.pointNum,
 				S_RecordPageBuffer->tempdata->testline.BasicResult, S_RecordPageBuffer->tempdata->temperweima.itemConstData.itemMeasure);
 		else if(S_RecordPageBuffer->tempdata->testline.BasicResult <= S_RecordPageBuffer->tempdata->temperweima.itemConstData.lowstResult)

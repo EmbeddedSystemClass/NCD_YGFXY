@@ -299,7 +299,7 @@ static void InitCurve(void)
 
 static void InitPageText(void)
 {
-	sprintf(S_TestPageBuffer->buf, "%s\0", S_TestPageBuffer->currenttestdata->testdata.temperweima.ItemName);
+	sprintf(S_TestPageBuffer->buf, "%s\0", S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemName);
 	DisText(0x1810, S_TestPageBuffer->buf, strlen(S_TestPageBuffer->buf)+1);
 			
 	memcpy(S_TestPageBuffer->buf, S_TestPageBuffer->currenttestdata->testdata.sampleid, MaxSampleIDLen);
@@ -335,7 +335,7 @@ static void RefreshCurve(void)
 	{
 		GetGB_Time(&(S_TestPageBuffer->currenttestdata->testdata.TestTime));
 		
-		MotorMoveTo(1, 2, MaxLocation, false);
+		MotorMoveTo(1, 2, MaxLocation, FALSE);
 
 		//保留一份数据给打印机打印
 		memcpy(&(S_TestPageBuffer->testDataForPrintf), &(S_TestPageBuffer->currenttestdata->testdata), sizeof(TestData));
@@ -344,7 +344,7 @@ static void RefreshCurve(void)
 		
 		if(S_TestPageBuffer->currenttestdata->testdata.testResultDesc == ResultIsOK)
 		{
-			if((isAutoPrint() == true) && (S_TestPageBuffer->isPrintfData == 0))
+			if(isAutoPrint() && (S_TestPageBuffer->isPrintfData == 0))
 				printfTestData();
 		}
 		else if(S_TestPageBuffer->currenttestdata->testdata.testResultDesc == PeakError)
@@ -374,7 +374,7 @@ static void RefreshPageText(void)
 	{
 		if(S_TestPageBuffer->currenttestdata->testdata.testResultDesc != ResultIsOK)
 			sprintf(S_TestPageBuffer->buf, "Error\0");
-		else if(IsShowRealValue() == true)
+		else if(IsShowRealValue())
 			sprintf(S_TestPageBuffer->buf, "%.*f %s\0", S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.pointNum,
 				S_TestPageBuffer->currenttestdata->testdata.testline.BasicResult, S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.itemMeasure);
 		else if(S_TestPageBuffer->currenttestdata->testdata.testline.BasicResult <= S_TestPageBuffer->currenttestdata->testdata.temperweima.itemConstData.lowstResult)

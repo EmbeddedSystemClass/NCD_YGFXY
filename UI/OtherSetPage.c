@@ -130,9 +130,9 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		{
 			//如果当前是自动打印，则禁止，否则打开
 			if(S_OtherSetPageBuffer->systemSetData.isAutoPrint)
-				S_OtherSetPageBuffer->systemSetData.isAutoPrint = false;
+				S_OtherSetPageBuffer->systemSetData.isAutoPrint = FALSE;
 			else
-				S_OtherSetPageBuffer->systemSetData.isAutoPrint = true;
+				S_OtherSetPageBuffer->systemSetData.isAutoPrint = TRUE;
 			
 			if(My_Pass == SaveSystemSetData(&(S_OtherSetPageBuffer->systemSetData)))
 			{
@@ -153,9 +153,9 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		{
 			//如果当前是自动打印，则禁止，否则打开
 			if(S_OtherSetPageBuffer->systemSetData.isMute)
-				S_OtherSetPageBuffer->systemSetData.isMute = false;
+				S_OtherSetPageBuffer->systemSetData.isMute = FALSE;
 			else
-				S_OtherSetPageBuffer->systemSetData.isMute = true;
+				S_OtherSetPageBuffer->systemSetData.isMute = TRUE;
 			
 			if(My_Pass == SaveSystemSetData(&(S_OtherSetPageBuffer->systemSetData)))
 			{

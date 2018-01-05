@@ -32,49 +32,43 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usb_conf.h"
 
-/** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
-  * @{
-  */
-  
-/** @defgroup USBD_CONF
-  * @brief This file is the device library configuration file
-  * @{
-  */ 
-
-/** @defgroup USBD_CONF_Exported_Defines
+/** @defgroup USB_CONF_Exported_Defines
   * @{
   */ 
 
 
-#define USBD_CFG_MAX_NUM           	1
-#define USBD_ITF_MAX_NUM           	1
-#define USB_MAX_STR_DESC_SIZ       	64 
+#define USBD_CFG_MAX_NUM           1
+#define USBD_ITF_MAX_NUM           1
+
+#define USB_MAX_STR_DESC_SIZ       64 
 
 #define USBD_SELF_POWERED               
 
-/* Class Layer Parameter */
-
-#define MSC_IN_EP                   0x81
-#define MSC_OUT_EP                  0x01
-#ifdef USE_USB_OTG_HS  
-#ifdef USE_ULPI_PHY
-#define MSC_MAX_PACKET              512
-#else
-#define MSC_MAX_PACKET            	64
-#endif
-#else  /*USE_USB_OTG_FS*/
-#define MSC_MAX_PACKET          	64
-#endif
 
 
-#define MSC_MEDIA_PACKET            12*1024		//越大速度越快(不过貌似提升不是很多)
+#define USBD_DYNAMIC_DESCRIPTOR_CHANGE_ENABLED 
+
+/** @defgroup USB_String_Descriptors
+  * @{
+  */ 
+
+
+/** @defgroup USB_HID_Class_Layer_Parameter
+  * @{
+  */ 
+//  #define HID_IN_EP                    0x01
+#define HID_IN_EP                    0x81
+#define HID_OUT_EP                   0x01
+
+//#define HID_IN_PACKET                4
+#define HID_IN_PACKET                0x40
+//#define HID_OUT_PACKET               4
+#define HID_OUT_PACKET               0x40
 
 /**
   * @}
   */ 
-
-
-/** @defgroup USB_CONF_Exported_TypesDefinitions
+/** @defgroup USB_CONF_Exported_Types
   * @{
   */ 
 /**
@@ -103,15 +97,8 @@
   * @}
   */ 
 
+
 #endif //__USBD_CONF__H__
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

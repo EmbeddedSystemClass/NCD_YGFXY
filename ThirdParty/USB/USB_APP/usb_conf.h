@@ -28,7 +28,10 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_CONF__H__
 #define __USB_CONF__H__
+
+/* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
+
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
@@ -141,17 +144,17 @@
  #define TX4_FIFO_HS_SIZE                          0
  #define TX5_FIFO_HS_SIZE                          0
 
-// #define USB_OTG_HS_LOW_PWR_MGMT_SUPPORT
 // #define USB_OTG_HS_SOF_OUTPUT_ENABLED
 
  #ifdef USE_ULPI_PHY
   #define USB_OTG_ULPI_PHY_ENABLED
  #endif
- #ifdef USE_EMBEDDED_PHY
+ #ifdef USE_EMBEDDED_PHY 
    #define USB_OTG_EMBEDDED_PHY_ENABLED
  #endif
- #define USB_OTG_HS_INTERNAL_DMA_ENABLED
+ #define USB_OTG_HS_INTERNAL_DMA_ENABLED 
  #define USB_OTG_HS_DEDICATED_EP1_ENABLED
+ #define USB_OTG_HS_LOW_PWR_MGMT_SUPPORT
 #endif
 
 /****************** USB OTG FS CONFIGURATION **********************************/
@@ -162,12 +165,11 @@
  #define TX2_FIFO_FS_SIZE                          0
  #define TX3_FIFO_FS_SIZE                          0
 
-// #define USB_OTG_FS_LOW_PWR_MGMT_SUPPORT
+ #define USB_OTG_FS_LOW_PWR_MGMT_SUPPORT
 // #define USB_OTG_FS_SOF_OUTPUT_ENABLED
 #endif
 
 /****************** USB OTG MISC CONFIGURATION ********************************/
-//Explorer STM32F407开发板没用到VBUS,所以禁止检测VBUS上面的电压
 //#define VBUS_SENSING_ENABLED
 
 /****************** USB OTG MODE CONFIGURATION ********************************/
@@ -277,5 +279,6 @@
 /**
   * @}
   */ 
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

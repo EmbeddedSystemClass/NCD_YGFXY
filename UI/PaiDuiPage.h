@@ -19,7 +19,7 @@ typedef struct PaiDuiPageBuffer_tag {
 	CreateTestErrorType error;
 	unsigned short count;
 	unsigned short count2;
-	bool pageisbusy;
+	MyBool pageisbusy;
 }PaiDuiPageBuffer;
 
 

@@ -37,14 +37,14 @@ extern Motor GB_Motors;
 /****************************************File Start*************************************************/
 /***************************************************************************************************/
 /***************************************************************************************************/
-void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int location, bool isWait)
+void MotorMoveTo(unsigned char highTime, unsigned char lowTime, unsigned int location, MyBool isWait)
 {
 	if(GB_Motors.motorLocation == location)
 		return;
 	else if(GB_Motors.motorLocation > location)
-		GB_Motors.isFront = false;
+		GB_Motors.isFront = FALSE;
 	else
-		GB_Motors.isFront = true;
+		GB_Motors.isFront = TRUE;
 
 	if(GB_Motors.isFront)
 		SetDRVDir(Forward);

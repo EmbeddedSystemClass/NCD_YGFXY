@@ -9,8 +9,8 @@ typedef struct SystemSetData_Tag
 {
 	DeviceInfo deviceInfo;												//设备信息
 	NetSet netSet;														//有线网设置
-	bool isAutoPrint;													//是否自动打印
-	bool isMute;														//是否静音
+	MyBool isAutoPrint;													//是否自动打印
+	MyBool isMute;														//是否静音
 	unsigned short ledSleepTime;										//休眠时间 s
 	unsigned char ledLightIntensity;									//屏幕亮度 0-100
 	unsigned int testDataNum;											//测试数据已保存的数目
@@ -29,12 +29,12 @@ void copyGBSystemSetData(SystemSetData * systemSetData);
 SystemSetData * getGBSystemSetData(void);
 void setSystemSetData(SystemSetData * systemSetData);
 
-bool deviceInfoIsNew(void);
+MyBool deviceInfoIsNew(void);
 void getDeviceInfo(DeviceInfo * deviceinfo);
 void readDeviceId(char * buf);
 void getNetSet(NetSet * netSet);
-bool isAutoPrint(void);
-bool isMute(void);
+MyBool isAutoPrint(void);
+MyBool isMute(void);
 unsigned short getLedSleepTime(void);
 unsigned char getLedLightIntensity(void);
 
@@ -42,12 +42,13 @@ void plusTestDataTotalNum(unsigned char num);
 unsigned int getTestDataTotalNum(void);
 void setUpLoadIndex(unsigned int index);
 unsigned int getUpLoadIndex(void);
-
+unsigned int getUserUpLoadIndex(void);
+	
 void setTestLedLightIntensity(SystemSetData * systemSetData, unsigned short value);
 unsigned short getTestLedLightIntensity(SystemSetData * systemSetData);
 
-void setIsShowRealValue(bool isShow);
-bool IsShowRealValue(void);
+void setIsShowRealValue(MyBool isShow);
+MyBool IsShowRealValue(void);
 
 #endif
 
