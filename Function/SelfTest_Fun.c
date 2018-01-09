@@ -67,6 +67,8 @@ void SelfTest_Function(void)
 	
 	WifiModuleTest();
 	vTaskDelay(500 * portTICK_RATE_MS);
+	
+	MotorSelfTest();
 
 	SetSelfTestFunState(SelfCheckOver, 10*portTICK_RATE_MS);
 }
@@ -279,7 +281,7 @@ static MyState_TypeDef MotorSelfTest(void)
 		return My_Fail;
 	}
 	
-	MotorMoveTo(10000, 1);
+	MotorMoveTo(MaxLocation, 1);
 	vTaskDelay(100 / portTICK_RATE_MS);
 
 	SetDRVPowerStatues(NonamalPower);
