@@ -18,7 +18,9 @@ typedef struct SystemSetData_Tag
 	unsigned short testLedLightIntensity;								//测试时采用的led亮度值，为校准后产生，默认为200
 	unsigned char parm1[700];
 	unsigned int userUpLoadIndex;										//用户服务器上传索引
-	unsigned char parm2[156];											//预留参数1											//预留参数3
+	ServerSet serverSet;												//服务器设置
+	unsigned char parm2[148];											//预留参数1
+	
 	unsigned short crc;
 }SystemSetData;
 #pragma pack()
@@ -49,6 +51,8 @@ unsigned short getTestLedLightIntensity(SystemSetData * systemSetData);
 
 void setIsShowRealValue(MyBool isShow);
 MyBool IsShowRealValue(void);
+void setDefaultServerData(ServerSet * server);
+void getGBServerData(ServerSet * server);
 
 #endif
 

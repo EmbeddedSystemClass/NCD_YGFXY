@@ -13,8 +13,6 @@ void Usart1_Init(void);
 void EnableUsart1TXInterrupt(void);
 xQueueHandle GetUsart1RXQueue(void);
 xQueueHandle GetUsart1TXQueue(void);
-xSemaphoreHandle GetUsart1RXMutex(void);
-xSemaphoreHandle GetUsart1TXMutex(void);
 
 #endif
 

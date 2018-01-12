@@ -17,8 +17,6 @@
 /***************************************************************************************************/
 static xQueueHandle xRxQueue;									//接收队列
 static xQueueHandle xTxQueue;									//发送队列
-static xSemaphoreHandle xRXMutex;								//互斥量
-static xSemaphoreHandle xTXMutex;								//互斥量
 
 
 
@@ -54,9 +52,6 @@ static void Usart2_Os_Init(void)
 {
 	xRxQueue = xQueueCreate( xRxQueue2_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	xTxQueue = xQueueCreate( xTxQueue2_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	
-	vSemaphoreCreateBinary(xRXMutex);
-	vSemaphoreCreateBinary(xTXMutex);
 }
 
 
@@ -234,16 +229,6 @@ xQueueHandle GetUsart2RXQueue(void)
 xQueueHandle GetUsart2TXQueue(void)
 {
 	return xTxQueue;
-}
-
-xSemaphoreHandle GetUsart2RXMutex(void)
-{
-	return xRXMutex;
-}
-
-xSemaphoreHandle GetUsart2TXMutex(void)
-{
-	return xTXMutex;
 }
 
 

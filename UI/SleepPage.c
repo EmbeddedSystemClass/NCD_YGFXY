@@ -7,6 +7,7 @@
 #include	"LCD_Driver.h"
 #include	"UI_Data.h"
 #include	"System_Data.h"
+#include	"RemoteSoft_Data.h"
 
 #include	"MyMem.h"
 
@@ -81,7 +82,8 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 }
 static void activityFresh(void)
 {
-
+	if(getIsSuccessDownloadFirmware())
+		while(1);
 }
 static void activityHide(void)
 {

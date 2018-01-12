@@ -13,8 +13,6 @@ void Usart6_Init(void);
 void EnableUsart6TXInterrupt(void);
 xQueueHandle GetUsart6RXQueue(void);
 xQueueHandle GetUsart6TXQueue(void);
-xSemaphoreHandle GetUsart6RXMutex(void);
-xSemaphoreHandle GetUsart6TXMutex(void);
 
 #endif
 

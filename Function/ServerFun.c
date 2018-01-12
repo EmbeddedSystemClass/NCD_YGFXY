@@ -54,11 +54,11 @@ extern uint8_t UsbHidReceiveComplete ;
 MyState_TypeDef CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
 {
 	err_t err;
-	struct pbuf *p = NULL;
 	
 	httpBuffer->status = My_Fail;
 	
-	IP4_ADDR(&httpBuffer->server_ipaddr,GB_UserServerIp_1, GB_UserServerIp_2, GB_UserServerIp_3, GB_UserServerIp_4);
+	IP4_ADDR(&httpBuffer->server_ipaddr, httpBuffer->serverSet.serverIP.ip_1, httpBuffer->serverSet.serverIP.ip_2, 
+		httpBuffer->serverSet.serverIP.ip_3, httpBuffer->serverSet.serverIP.ip_4);
 
 	//创建连接
 	httpBuffer->clientconn = netconn_new(NETCONN_TCP);
@@ -73,7 +73,7 @@ MyState_TypeDef CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
 		goto END2;
 
 	//尝试连接远程服务器
-	err = netconn_connect(httpBuffer->clientconn, &httpBuffer->server_ipaddr, GB_UserServerPort);
+	err = netconn_connect(httpBuffer->clientconn, &httpBuffer->server_ipaddr, httpBuffer->serverSet.serverPort);
 	//连接失败
 	if(err != ERR_OK)
 		goto END2;

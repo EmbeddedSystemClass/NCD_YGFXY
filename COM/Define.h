@@ -17,8 +17,8 @@
 #define	GB_QRVersion			QRVersion3Define				//当前支持的二维码版本，往下兼容
 
 
-#define	GB_SoftVersion	(unsigned short)1070
-#define	GB_SoftVersion_Build	"Build17121401\0"
+#define	GB_SoftVersion	(unsigned short)1071
+#define	GB_SoftVersion_Build	"Build18011201\0"
 
 #define	DEVICE_EN						100
 #define	DEVICE_CN						101
@@ -411,8 +411,11 @@ typedef struct
 {
 	IP_Def serverIP;														//服务器IP
 	unsigned short serverPort;											//服务器端口号
+	unsigned short crc;
 }ServerSet; 
 #pragma pack()
+
+#define	ServerStructSize	sizeof(ServerSet)
 
 
 /**********************************************************************************************************/

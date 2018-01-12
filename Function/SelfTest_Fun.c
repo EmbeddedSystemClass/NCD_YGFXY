@@ -163,8 +163,14 @@ static MyState_TypeDef loadSystemData(void)
 			//恢复默认设置
 			setDefaultSystemSetData(systemSetData);
 		}
-		
-		//if(systemSetData->userUpLoadIndex > systemSetData->testDataNum)
+		else
+		{
+			//check server set
+			if(systemSetData->serverSet.crc != CalModbusCRC16Fun1(&systemSetData->serverSet, sizeof(ServerSet)-2))
+				setDefaultServerData(&systemSetData->serverSet);
+		}
+
+		if(systemSetData->userUpLoadIndex > systemSetData->testDataNum)
 			systemSetData->userUpLoadIndex = 0;
 		
 		//保存默认设置

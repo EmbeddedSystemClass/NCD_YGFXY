@@ -1,16 +1,12 @@
 /******************************************************************************************/
 /*****************************************头文件*******************************************/
 
-#include	"NetPreSetPage.h"
-#include	"Define.h"
-#include	"LCD_Driver.h"
-#include	"MyMem.h"
-
-#include	"SystemSetPage.h"
-#include	"NetSetPage.h"
-#include	"WifiSetPage.h"
-#include	"NetInfoPage.h"
 #include	"ServerSetPage.h"
+#include	"LCD_Driver.h"
+#include	"SystemSet_Dao.h"
+#include	"MyMem.h"
+#include	"CRC16.h"
+#include	"MyTools.h"
 
 #include 	"FreeRTOS.h"
 #include 	"task.h"
@@ -18,10 +14,11 @@
 
 #include	<string.h>
 #include	"stdio.h"
+#include 	"stdlib.h"
 
 /******************************************************************************************/
 /*****************************************局部变量声明*************************************/
-static NetPrePageBuffer * S_NetPrePageBuffer = NULL;
+static ServerSetPageBuffer * pageBuffer = NULL;
 /******************************************************************************************/
 /*****************************************局部函数声明*************************************/
 static void activityStart(void);
@@ -32,6 +29,8 @@ static void activityResume(void);
 static void activityDestroy(void);
 static MyState_TypeDef activityBufferMalloc(void);
 static void activityBufferFree(void);
+
+static void UpPageValue(void);
 /******************************************************************************************/
 /******************************************************************************************/
 /******************************************************************************************/
@@ -47,14 +46,14 @@ static void activityBufferFree(void);
 *Author: xsx
 *Date: 2016年12月21日09:00:09
 ***************************************************************************************************/
-MyState_TypeDef createNetPreActivity(Activity * thizActivity, Intent * pram)
+MyState_TypeDef createServerSetActivity(Activity * thizActivity, Intent * pram)
 {
 	if(NULL == thizActivity)
 		return My_Fail;
 	
 	if(My_Pass == activityBufferMalloc())
 	{
-		InitActivity(thizActivity, "NetPreActivity\0", activityStart, activityInput, activityFresh, activityHide, activityResume, activityDestroy);
+		InitActivity(thizActivity, "ServerSetActivity\0", activityStart, activityInput, activityFresh, activityHide, activityResume, activityDestroy);
 		
 		return My_Pass;
 	}
@@ -73,12 +72,13 @@ MyState_TypeDef createNetPreActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_NetPrePageBuffer)
-	{
-
-	}
+	copyGBSystemSetData(&pageBuffer->systemSetData);
+		
+	memcpy(&pageBuffer->serverSet, &pageBuffer->systemSetData.serverSet, ServerStructSize);
+		
+	UpPageValue();
 	
-	SelectPage(108);
+	SelectPage(109);
 }
 
 /***************************************************************************************************
@@ -92,38 +92,50 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_NetPrePageBuffer)
+	/*命令*/
+	pageBuffer->lcdinput[0] = pbuf[4];
+	pageBuffer->lcdinput[0] = (pageBuffer->lcdinput[0]<<8) + pbuf[5];
+
+	//server ip
+	if(pageBuffer->lcdinput[0] == 0x1E20)
 	{
-		/*命令*/
-		S_NetPrePageBuffer->lcdinput[0] = pbuf[4];
-		S_NetPrePageBuffer->lcdinput[0] = (S_NetPrePageBuffer->lcdinput[0]<<8) + pbuf[5];
+		GetBufLen(&pbuf[7] , 2*pbuf[6]);
+
+		if(My_Pass != parseIpString(&pageBuffer->serverSet.serverIP, &pbuf[7]))
+		{
+			memset(&pageBuffer->serverSet.serverIP, 0, 4);
+			ClearText(0x1E20);
+			SendKeyCode(3);
+		}
+	}
+	//server port
+	else if(pageBuffer->lcdinput[0] == 0x1E30)
+	{
+		GetBufLen(&pbuf[7] , 2*pbuf[6]);
+		if(My_Pass != parsePortString(&pageBuffer->serverSet.serverPort, &pbuf[7]))
+		{
+			pageBuffer->serverSet.serverPort = 0;
+			ClearText(0x1E30);
+			SendKeyCode(3);
+		}
+	}
+	/*确认修改*/
+	else if(pageBuffer->lcdinput[0] == 0x1E3b)
+	{
+		copyGBSystemSetData(&(pageBuffer->systemSetData));
 		
-		/*返回*/
-		if(S_NetPrePageBuffer->lcdinput[0] == 0x1E00)
-		{
-			backToFatherActivity();
-		}
-		
-		/*有线网设置*/
-		else if(S_NetPrePageBuffer->lcdinput[0] == 0x1E01)
-		{
-			startActivity(createNetSetActivity, NULL);
-		}
-		/*wifi设置*/
-		else if(S_NetPrePageBuffer->lcdinput[0] == 0x1E02)
-		{
-			startActivity(createWifiSetActivity, NULL);
-		}
-		//SERVER set
-		else if(S_NetPrePageBuffer->lcdinput[0] == 0x1E0a)
-		{
-			startActivity(createServerSetActivity, NULL);
-		}
-		//查看网络信息
-		else if(S_NetPrePageBuffer->lcdinput[0] == 0x1E03)
-		{
-			startActivity(createNetInfoActivity, NULL);
-		}
+		pageBuffer->serverSet.crc = CalModbusCRC16Fun1(&pageBuffer->serverSet, ServerStructSize-2);
+		memcpy(&pageBuffer->systemSetData.serverSet, &pageBuffer->serverSet, ServerStructSize);
+				
+		if(My_Pass == SaveSystemSetData(&pageBuffer->systemSetData))
+			SendKeyCode(1);
+		else
+			SendKeyCode(2);
+	}
+	/*返回*/
+	else if(pageBuffer->lcdinput[0] == 0x1E3a)
+	{
+		backToFatherActivity();
 	}
 }
 
@@ -138,10 +150,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	if(S_NetPrePageBuffer)
-	{
 
-	}
 }
 
 /***************************************************************************************************
@@ -169,12 +178,7 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-	if(S_NetPrePageBuffer)
-	{
-
-	}
-	
-	SelectPage(108);
+	SelectPage(109);
 }
 
 /***************************************************************************************************
@@ -202,13 +206,13 @@ static void activityDestroy(void)
 ***************************************************************************************************/
 static MyState_TypeDef activityBufferMalloc(void)
 {
-	if(NULL == S_NetPrePageBuffer)
+	if(NULL == pageBuffer)
 	{
-		S_NetPrePageBuffer = MyMalloc(sizeof(NetPrePageBuffer));
+		pageBuffer = MyMalloc(sizeof(ServerSetPageBuffer));
 		
-		if(S_NetPrePageBuffer)
+		if(pageBuffer)
 		{
-			memset(S_NetPrePageBuffer, 0, sizeof(NetPrePageBuffer));
+			memset(pageBuffer, 0, sizeof(ServerSetPageBuffer));
 	
 			return My_Pass;
 		}
@@ -230,9 +234,23 @@ static MyState_TypeDef activityBufferMalloc(void)
 ***************************************************************************************************/
 static void activityBufferFree(void)
 {
-	MyFree(S_NetPrePageBuffer);
-	S_NetPrePageBuffer = NULL;
+	MyFree(pageBuffer);
+	pageBuffer = NULL;
 }
 
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+/***************************************************************************************************/
+static void UpPageValue(void)
+{
+	sprintf(pageBuffer->buf, "%03d.%03d.%03d.%03d", pageBuffer->serverSet.serverIP.ip_1, pageBuffer->serverSet.serverIP.ip_2, 
+				pageBuffer->serverSet.serverIP.ip_3, pageBuffer->serverSet.serverIP.ip_4);
+	DisText(0x1E20, pageBuffer->buf, strlen(pageBuffer->buf)+1);
+	
+	sprintf(pageBuffer->buf, "%05d", pageBuffer->serverSet.serverPort);
+	DisText(0x1E30, pageBuffer->buf, strlen(pageBuffer->buf)+1);
 
+}
 

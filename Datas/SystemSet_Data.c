@@ -67,7 +67,9 @@ void setDefaultSystemSetData(SystemSetData * systemSetData)
 		
 		//清空校准参数
 		memset(systemSetData->parm1, 0, 700);
-		memset(systemSetData->parm2, 0, 156);
+		memset(systemSetData->parm2, 0, 148);
+		
+		setDefaultServerData(&systemSetData->serverSet);
 		
 		systemSetData->crc = CalModbusCRC16Fun1(systemSetData, sizeof(SystemSetData) - 2);
 	}
@@ -371,5 +373,26 @@ void setIsShowRealValue(MyBool isShow)
 MyBool IsShowRealValue(void)
 {
 	return isShowRealValue;
+}
+
+void setDefaultServerData(ServerSet * server)
+{
+	if(server)
+	{
+		server->serverIP.ip_1 = GB_UserServerIp_1;
+		server->serverIP.ip_2 = GB_UserServerIp_2;
+		server->serverIP.ip_3 = GB_UserServerIp_3;
+		server->serverIP.ip_4 = GB_UserServerIp_4;
+		server->serverPort = GB_UserServerPort;
+		server->crc = CalModbusCRC16Fun1(server, sizeof(ServerSet)-2);
+	}
+}
+
+void getGBServerData(ServerSet * server)
+{
+	if(server)
+	{
+		memcpy(server, &GB_SystemSetData.serverSet, ServerStructSize);
+	}
 }
 /****************************************end of file************************************************/

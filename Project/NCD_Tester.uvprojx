@@ -830,6 +830,11 @@
               <FileType>1</FileType>
               <FilePath>..\UI\AboutUsPage.c</FilePath>
             </File>
+            <File>
+              <FileName>ServerSetPage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\UI\ServerSetPage.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

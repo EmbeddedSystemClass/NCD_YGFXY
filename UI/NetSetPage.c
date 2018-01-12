@@ -74,14 +74,11 @@ MyState_TypeDef createNetSetActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_NetSetPageBuffer)
-	{
-		copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
+	copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
 		
-		memcpy(&(S_NetSetPageBuffer->myNetSet), &(S_NetSetPageBuffer->systemSetData.netSet), sizeof(NetSet));
+	memcpy(&(S_NetSetPageBuffer->myNetSet), &(S_NetSetPageBuffer->systemSetData.netSet), sizeof(NetSet));
 		
-		UpPageValue();
-	}
+	UpPageValue();
 	
 	SelectPage(110);
 }
@@ -97,56 +94,53 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	if(S_NetSetPageBuffer)
-	{
-		/*命令*/
-		S_NetSetPageBuffer->lcdinput[0] = pbuf[4];
-		S_NetSetPageBuffer->lcdinput[0] = (S_NetSetPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	/*命令*/
+	S_NetSetPageBuffer->lcdinput[0] = pbuf[4];
+	S_NetSetPageBuffer->lcdinput[0] = (S_NetSetPageBuffer->lcdinput[0]<<8) + pbuf[5];
 
-		/*有线网的ip获取模式*/
-		if(S_NetSetPageBuffer->lcdinput[0] == 0x1E09)
-		{
-			/*数据*/
-			S_NetSetPageBuffer->lcdinput[1] = pbuf[7];
-			S_NetSetPageBuffer->lcdinput[1] = (S_NetSetPageBuffer->lcdinput[1]<<8) + pbuf[8];
+	/*有线网的ip获取模式*/
+	if(S_NetSetPageBuffer->lcdinput[0] == 0x1E09)
+	{
+		/*数据*/
+		S_NetSetPageBuffer->lcdinput[1] = pbuf[7];
+		S_NetSetPageBuffer->lcdinput[1] = (S_NetSetPageBuffer->lcdinput[1]<<8) + pbuf[8];
 			
-			/*自动获取ip*/
-			if(S_NetSetPageBuffer->lcdinput[1] == 0x8000)
-				S_NetSetPageBuffer->myNetSet.ipmode = DHCP_Mode;
-			/*使用设置的ip*/
-			else if(S_NetSetPageBuffer->lcdinput[1] == 0x0000)
-				S_NetSetPageBuffer->myNetSet.ipmode = User_Mode;
-		}
-		/*设置IP*/
-		else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E10)
+		/*自动获取ip*/
+		if(S_NetSetPageBuffer->lcdinput[1] == 0x8000)
+			S_NetSetPageBuffer->myNetSet.ipmode = DHCP_Mode;
+		/*使用设置的ip*/
+		else if(S_NetSetPageBuffer->lcdinput[1] == 0x0000)
+			S_NetSetPageBuffer->myNetSet.ipmode = User_Mode;
+	}
+	/*设置IP*/
+	else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E10)
+	{
+		memset(S_NetSetPageBuffer->buf, 0, 50);
+		memcpy(S_NetSetPageBuffer->buf, &pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
+		if(My_Pass != parseIpString(&S_NetSetPageBuffer->myNetSet.myip, S_NetSetPageBuffer->buf))
 		{
-			memset(S_NetSetPageBuffer->buf, 0, 50);
-			memcpy(S_NetSetPageBuffer->buf, &pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
-			if(My_Pass != parseIpString(&S_NetSetPageBuffer->myNetSet.myip, S_NetSetPageBuffer->buf))
-			{
-				memset(&S_NetSetPageBuffer->myNetSet.myip, 0, 4);
-				ClearText(0x1E10);
-				SendKeyCode(3);
-			}
+			memset(&S_NetSetPageBuffer->myNetSet.myip, 0, 4);
+			ClearText(0x1E10);
+			SendKeyCode(3);
 		}
-		/*确认修改*/
-		else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E05)
-		{
-			copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
+	}
+	/*确认修改*/
+	else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E05)
+	{
+		copyGBSystemSetData(&(S_NetSetPageBuffer->systemSetData));
 		
-			S_NetSetPageBuffer->myNetSet.crc = CalModbusCRC16Fun1(&(S_NetSetPageBuffer->myNetSet), sizeof(NetSet)-2);
-			memcpy(&(S_NetSetPageBuffer->systemSetData.netSet), &(S_NetSetPageBuffer->myNetSet), sizeof(NetSet));
+		S_NetSetPageBuffer->myNetSet.crc = CalModbusCRC16Fun1(&(S_NetSetPageBuffer->myNetSet), sizeof(NetSet)-2);
+		memcpy(&(S_NetSetPageBuffer->systemSetData.netSet), &(S_NetSetPageBuffer->myNetSet), sizeof(NetSet));
 				
-			if(My_Pass == SaveSystemSetData(&(S_NetSetPageBuffer->systemSetData)))
-				SendKeyCode(1);
-			else
-				SendKeyCode(2);
-		}
-		/*返回*/
-		else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E04)
-		{
-			backToFatherActivity();
-		}
+		if(My_Pass == SaveSystemSetData(&(S_NetSetPageBuffer->systemSetData)))
+			SendKeyCode(1);
+		else
+			SendKeyCode(2);
+	}
+	/*返回*/
+	else if(S_NetSetPageBuffer->lcdinput[0] == 0x1E04)
+	{
+		backToFatherActivity();
 	}
 }
 

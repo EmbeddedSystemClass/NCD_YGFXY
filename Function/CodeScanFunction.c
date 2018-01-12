@@ -125,7 +125,7 @@ static void ReadBasicCodeData(ReadQRCodeBuffer * readQRCodeBuffer)
 		return;
 	
 	memset(readQRCodeBuffer->originalcode, 0, MAX_QR_CODE_LENGHT+1);
-	ReceiveDataFromQueue(GetUsart2RXQueue(), GetUsart2RXMutex(), readQRCodeBuffer->originalcode , MAX_QR_CODE_LENGHT, 
+	ReceiveDataFromQueue(GetUsart2RXQueue(), NULL, readQRCodeBuffer->originalcode , MAX_QR_CODE_LENGHT, 
 		&(readQRCodeBuffer->originalCodeLen), 1, 10 / portTICK_RATE_MS, 10 / portTICK_RATE_MS);
 	
 	if(readQRCodeBuffer->originalCodeLen > 0)

@@ -13,7 +13,6 @@ void Usart3_Init(void);
 void EnableUsart3TXInterrupt(void);
 xQueueHandle GetUsart3RXQueue(void);
 xQueueHandle GetUsart3TXQueue(void);
-xSemaphoreHandle GetUsart3Mutex(void);
 	
 #endif
 

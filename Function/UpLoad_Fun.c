@@ -70,7 +70,7 @@ void UpLoadFunction(void)
 		
 		MyFree(httpBuffer);
 		
-		vTaskDelay(1000 / portTICK_RATE_MS);
+		vTaskDelay(30000 / portTICK_RATE_MS);
 	}
 }
 
@@ -367,7 +367,7 @@ static void upLoadUserServer(void)
 			//read datas from sd
 			httpBuffer->pageRequest.startElementIndex = httpBuffer->tempInt2;
 			httpBuffer->pageRequest.orderType = DESC;
-			httpBuffer->pageRequest.pageSize = 1;
+			httpBuffer->pageRequest.pageSize = 3;
 
 			memset(httpBuffer->page, 0, PageStructSize);
 			
@@ -415,6 +415,7 @@ static void upLoadUserServer(void)
 						
 						httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);	
 						
+						getGBServerData(&httpBuffer->serverSet);
 						if(My_Pass == CommunicateWithServerByLineNet(httpBuffer) || My_Pass == CommunicateWithServerByUSB(httpBuffer))
 						{
 							if(strstr(httpBuffer->recvBuf, httpBuffer->testData->temperweima.PiHao) && strstr(httpBuffer->recvBuf, httpBuffer->testData->temperweima.piNum))

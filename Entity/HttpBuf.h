@@ -28,6 +28,7 @@ typedef struct HttpBuffer_Tag
 	PageRequest pageRequest;
 	Page * page;
 	TestData * testData;
+	ServerSet serverSet;
 	char * tempP;
 	char * tempP2;
 	unsigned int tempInt1;

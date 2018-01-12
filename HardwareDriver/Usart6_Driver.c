@@ -16,8 +16,6 @@
 /***************************************************************************************************/
 static xQueueHandle xRxQueue = NULL;									//接收队列
 static xQueueHandle xTxQueue = NULL;									//发送队列
-static xSemaphoreHandle xRXMutex = NULL;								//互斥量
-static xSemaphoreHandle xTXMutex = NULL;								//互斥量
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -43,9 +41,6 @@ static void Usart6_Os_Init(void)
 {
 	xRxQueue = xQueueCreate( xRxQueue6_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	xTxQueue = xQueueCreate( xTxQueue6_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	
-	vSemaphoreCreateBinary(xTXMutex);
-	vSemaphoreCreateBinary(xRXMutex);
 }
 
 /***************************************************************************************************
@@ -218,14 +213,4 @@ xQueueHandle GetUsart6RXQueue(void)
 xQueueHandle GetUsart6TXQueue(void)
 {
 	return xTxQueue;
-}
-
-xSemaphoreHandle GetUsart6RXMutex(void)
-{
-	return xRXMutex;
-}
-
-xSemaphoreHandle GetUsart6TXMutex(void)
-{
-	return xTXMutex;
 }
