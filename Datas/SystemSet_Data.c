@@ -141,6 +141,14 @@ void readDeviceId(char * buf)
 	memcpy(buf, GB_SystemSetData.deviceInfo.deviceid, MaxDeviceIDLen);
 }
 
+void readDeviceAddr(char * buf)
+{
+	if(GB_SystemSetData.crc != CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2))
+		setDefaultSystemSetData(&GB_SystemSetData);
+		
+	memcpy(buf, GB_SystemSetData.deviceInfo.deviceunit, MaxDeviceUnitLen);
+}
+
 /***************************************************************************************************
 *FunctionName: deviceInfoIsNew
 *Description: 设备信息是否有更新

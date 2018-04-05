@@ -27,11 +27,17 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+
 #ifndef __USB_HID_CORE_H_
 #define __USB_HID_CORE_H_
 
+
+
+
 #include  "usbd_ioreq.h"
 
+
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -106,8 +112,12 @@ uint8_t USBD_HID_SendReport (USB_OTG_CORE_HANDLE  *pdev,
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif  // __USB_HID_CORE_H_
+
+
 /**
   * @}
   */ 

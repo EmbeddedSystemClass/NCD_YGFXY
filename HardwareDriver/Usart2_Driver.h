@@ -7,12 +7,9 @@
 #include	"semphr.h"
 
 #define xRxQueue2_Len				300
-#define xTxQueue2_Len				20
 
 void Usart2_Init(void);
-void EnableUsart2TXInterrupt(void);
 xQueueHandle GetUsart2RXQueue(void);
-xQueueHandle GetUsart2TXQueue(void);
 
 #endif
 

@@ -29,10 +29,13 @@
 #ifndef __USB_BSP__H__
 #define __USB_BSP__H__
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_core.h"
 #include "usb_conf.h"
 
+
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
   * @{
   */
@@ -89,8 +92,12 @@ void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif //__USB_BSP__H__
+
+
 
 /**
   * @}

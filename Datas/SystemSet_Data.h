@@ -34,6 +34,7 @@ void setSystemSetData(SystemSetData * systemSetData);
 MyBool deviceInfoIsNew(void);
 void getDeviceInfo(DeviceInfo * deviceinfo);
 void readDeviceId(char * buf);
+void readDeviceAddr(char * buf);
 void getNetSet(NetSet * netSet);
 MyBool isAutoPrint(void);
 MyBool isMute(void);

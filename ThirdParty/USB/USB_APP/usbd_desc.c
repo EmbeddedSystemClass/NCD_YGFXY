@@ -33,6 +33,7 @@
 #include "usb_regs.h"
 #include	"stm32f4xx.h"
 
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -303,6 +304,7 @@ uint8_t *  USBD_USR_InterfaceStrDescriptor( uint8_t speed , uint16_t *length)
   return USBD_StrDesc;  
 }
 
+#endif	//#if (USB_USE == 1)
 /**
   * @}
   */ 

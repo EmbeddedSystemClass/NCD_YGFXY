@@ -30,7 +30,7 @@
 #include "usbd_ioreq.h"
 #include "usbd_desc.h"
 
-
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -854,7 +854,7 @@ static uint8_t USBD_GetLen(uint8_t *buf)
 /**
   * @}
   */ 
-
+#endif	//#if (USB_USE == 1)
 
 /**
   * @}

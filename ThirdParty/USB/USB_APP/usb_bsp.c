@@ -26,6 +26,7 @@
   ******************************************************************************
   */ 
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_bsp.h"
 #include "usbd_conf.h"
@@ -34,6 +35,8 @@
 #include	"stm32f4xx_gpio.h"
 #include	"misc.h"
 #include "Delay.h"
+ 
+ #if (USB_USE == 1)
  
 //USB OTG 底层IO初始化
 //pdev:USB OTG内核结构体指针
@@ -99,4 +102,4 @@ void USB_OTG_BSP_mDelay (const uint32_t msec)
 	delay_ms(msec);
 }
    
-
+#endif	//#if (USB_USE == 1)

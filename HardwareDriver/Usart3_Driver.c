@@ -16,21 +16,10 @@
 #include 	"stm32f4xx.h"
 #include 	"Usart3_Driver.h"
 
-
-
-
-
-
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
-static xQueueHandle xRxQueue;									//接收队列
 static xQueueHandle xTxQueue;									//发送队列
-
-
-
-
-
 
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
@@ -60,7 +49,6 @@ static portBASE_TYPE prvUsart3_ISR_NonNakedBehaviour( void );
 ***************************************************************************************************/
 static void Usart3_Os_Init(void)
 {
-	xRxQueue = xQueueCreate( xRxQueue3_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	xTxQueue = xQueueCreate( xTxQueue3_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 }
 
@@ -105,7 +93,7 @@ static void ConfigUsart3(void)
 	/* 使能串口2 */
 	USART_Cmd(USART3, ENABLE);
 	//使能接收中断
-	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+	//USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
 	
 	/* NVIC configuration */
 	/* Configure the Priority Group to 2 bits */
@@ -185,18 +173,6 @@ static portBASE_TYPE prvUsart3_ISR_NonNakedBehaviour( void )
 		}
 	}
 
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
-	{
-		/* The interrupt was caused by the receiver getting data. */
-		cChar = USART_ReceiveData(USART3);
-
-		/* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
-		calls in a critical section . */
-		portENTER_CRITICAL();
-			xQueueSendFromISR(xRxQueue, &cChar, &xHigherPriorityTaskWoken);
-		portEXIT_CRITICAL();
-	}
-
 	/* The return value will be used by portEXIT_SWITCHING_ISR() to know if it
 	should perform a vTaskSwitchContext(). */
 	return ( xHigherPriorityTaskWoken );
@@ -213,19 +189,6 @@ static portBASE_TYPE prvUsart3_ISR_NonNakedBehaviour( void )
 void EnableUsart3TXInterrupt(void)
 {
 	USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
-}
-
-/***************************************************************************************************
-*FunctionName：GetUsart3RXQueue, GetUsart3TXQueue,GetUsart3Mutex
-*Description：获取串口3的发送接收队列,和队列互斥量
-*Input：None
-*Output：None
-*Author：xsx
-*Data：2016年4月29日11:22:06
-***************************************************************************************************/
-xQueueHandle GetUsart3RXQueue(void)
-{
-	return xRxQueue;
 }
 
 xQueueHandle GetUsart3TXQueue(void)

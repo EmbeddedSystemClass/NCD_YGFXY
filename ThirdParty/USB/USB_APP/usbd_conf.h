@@ -29,9 +29,12 @@
 #ifndef __USBD_CONF__H__
 #define __USBD_CONF__H__
 
+
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_conf.h"
 
+#if (USB_USE == 1)
 /** @defgroup USB_CONF_Exported_Defines
   * @{
   */ 
@@ -97,6 +100,7 @@
   * @}
   */ 
 
+#endif	//#if (USB_USE == 1)
 
 #endif //__USBD_CONF__H__
 

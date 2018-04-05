@@ -24,7 +24,7 @@
   *
   ******************************************************************************
   */
-
+#if (USB_USE == 1)
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_OTG_REGS_H__
 #define __USB_OTG_REGS_H__
@@ -1178,7 +1178,7 @@ uint32_t Reserved5_31 :
 
 #endif //__USB_OTG_REGS_H__
 
-
+#endif	//#if (USB_USE == 1)
 /**
   * @}
   */ 

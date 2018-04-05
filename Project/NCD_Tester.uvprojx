@@ -334,7 +334,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_USB_OTG_FS</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\AppLunch;..\COM;..\Datas;..\Function;..\HardwareDriver;..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\Libraries\STM32F4x7_ETH_Driver\inc;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Task;..\ThirdParty\Fatfs\src;..\ThirdParty\lwip-1.4.1\src\include;..\ThirdParty\lwip-1.4.1\src\include\ipv4;..\ThirdParty\lwip-1.4.1\src\include\netif;..\ThirdParty\lwip-1.4.1\src\include\lwip;..\ThirdParty\lwip-1.4.1\port\STM32F4x7\FreeRTOS;..\ThirdParty\lwip-1.4.1\port\STM32F4x7;..\ThirdParty\lwip-1.4.1\User;..\ThirdParty\cJSON-master;..\UI;..\ThirdParty\FreeRTOS\inc;..\Daos;..\Libraries\CMSIS\Include;..\Entity;..\ThirdParty\USB\USB_APP;..\ThirdParty\USB\STM32_USB_OTG_Driver\inc;..\ThirdParty\USB\STM32_USB_Device_Library\Core\inc;..\ThirdParty\USB\STM32_USB_Device_Library\Class\hid\inc</IncludePath>
             </VariousControls>
@@ -404,16 +404,6 @@
               <FileName>Led_Driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HardwareDriver\Led_Driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>SPI1_Driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HardwareDriver\SPI1_Driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>SPI2_Driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HardwareDriver\SPI2_Driver.c</FilePath>
             </File>
             <File>
               <FileName>Usart1_Driver.c</FileName>
@@ -1034,6 +1024,11 @@
               <FileName>Motor.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\COM\Motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>CheckSum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\COM\CheckSum.c</FilePath>
             </File>
           </Files>
         </Group>

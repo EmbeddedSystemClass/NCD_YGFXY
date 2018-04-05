@@ -14,7 +14,6 @@
 #include 	"Usart3_Driver.h"
 #include 	"Usart2_Driver.h"
 #include 	"Usart1_Driver.h"
-#include	"SPI1_Driver.h"
 #include	"Ads8325_Driver.h"
 #include	"DRV8825_Driver.h"
 #include	"CodeScanner_Driver.h"
@@ -38,13 +37,16 @@
 #include 	"usbd_hid_core.h"
 #include 	"usbd_usr.h"
 #include 	"usbd_desc.h"
-#include 	"usb_conf.h"  
+#include 	"usb_conf.h"
 
 #include	"Delay.h"
 /***************************************************************************************************/
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
+#if (USB_USE == 1)
 USB_OTG_CORE_HANDLE USB_OTG_dev;
+#endif				//USB_USE 
+
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -135,7 +137,9 @@ void MySystemBSPInit(void)
 	
 	FatfsInit();						//文件系统初始化
 	
-	USBD_Init(&USB_OTG_dev, USB_OTG_FS_CORE_ID, &USR_desc, &USBD_HID_cb, &USR_cb);
+	#if (USB_USE == 1)
+		USBD_Init(&USB_OTG_dev, USB_OTG_FS_CORE_ID, &USR_desc, &USBD_HID_cb, &USR_cb);
+	#endif				//USB_USE 
 	
 	IWDG_Init(3, 3000);					//看门狗初始化,超时时间2S
 	delay_ms(1);

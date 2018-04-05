@@ -29,6 +29,7 @@
 #ifndef __USB_DEF_H__
 #define __USB_DEF_H__
 
+#if (USB_USE == 1)
 /* Includes ------------------------------------------------------------------*/
 #include  "usb_conf.h"
 
@@ -234,6 +235,8 @@ enum USB_OTG_SPEED {
   USB_SPEED_FULL,
   USB_SPEED_HIGH
 };
+
+#endif	//#if (USB_USE == 1)
 
 #endif //__USB_DEFINES__H__
 

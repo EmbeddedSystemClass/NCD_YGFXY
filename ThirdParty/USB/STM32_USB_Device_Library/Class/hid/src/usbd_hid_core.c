@@ -57,6 +57,9 @@
 #include	"stdio.h"
 #include 	"stdlib.h"
 
+
+#if (USB_USE == 1)
+
 #define CUSTOM_HID_EPOUT_SIZE                0x40
 #define USB_OTG_HS_INTERNAL_DMA_ENABLED
 
@@ -100,9 +103,9 @@
 /** @defgroup USBD_HID_Private_FunctionPrototypes
   * @{
   */
-#if 1
+
 uint8_t USB_Rx_Buffer[100];
-#endif
+
 static uint8_t  USBD_HID_Init (void  *pdev, 
                                uint8_t cfgidx);
 
@@ -115,9 +118,9 @@ static uint8_t  USBD_HID_Setup (void  *pdev,
 static uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
 
 static uint8_t  USBD_HID_DataIn (void  *pdev, uint8_t epnum);
-#if 1
+
 static uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
-#endif
+
 /**
   * @}
   */ 
@@ -509,7 +512,6 @@ static uint8_t  USBD_HID_DataIn (void  *pdev,
   return USBD_OK;
 }
 
-#if 1
 static uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum)
 {
 	if ( epnum != (HID_OUT_EP & 0x0F) )
@@ -526,19 +528,6 @@ static uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum)
   return USBD_OK;
 }
 
-#endif
-/**
-  * @}
-  */ 
-
-
-/**
-  * @}
-  */ 
-
-
-/**
-  * @}
-  */ 
+#endif	//#if (USB_USE == 1)
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

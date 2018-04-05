@@ -30,9 +30,11 @@
 #ifndef __USB_DESC_H
 #define __USB_DESC_H
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_def.h"
 
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -107,8 +109,12 @@ uint8_t *     USBD_USR_USRStringDesc (uint8_t speed, uint8_t idx , uint16_t *len
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif /* __USBD_DESC_H */
+
+
 
 /**
   * @}

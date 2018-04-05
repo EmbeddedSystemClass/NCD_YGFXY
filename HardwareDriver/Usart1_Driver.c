@@ -20,11 +20,6 @@
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
 static xQueueHandle xRxQueue;									//接收队列
-static xQueueHandle xTxQueue;									//发送队列
-
-
-
-
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -55,7 +50,6 @@ static portBASE_TYPE prvUsart1_ISR_NonNakedBehaviour( void );
 static void Usart1_Os_Init(void)
 {
 	xRxQueue = xQueueCreate( xRxQueue1_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xTxQueue = xQueueCreate( xTxQueue1_Len, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 }
 
 /***************************************************************************************************
@@ -171,30 +165,6 @@ static portBASE_TYPE prvUsart1_ISR_NonNakedBehaviour( void )
 	signed portCHAR     cChar;
 	portBASE_TYPE     xHigherPriorityTaskWoken = pdFALSE;
 
-	portBASE_TYPE retstatus;
-
-	if(USART_GetITStatus(USART1 , USART_IT_TXE) == SET)
-	{
-		/* The interrupt was caused by the THR becoming empty.  Are there any
-		more characters to transmit?
-		Because FreeRTOS is not supposed to run with nested interrupts, put all OS
-		calls in a critical section . */
-		portENTER_CRITICAL();
-			retstatus = xQueueReceiveFromISR( xTxQueue, &cChar, &xHigherPriorityTaskWoken );
-		portEXIT_CRITICAL();
-
-		if (retstatus == pdTRUE)
-		{
-			/* A character was retrieved from the queue so can be sent to the THR now. */
-			USART_SendData(USART1, cChar);
-		}
-		else
-		{
-			/* Queue empty, nothing to send so turn off the Tx interrupt. */
-			USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
-		}
-	}
-
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) == SET)
 	{
 		/* The interrupt was caused by the receiver getting data. */
@@ -212,19 +182,6 @@ static portBASE_TYPE prvUsart1_ISR_NonNakedBehaviour( void )
 }
 
 /***************************************************************************************************
-*FunctionName：EnableUsart1TXInterrupt
-*Description：开启一次发送中断（发送队列中数据）
-*Input：None
-*Output：None
-*Author：xsx
-*Data：2016年4月29日11:18:28
-***************************************************************************************************/
-void EnableUsart1TXInterrupt(void)
-{
-	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-}
-
-/***************************************************************************************************
 *FunctionName：GetUsart1RXQueue, GetUsart1TXQueue,GetUsart1Mutex
 *Description：获取串口1的发送接收队列,和队列互斥量
 *Input：None
@@ -235,10 +192,5 @@ void EnableUsart1TXInterrupt(void)
 xQueueHandle GetUsart1RXQueue(void)
 {
 	return xRxQueue;
-}
-
-xQueueHandle GetUsart1TXQueue(void)
-{
-	return xTxQueue;
 }
 

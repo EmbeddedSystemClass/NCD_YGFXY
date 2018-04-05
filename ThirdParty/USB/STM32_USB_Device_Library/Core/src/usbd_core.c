@@ -33,6 +33,7 @@
 #include "usb_bsp.h"
 #include "usbd_usr.h"
 
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
 */
@@ -493,7 +494,7 @@ static uint8_t USBD_DevDisconnected(USB_OTG_CORE_HANDLE  *pdev)
 /**
 * @}
 */ 
-
+#endif  //#if (USB_USE == 1)
 
 /**
 * @}

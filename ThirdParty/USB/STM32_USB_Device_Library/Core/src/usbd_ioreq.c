@@ -31,7 +31,7 @@
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
-
+#if (USB_USE == 1)
 
 /** @defgroup USBD_IOREQ 
   * @brief control I/O requests module
@@ -236,7 +236,7 @@ uint16_t  USBD_GetRxCount (USB_OTG_CORE_HANDLE  *pdev , uint8_t epnum)
   * @}
   */ 
 
-
+#endif	//#if (USB_USE == 1)
 /**
   * @}
   */ 

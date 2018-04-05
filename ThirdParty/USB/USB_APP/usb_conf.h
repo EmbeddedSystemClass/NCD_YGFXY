@@ -29,10 +29,12 @@
 #ifndef __USB_CONF__H__
 #define __USB_CONF__H__
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
+#include	"Define.h"
 
-
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
   * @{
   */
@@ -57,8 +59,9 @@
 *  The USE_EMBEDDED_PHY symbol is defined in the project compiler preprocessor 
 *  when FS core is used.
 *******************************************************************************/
+
 #ifndef USE_USB_OTG_FS
- //#define USE_USB_OTG_FS
+ #define USE_USB_OTG_FS
 #endif /* USE_USB_OTG_FS */
 
 #ifdef USE_USB_OTG_FS 
@@ -267,9 +270,10 @@
 /**
   * @}
   */ 
-
+#endif	//#if (USB_USE == 1)
 
 #endif //__USB_CONF__H__
+
 
 
 /**

@@ -31,6 +31,8 @@
 #include "usb_dcd_int.h"
 #include "usb_conf.h"
 
+
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
 */
@@ -139,19 +141,7 @@ void USBD_USR_Init(void)
 */
 void USBD_USR_DeviceReset(uint8_t speed )
 {
- switch (speed)
- {
-   case USB_OTG_SPEED_HIGH: 
-     //printf("USB bus reset. USB Device Library v1.1.0 [HS]\r\n" );
-     break;
 
-  case USB_OTG_SPEED_FULL: 
-     //printf ("USB bus reset. USB Device Library v1.1.0 [FS]\r\n" );
-     break;
- default:
-     //printf ("USB bus reset. USB Device Library v1.1.0 [??]\r\n" );
-     ;
- }
 }
 
 
@@ -221,6 +211,7 @@ xQueueHandle GetUSBRXQueue(void)
 	return xRxQueue;
 }
 
+#endif	//#if (USB_USE == 1)
 /**
 * @}
 */ 
@@ -230,33 +221,4 @@ xQueueHandle GetUSBRXQueue(void)
 */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

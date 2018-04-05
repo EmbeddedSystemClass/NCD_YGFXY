@@ -29,10 +29,11 @@
 #ifndef USB_DCD_INT_H__
 #define USB_DCD_INT_H__
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_dcd.h"
 
-
+#if (USB_USE == 1)
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
@@ -112,9 +113,10 @@ uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 /**
   * @}
   */ 
-
+#endif	//#if (USB_USE == 1)
 
 #endif // USB_DCD_INT_H__
+
 
 /**
   * @}

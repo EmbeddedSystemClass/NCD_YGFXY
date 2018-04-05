@@ -29,7 +29,7 @@
 #include "usb_dcd.h"
 #include "usb_bsp.h"
 
-
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
 * @{
 */
@@ -463,6 +463,7 @@ void DCD_SetEPStatus (USB_OTG_CORE_HANDLE *pdev , uint8_t epnum , uint32_t Statu
    USB_OTG_SetEPStatus(pdev ,ep , Status);
 }
 
+#endif //#if (USB_USE == 1)
 /**
 * @}
 */ 

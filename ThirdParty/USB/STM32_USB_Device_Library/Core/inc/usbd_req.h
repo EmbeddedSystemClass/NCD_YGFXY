@@ -30,12 +30,14 @@
 #ifndef __USB_REQUEST_H_
 #define __USB_REQUEST_H_
 
+
+
 /* Includes ------------------------------------------------------------------*/
 #include  "usbd_def.h"
 #include  "usbd_core.h"
 #include  "usbd_conf.h"
 
-
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -93,8 +95,11 @@ void USBD_GetString(uint8_t *desc, uint8_t *unicode, uint16_t *len);
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif /* __USB_REQUEST_H_ */
+
 
 /**
   * @}

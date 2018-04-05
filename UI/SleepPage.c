@@ -82,8 +82,8 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 }
 static void activityFresh(void)
 {
-	if(getIsSuccessDownloadFirmware())
-		while(1);
+	//if(getIsSuccessDownloadFirmware())
+	//	while(1);
 }
 static void activityHide(void)
 {

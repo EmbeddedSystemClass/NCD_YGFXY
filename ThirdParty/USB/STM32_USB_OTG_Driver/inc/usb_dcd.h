@@ -29,10 +29,11 @@
 #ifndef __DCD_H__
 #define __DCD_H__
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_core.h"
 
-
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
 * @{
 */
@@ -148,6 +149,7 @@ void DCD_SetEPStatus (USB_OTG_CORE_HANDLE *pdev ,
 /**
 * @}
 */ 
+#endif	//#if (USB_USE == 1)
 
 
 #endif //__DCD_H__

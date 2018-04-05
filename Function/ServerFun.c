@@ -21,10 +21,12 @@
 #include	"MyMem.h"
 #include	"StringDefine.h"
 
+
 #include 	"usbd_hid_core.h"
 #include 	"usbd_usr.h"
 #include 	"usbd_desc.h"
 #include 	"usb_conf.h" 
+
 
 #include	"FreeRTOS.h"
 #include 	"task.h"
@@ -38,8 +40,10 @@
 /**************************************局部变量声明*************************************************/
 /***************************************************************************************************/
 const char * fileStartStr = "i am zhangxiong^*^!";
+#if (USB_USE == 1)
 extern USB_OTG_CORE_HANDLE USB_OTG_dev;
 extern uint8_t UsbHidReceiveComplete ;
+#endif
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
@@ -196,6 +200,7 @@ MyState_TypeDef CommunicateWithServerByWifi(HttpBuffer * httpBuffer)
 	return My_Fail;
 }
 
+#if (USB_USE == 1)
 MyState_TypeDef CommunicateWithServerByUSB(HttpBuffer * httpBuffer)
 {
 	xQueueReset(GetUSBRXQueue());
@@ -203,16 +208,16 @@ MyState_TypeDef CommunicateWithServerByUSB(HttpBuffer * httpBuffer)
 	
 	//start send data
 	httpBuffer->tempP = httpBuffer->sendBuf;
-
-	while(httpBuffer->sendDataLen > 0)
+	httpBuffer->tempInt1 = httpBuffer->sendDataLen;
+	while(httpBuffer->tempInt1 > 0)
 	{
-		if(httpBuffer->sendDataLen > 64)
+		if(httpBuffer->tempInt1 > 64)
 			httpBuffer->readSize = 64;
 		else
-			httpBuffer->readSize = httpBuffer->sendDataLen;
+			httpBuffer->readSize = httpBuffer->tempInt1;
 			
 		USBD_HID_SendReport(&USB_OTG_dev, httpBuffer->tempP, 64);
-		httpBuffer->sendDataLen -= httpBuffer->readSize;
+		httpBuffer->tempInt1 -= httpBuffer->readSize;
 		httpBuffer->tempP += httpBuffer->readSize;
 	}
 	
@@ -224,4 +229,81 @@ MyState_TypeDef CommunicateWithServerByUSB(HttpBuffer * httpBuffer)
 		return My_Pass;
 	else
 		return My_Fail;
+}
+#endif
+
+MyState_TypeDef CommunicateWithLisByLineNet(HttpBuffer * httpBuffer)
+{
+	err_t err;
+	
+	httpBuffer->status = My_Fail;
+	
+	IP4_ADDR(&httpBuffer->server_ipaddr, httpBuffer->serverSet.serverIP.ip_1, httpBuffer->serverSet.serverIP.ip_2, 
+		httpBuffer->serverSet.serverIP.ip_3, httpBuffer->serverSet.serverIP.ip_4);
+
+	//创建连接
+	httpBuffer->clientconn = netconn_new(NETCONN_TCP);
+	//创建失败
+	if(httpBuffer->clientconn == NULL)
+		return httpBuffer->status;
+
+	//绑定本地ip
+	err = netconn_bind(httpBuffer->clientconn, IP_ADDR_ANY, 0);
+	//连接失败
+	if(err != ERR_OK)
+		goto END2;
+
+	//尝试连接远程服务器
+	err = netconn_connect(httpBuffer->clientconn, &httpBuffer->server_ipaddr, httpBuffer->serverSet.serverPort);
+	//连接失败
+	if(err != ERR_OK)
+		goto END2;
+		
+	//设置接收数据超时时间100MS
+	httpBuffer->clientconn->recv_timeout = 3000;
+		
+	//step 1, ENQ
+	httpBuffer->tempBuf[0] = 0X05;
+	httpBuffer->tempBuf[1] = 0X00;
+	httpBuffer->recvBuf[0] = 0;
+	netconn_write(httpBuffer->clientconn, httpBuffer->tempBuf, 1, NETCONN_COPY );
+	if(ERR_OK == netconn_recv(httpBuffer->clientconn, &httpBuffer->tcpRecvBuf))
+	{
+		netbuf_copy(httpBuffer->tcpRecvBuf, httpBuffer->recvBuf, 1);
+		netbuf_delete(httpBuffer->tcpRecvBuf);
+		
+		if(httpBuffer->recvBuf[0] == 0x06)
+			netconn_write(httpBuffer->clientconn, httpBuffer->recvBuf, 1, NETCONN_COPY );
+		else
+			goto END1;
+	}
+	else
+		goto END1;
+	
+	//step2, send data
+	httpBuffer->recvBuf[0] = 0;
+	netconn_write(httpBuffer->clientconn, httpBuffer->sendBuf, httpBuffer->sendDataLen, NETCONN_COPY );
+	if(ERR_OK == netconn_recv(httpBuffer->clientconn, &httpBuffer->tcpRecvBuf))
+	{
+		netbuf_copy(httpBuffer->tcpRecvBuf, httpBuffer->recvBuf, 1);
+		netbuf_delete(httpBuffer->tcpRecvBuf);
+		
+		if(httpBuffer->recvBuf[0] == 0x06)
+			netconn_write(httpBuffer->clientconn, httpBuffer->recvBuf, 1, NETCONN_COPY );
+		else
+			goto END1;
+	}
+	else
+		goto END1;
+	
+	httpBuffer->status = My_Pass;
+			
+	END1:
+		netconn_close(httpBuffer->clientconn);
+		netconn_delete(httpBuffer->clientconn);
+		return httpBuffer->status;
+		
+	END2:
+		netconn_delete(httpBuffer->clientconn);
+		return httpBuffer->status;
 }

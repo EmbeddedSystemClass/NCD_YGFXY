@@ -29,12 +29,16 @@
 #ifndef __USBD_USR_H__
 #define __USBD_USR_H__
 
+
+
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_core.h"
 
 #include	"FreeRTOS.h"
 #include 	"queue.h"
 
+
+#if (USB_USE == 1)
 /** @addtogroup USBD_USER
   * @{
   */
@@ -122,8 +126,12 @@ xQueueHandle GetUSBRXQueue(void);
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif /*__USBD_USR_H__*/
+
+
 
 /**
   * @}

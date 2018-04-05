@@ -30,10 +30,13 @@
 #ifndef __USBD_IOREQ_H_
 #define __USBD_IOREQ_H_
 
+
+
 /* Includes ------------------------------------------------------------------*/
 #include  "usbd_def.h"
 #include  "usbd_core.h"
 
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -108,8 +111,11 @@ uint16_t  USBD_GetRxCount (USB_OTG_CORE_HANDLE  *pdev ,
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif /* __USBD_IOREQ_H_ */
+
 
 /**
   * @}

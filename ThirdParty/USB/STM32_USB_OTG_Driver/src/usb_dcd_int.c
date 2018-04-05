@@ -27,6 +27,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usb_dcd_int.h"
+
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
 * @{
 */
@@ -853,7 +855,7 @@ static uint32_t DCD_ReadDevInEP (USB_OTG_CORE_HANDLE *pdev, uint8_t epnum)
 }
 
 
-
+#endif //#if (USB_USE == 1)
 /**
 * @}
 */ 

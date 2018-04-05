@@ -435,63 +435,6 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		//恢复被改的数据
 		S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x] = S_TempCalData->maxdata;
 		S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
-
-		//针对开立公司
-		readDeviceId(S_TempCalData->tempBuf);
-		if(strstr(S_TempCalData->tempBuf, "NCD13011703018"))
-		{
-			if(TRUE == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.itemConstData.itemName, "NT-proBNP", 9))
-			{
-				S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
-				if(S_TempCalData->finalBili <= 0.129)
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * 10640.0f - 214.46;
-				else
-					S_TempCalData->itemData->testdata.testline.BasicResult = 566.49 * exp(4.9057*S_TempCalData->finalBili);
-				
-				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
-					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
-				
-				S_TempCalData->resultstatues = ResultIsOK;
-			
-				return;
-			}
-			else if(TRUE == CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.itemConstData.itemName, "cTnI", 4))
-			{
-				S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
-				if(S_TempCalData->finalBili <= 0.0919)
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * 16.814f - 0.5512;
-				else if(S_TempCalData->finalBili <= 0.6127)
-					S_TempCalData->itemData->testdata.testline.BasicResult = 21.093*S_TempCalData->finalBili*S_TempCalData->finalBili + 
-						12.558f * S_TempCalData->finalBili - 0.4594;
-				else
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * 125.66f - 62.903;
-				
-				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
-					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
-				
-				S_TempCalData->resultstatues = ResultIsOK;
-			
-				return;
-			}
-			else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.itemConstData.itemName, "CK-MB", 5))
-			{
-				S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
-				
-				if(S_TempCalData->finalBili <= 0.3153)
-					S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 90.414f 
-						+ S_TempCalData->finalBili * 25.522f - 2.8215f;
-				else
-					S_TempCalData->itemData->testdata.testline.BasicResult = 396.69f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
-						138.72f * S_TempCalData->finalBili + 19.677;
-
-				if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
-					S_TempCalData->itemData->testdata.testline.BasicResult = 0;
-				
-				S_TempCalData->resultstatues = ResultIsOK;
-			
-				return;
-			}
-		}
 		
 		//选择最终进行计算的比例(T/C or T/T+C)
 		if(S_TempCalData->itemData->testdata.temperweima.calMode == 1)
@@ -521,6 +464,19 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			else
 				S_TempCalData->itemData->testdata.testline.BasicResult = 1015.9f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
 					282.47f * S_TempCalData->finalBili + 36.177f;
+		}
+		else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1803-01", 9))
+		{
+			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+			
+			if(S_TempCalData->finalBili <= 0.6133)
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 11358.0f 
+					+ S_TempCalData->finalBili * 2127.1f - 537.0f;
+			else if(S_TempCalData->finalBili <= 0.8483)
+				S_TempCalData->itemData->testdata.testline.BasicResult = -63205.0f*S_TempCalData->finalBili*S_TempCalData->finalBili + 
+					139155.0f * S_TempCalData->finalBili - 56327.0f;
+			else
+				S_TempCalData->itemData->testdata.testline.BasicResult = 261236.0f*S_TempCalData->finalBili - 207211.0f;
 		}
 		else
 		{

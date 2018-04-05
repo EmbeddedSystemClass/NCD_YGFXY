@@ -29,7 +29,7 @@
 #include "usb_core.h"
 #include "usb_bsp.h"
 
-
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
 * @{
 */
@@ -2147,6 +2147,8 @@ void USB_OTG_SetEPStatus (USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep , uint32_t 
 }
 
 #endif
+
+#endif	//#if (USB_USE == 1)
 /**
 * @}
 */ 

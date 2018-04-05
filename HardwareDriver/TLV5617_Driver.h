@@ -1,6 +1,9 @@
 #ifndef TLV5617_D_H
 #define TLV5617_D_H
 
+#include	"stm32f4xx_gpio.h"
+#include	"stm32f4xx_rcc.h"
+
 #define	DA_SCK_Pin			GPIO_Pin_10
 #define	DA_SCK_Group		GPIOB
 #define	DA_SCK_Rcc			RCC_AHB1Periph_GPIOB

@@ -29,6 +29,7 @@
 #ifndef __USB_CORE_H__
 #define __USB_CORE_H__
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_conf.h"
 #include "usb_regs.h"
@@ -37,6 +38,8 @@
 #include	"FreeRTOS.h"
 #include 	"queue.h"
 
+
+#if (USB_USE == 1)
 /** @addtogroup USB_OTG_DRIVER
   * @{
   */
@@ -405,6 +408,7 @@ uint32_t     USB_OTG_GetEPStatus(USB_OTG_CORE_HANDLE *pdev ,USB_OTG_EP *ep);
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
 
 #endif  /* __USB_CORE_H__ */
 

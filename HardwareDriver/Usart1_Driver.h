@@ -6,13 +6,13 @@
 #include 	"queue.h"
 #include	"semphr.h"
 
+#include	"stm32f4xx_gpio.h"
+#include	"stm32f4xx_rcc.h"
+
 #define xRxQueue1_Len				50
-#define xTxQueue1_Len				50
 
 void Usart1_Init(void);
-void EnableUsart1TXInterrupt(void);
 xQueueHandle GetUsart1RXQueue(void);
-xQueueHandle GetUsart1TXQueue(void);
 
 #endif
 

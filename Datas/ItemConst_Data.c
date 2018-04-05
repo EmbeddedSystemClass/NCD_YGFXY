@@ -60,7 +60,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 	{
 		.itemName = "D-Dimer\0",
 		.icoIndex = 3,
-		.pointNum = 1,
+		.pointNum = 2,
 		.lowstResult = 0.2,
 		.highestResult = 15,
 		.normalResult = {"<=0.5 mg/L\0"},

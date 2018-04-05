@@ -29,11 +29,14 @@
 #ifndef __USBD_CORE_H
 #define __USBD_CORE_H
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "usb_dcd.h"
 #include "usbd_def.h"
 #include "usbd_conf.h"
 
+
+#if (USB_USE == 1)
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
@@ -103,8 +106,11 @@ USBD_Status USBD_SetCfg(USB_OTG_CORE_HANDLE  *pdev, uint8_t cfgidx);
 /**
   * @}
   */ 
+#endif	//#if (USB_USE == 1)
+
 
 #endif /* __USBD_CORE_H */
+
 
 /**
   * @}

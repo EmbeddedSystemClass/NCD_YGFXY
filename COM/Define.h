@@ -17,7 +17,8 @@
 #define	GB_QRVersion			QRVersion3Define				//当前支持的二维码版本，往下兼容
 
 
-#define	GB_SoftVersion	(unsigned short)1071
+#define	GB_SoftVersion			(unsigned short)1071
+#define	GB_SoftVersionStr		"V1.0.71\0"
 #define	GB_SoftVersion_Build	"Build18011201\0"
 
 #define	DEVICE_EN						100
@@ -32,6 +33,16 @@
 #define	NCDServerFinal					0x88
 #define	NCDServerDebug					0x89
 #define	NCDServerType					NCDServerFinal
+
+#define	UserNormalProgram				0x60					//通用程序
+#define	UserXGProgram					0x61					//孝感中心医院程序
+#define	UserProgramType					UserNormalProgram			//程序用户选择定义
+
+#if (UserProgramType == UserNormalProgram)
+	#define	USB_USE							1
+#elif (UserProgramType == UserXGProgram)
+	#define	USB_USE							0
+#endif
 
 /*服务器信息*/
 #define	GB_ServerIp_1		116
