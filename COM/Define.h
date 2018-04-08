@@ -16,10 +16,21 @@
 #define QRVersionUnDefine		0xff							//不支持二维码版本
 #define	GB_QRVersion			QRVersion3Define				//当前支持的二维码版本，往下兼容
 
+//build by device id
+#define	DeviceAll						0x30
+/*
+*	device id define list
+*/
+#define	DeviceBuildId					DeviceAll	
 
-#define	GB_SoftVersion			(unsigned short)1071
-#define	GB_SoftVersionStr		"V1.0.71\0"
-#define	GB_SoftVersion_Build	"Build18011201\0"
+#if (DeviceBuildId == DeviceAll)
+
+	#define	GB_SoftVersion			(unsigned short)1072
+	#define	GB_SoftVersionStr		"V1.0.72\0"
+	#define	GB_SoftVersion_Build	"Build18040801\0"
+
+#endif
+	
 
 #define	DEVICE_EN						100
 #define	DEVICE_CN						101

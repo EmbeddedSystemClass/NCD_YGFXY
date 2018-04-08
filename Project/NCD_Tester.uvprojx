@@ -835,6 +835,11 @@
               <FileType>5</FileType>
               <FilePath>..\Entity\HttpBuf.h</FilePath>
             </File>
+            <File>
+              <FileName>readme.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Entity\readme.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

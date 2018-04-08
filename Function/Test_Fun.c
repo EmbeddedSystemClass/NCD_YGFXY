@@ -470,13 +470,24 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
 			
 			if(S_TempCalData->finalBili <= 0.6133)
-				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 11358.0f 
-					+ S_TempCalData->finalBili * 2127.1f - 537.0f;
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 16764.0f 
+					- S_TempCalData->finalBili * 1428.4f + 11.797f;
 			else if(S_TempCalData->finalBili <= 0.8483)
 				S_TempCalData->itemData->testdata.testline.BasicResult = -63205.0f*S_TempCalData->finalBili*S_TempCalData->finalBili + 
 					139155.0f * S_TempCalData->finalBili - 56327.0f;
 			else
 				S_TempCalData->itemData->testdata.testline.BasicResult = 261236.0f*S_TempCalData->finalBili - 207211.0f;
+		}
+		else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1801-02", 9))
+		{
+			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
+			
+			if(S_TempCalData->finalBili <= 0.673)
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 23703.0f 
+					- S_TempCalData->finalBili * 1455.5f + 33.66f;
+			else 
+				S_TempCalData->itemData->testdata.testline.BasicResult = 512669.0f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
+					671741.0f * S_TempCalData->finalBili + 229288.0f;
 		}
 		else
 		{
