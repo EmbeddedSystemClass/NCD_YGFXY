@@ -425,7 +425,7 @@ static void AddANewUser(void)
 		/*如果有空间*/
 		if(i < MaxUserNum)
 		{
-			/*保存数据*/
+			/*保存数据，此处为保存全部操作人数据，所以传入操作人首地址*/
 			if(My_Fail == SaveUserData(&(S_UserMPageBuffer->user[0])))
 			{
 				SendKeyCode(2);
@@ -433,10 +433,13 @@ static void AddANewUser(void)
 			}
 			else
 			{
+				//保存失败，则清除已复制的数据
+				memset(S_UserMPageBuffer->tempuser, 0, sizeof(User_Type));
 				SendKeyCode(1);
 			}
 			
 			memset(&(S_UserMPageBuffer->tempnewuser), 0, sizeof(User_Type));
+			
 			S_UserMPageBuffer->selectindex = 0;
 
 			ShowList();

@@ -552,6 +552,10 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 5.0f;
 		}
+        else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IT1805-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult /= 1.3f;
+		}
 		
 		S_TempCalData->resultstatues = ResultIsOK;
 		

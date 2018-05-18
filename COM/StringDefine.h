@@ -63,6 +63,12 @@
 	#define	SerumStr			"血清\0"
 	#define	PlasmaStr			"血浆\0"
 	
+	#if (DeviceBuildId == DeviceAll)
+		#define	PrintCompanyNameStr		"武汉纽康度生物科技股份有限公司\0"
+	#elif (DeviceBuildId == DeviceNCD13011703019)
+		#define	PrintCompanyNameStr		"    鄂州市汀祖镇中心卫生院\0"
+	#endif
+	
 #elif(DeviceLanguage == DEVICE_EN)
 	#define	DeviceNameStr 		"Fluor Immun Quant Analyzer\0"
 	#define	CompanyNameStr		"Wuhan Newcando Biotechnology Co.,Ltd.\0"
@@ -79,6 +85,11 @@
 	#define	SerumStr			"Serum\0"
 	#define	PlasmaStr			"Plasma\0"
 	
+	#if (DeviceBuildId == DeviceAll)
+		#define	PrintCompanyNameStr		"武汉纽康度生物科技股份有限公司\0"
+	#elif (DeviceBuildId == DeviceNCD13011703019)
+		#define	PrintCompanyNameStr		"    鄂州市汀祖镇中心卫生院\0"
+	#endif
 	
 #endif
 

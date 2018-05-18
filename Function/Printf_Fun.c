@@ -50,7 +50,7 @@ void PrintfData(TestData * testd2)
 		//首先复制数据到自己的缓冲器，以防多任务下，其他任务释放原数据区
 		memcpy(tempTestData, testd2, sizeof(TestData));
 		
-		sprintf(printfbuf, "%s\n", CompanyNameStr);
+		sprintf(printfbuf, "%s\n", PrintCompanyNameStr);
 		SendDataToQueue(GetUsart3TXQueue(), NULL, printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
 		sprintf(printfbuf, "%s: %s\n", TesterNameStr, tempTestData->user.user_name);

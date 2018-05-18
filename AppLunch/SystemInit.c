@@ -141,7 +141,7 @@ void MySystemBSPInit(void)
 		USBD_Init(&USB_OTG_dev, USB_OTG_FS_CORE_ID, &USR_desc, &USBD_HID_cb, &USR_cb);
 	#endif				//USB_USE 
 	
-	IWDG_Init(3, 3000);					//看门狗初始化,超时时间2S
+	//IWDG_Init(3, 3000);					//看门狗初始化,超时时间2S
 	delay_ms(1);
 }
 
