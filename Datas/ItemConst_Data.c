@@ -79,7 +79,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.itemName = "PCT\0",
 		.icoIndex = 3,
 		.pointNum = 2,
-		.lowstResult = 0.22,
+		.lowstResult = 0.01,
 		.highestResult = 100,
 		.normalResult = {"<=0.5 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}

@@ -85,7 +85,8 @@ void PrintfData(TestData * testd2)
 			, tempTestData->TestTime.hour, tempTestData->TestTime.min, tempTestData->TestTime.sec);
 		SendDataToQueue(GetUsart3TXQueue(), NULL, printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 		
-		sprintf(printfbuf, "%s\n\n\n\n\n", StatementStr);
+        
+		sprintf(printfbuf, "%s\n \n \n \n", StatementStr);
 		SendDataToQueue(GetUsart3TXQueue(), NULL, printfbuf, strlen(printfbuf), sizeof(unsigned char), 50 / portTICK_RATE_MS, 100 / portTICK_RATE_MS, EnableUsart3TXInterrupt);
 	}
 	

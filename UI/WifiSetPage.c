@@ -106,7 +106,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		if(S_WifiPageBuffer->lcdinput[0] == 0x1E70)
 		{
 			SendKeyCode(4);
-
+            vTaskDelay(100/portTICK_RATE_MS);
 			memcpy(S_WifiPageBuffer->wifip->key, &pbuf[7], GetBufLen(&pbuf[7] , 2*pbuf[6]));
 			if(My_Fail == ConnectWifi(S_WifiPageBuffer->wifip))
 			{

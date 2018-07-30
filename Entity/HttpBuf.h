@@ -8,6 +8,7 @@
 #include	"TestDataDao.h"
 #include	"tcp.h"
 #include 	"api.h" 
+#include	"Test_Fun.h"
 
 #define	HttpSendBufLen	4096
 #define	HttpRecvBufLen	1024

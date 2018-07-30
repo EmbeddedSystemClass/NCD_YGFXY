@@ -32,7 +32,7 @@ typedef struct TempCalData_tag{
 
 MyState_TypeDef InitTestFunData(void);
 ResultState TestFunction(void * parm);
-
+void AnalysisTestData(TempCalData * S_TempCalData);
 MyState_TypeDef TakeTestPointData(void * data);
 MyState_TypeDef TakeTestResultData(void * data);
 

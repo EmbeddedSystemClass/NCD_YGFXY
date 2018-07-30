@@ -200,12 +200,14 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 			
 			if(My_Pass == ReadTestData(&httpBuffer->pageRequest, httpBuffer->page, httpBuffer->tempInt1))
 			{
-				httpBuffer->testData = httpBuffer->page->testData;
+				httpBuffer->testData = httpBuffer->page->testData;                
+                
 				for(httpBuffer->upLoadIndex=0; httpBuffer->upLoadIndex< httpBuffer->page->ElementsSize; httpBuffer->upLoadIndex++)
 				{
+                    
 					//如果crc校验正确，则开始上传
 					if(httpBuffer->testData->crc == CalModbusCRC16Fun1(httpBuffer->testData, TestDataStructCrcSize))
-					{
+					{ 
 						//上传测试数据
 						if(httpBuffer->testData->testResultDesc != ResultIsOK)
 							sprintf(httpBuffer->tempBuf, "false");
@@ -226,7 +228,7 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 						readDeviceId(httpBuffer->tempBuf+10);
 						readDeviceAddr(httpBuffer->tempBuf+100);
 						
-						sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ncardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%02d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.4f&t_tc_v=%.4f&testv=%.*f&serialnum=%s-%s&t_isok=%s&cparm=%d&t_cv=%.4f&c_cv=%.4f&testaddr=%s\0",
+						sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ncardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%02d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.4f&t_tc_v=%.4f&testv=%.*f&serialnum=%s-%s&t_isok=%s&cparm=%d&t_cv=%.4f&c_cv=%.4f&testaddr=%s&errcode=%d\0",
 							NcdServerUpTestDataUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, 
 							httpBuffer->testData->temperweima.piNum, httpBuffer->testData->temperweima.PiHao, 
 							httpBuffer->tempBuf+10, httpBuffer->testData->user.user_name, 
@@ -238,7 +240,8 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 							httpBuffer->testData->testline.B_Point.x, httpBuffer->testData->testline.t_cValue, httpBuffer->testData->t_tcValue, 
 							httpBuffer->testData->temperweima.itemConstData.pointNum, httpBuffer->testData->testline.BasicResult, 
 							httpBuffer->testData->temperweima.PiHao, httpBuffer->testData->temperweima.piNum, httpBuffer->tempBuf,
-							httpBuffer->testData->testline.CMdifyNum, httpBuffer->testData->t_cv, httpBuffer->testData->c_cv, httpBuffer->tempBuf+100);
+							httpBuffer->testData->testline.CMdifyNum, httpBuffer->testData->t_cv, httpBuffer->testData->c_cv, httpBuffer->tempBuf+100,
+                            httpBuffer->testData->testResultDesc);
 
 						for(httpBuffer->i=0; httpBuffer->i<100; httpBuffer->i++)
 						{
@@ -488,7 +491,7 @@ static void upLoadUserServer(void)
 						//STX
 						httpBuffer->sendBuf[0] = 0x02;
 						//AA | testtime | sampleid | testtype | pihao | pinum | deviceid | tester | item | danwei | normal 
-						sprintf(httpBuffer->sendBuf+1, "H|\\^|||荧光免疫定量分析仪^%s^%s^NCD-A01^%s-%s^1.0|||||||P||20%02d%02d%02d%02d%02d%02d\rP|1||||^^\rO|1|%s|||||||||||||Blood\rR|1|^^^%s",  
+						sprintf(httpBuffer->sendBuf+1, "H|\\^&|||荧光免疫定量分析仪^%s^%s^NCD-A01^%s-%s^1.0|||||||P||20%02d%02d%02d%02d%02d%02d\rP|1||||^^\rO|1|%s|||||||||||||Blood\rR|1|^^^%s",  
 							GB_SoftVersionStr, httpBuffer->tempBuf, httpBuffer->testData->temperweima.PiHao,  httpBuffer->testData->temperweima.piNum,
 							httpBuffer->testData->TestTime.year,  httpBuffer->testData->TestTime.month, httpBuffer->testData->TestTime.day, 
 							httpBuffer->testData->TestTime.hour, httpBuffer->testData->TestTime.min, httpBuffer->testData->TestTime.sec,
@@ -503,7 +506,7 @@ static void upLoadUserServer(void)
 							sprintf(httpBuffer->tempBuf, "|%.*f|", httpBuffer->testData->temperweima.itemConstData.pointNum, httpBuffer->testData->testline.BasicResult);
 						strcat(httpBuffer->sendBuf, httpBuffer->tempBuf);
 						
-						sprintf(httpBuffer->tempBuf, "%s|%s|||||\rL|1\r", httpBuffer->testData->temperweima.itemConstData.itemMeasure, httpBuffer->testData->temperweima.itemConstData.normalResult);
+						sprintf(httpBuffer->tempBuf, "%s|%s^^^|L||||1\rL|1\r", httpBuffer->testData->temperweima.itemConstData.itemMeasure, httpBuffer->testData->temperweima.itemConstData.normalResult);
 						strcat(httpBuffer->sendBuf, httpBuffer->tempBuf);
 						httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
 						httpBuffer->sendBuf[httpBuffer->sendDataLen] = 0x03;

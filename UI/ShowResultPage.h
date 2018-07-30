@@ -4,6 +4,7 @@
 #include	"MyTest_Data.h"
 #include	"UI_Data.h"
 #include	"SystemSet_Data.h"
+#include    "Define.h"
 
 typedef struct ShowPageBuffer_tag {
 	char tempbuf[100];

@@ -122,11 +122,13 @@ void findFeng(unsigned short * datas, unsigned short startIndex, unsigned short 
 		
 	myPoint->x = 0;
 	myPoint->y = 0;
-	for(i=startIndex; i<endIndex; i++)
+    if(endIndex > 300)
+        endIndex = 300;
+	for(i=startIndex; i<endIndex-10; i++)
 	{
 		tempPoint.x = 0;
 		tempPoint.y = 0;
-		for(j=i-15; j<15+i; j++) 
+		for(j=i; j<10+i; j++) 
 		{
 			tempv1 = datas[j];
 			if(tempPoint.y < tempv1) 
@@ -150,7 +152,6 @@ void findFeng(unsigned short * datas, unsigned short startIndex, unsigned short 
 
 		if(j < 10)
 		{
-			i += 10;
 			continue;
 		}
 		else 
@@ -160,7 +161,7 @@ void findFeng(unsigned short * datas, unsigned short startIndex, unsigned short 
 				myPoint->x = tempPoint.x;
 				myPoint->y = tempPoint.y;
 			}
-			i = (tempPoint.x + 15);
+			i = (tempPoint.x + 10);
 		}
 	}
 }

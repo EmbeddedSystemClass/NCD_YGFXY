@@ -43,7 +43,6 @@ static xQueueHandle xTestCurveQueue = NULL;												//发送测试曲线
 /**************************************??????*************************************************/
 /***************************************************************************************************/
 static MyState_TypeDef SendTestPointData(void * data);
-static void AnalysisTestData(TempCalData * S_TempCalData);
 /***************************************************************************************************/
 /***************************************************************************************************/
 /***************************************??********************************************************/
@@ -234,7 +233,7 @@ ResultState TestFunction(void * parm)
 
 
 
-static void AnalysisTestData(TempCalData * S_TempCalData)
+void AnalysisTestData(TempCalData * S_TempCalData)
 {
 	unsigned short i=0;
 	
@@ -275,7 +274,10 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		//step.1 计算整条曲线的cv值，用于判断是否加样
 		S_TempCalData->tempCV = calculateDataCV(S_TempCalData->itemData->testdata.testline.TestPoint, 300, S_TempCalData->tempvalue1);
 		if(S_TempCalData->tempCV < 0.025)
-			goto END1;
+		{
+            S_TempCalData->resultstatues = NoSample;
+            goto END1;
+        }
 		
 		//step.2 find T
 		findFeng(S_TempCalData->itemData->testdata.testline.TestPoint, S_TempCalData->itemData->testdata.temperweima.ItemLocation-30, 
@@ -288,17 +290,16 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			S_TempCalData->itemData->testdata.testline.T_Point.x = S_TempCalData->itemData->testdata.temperweima.ItemLocation;
 		
 			S_TempCalData->CV_T = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x-15], 31, 0);
-
+            
+            //默认T线位置，如果cv>0.05,表明有峰，但是有找不到，所以报错
 			if(S_TempCalData->CV_T > 0.05)
 			{
-				goto END2;
+                S_TempCalData->resultstatues = T_CV_0_05;
+				goto END1;
 			}
 		}
 		else
 		{
-			if((S_TempCalData->itemData->testdata.testline.T_Point.x >= 200) || (S_TempCalData->itemData->testdata.testline.T_Point.x <= 100))
-				goto END2;
-			
 			if(S_TempCalData->itemData->testdata.testline.T_Point.x < S_TempCalData->itemData->testdata.temperweima.ItemLocation) 
 			{
 				S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.temperweima.ItemLocation - S_TempCalData->itemData->testdata.testline.T_Point.x;
@@ -326,36 +327,49 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			S_TempCalData->itemData->testdata.testline.C_Point.x = S_TempCalData->itemData->testdata.temperweima.CLineLocation;
 
 		S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.testline.C_Point.x-15;
-		if(S_TempCalData->itemData->testdata.testline.C_Point.x < 284)
+		if((300 - S_TempCalData->tempvalue3) > 31)
 			S_TempCalData->CV_C = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], 31, 0);
 		else
 			S_TempCalData->CV_C = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->tempvalue3], (300 - S_TempCalData->tempvalue3), 0);
 		
+        S_TempCalData->itemData->testdata.c_cv = S_TempCalData->CV_C;
+        
 		if((S_TempCalData->CV_C > 0.03) && (S_TempCalData->itemData->testdata.testline.C_Point.y == 0))
 		{
-			goto END2;
+            S_TempCalData->resultstatues = C_CV_ERR_1;
+			goto END1;
 		}
 		
 		if(S_TempCalData->CV_C < 0.03)
 		{
-			goto END2;
+            S_TempCalData->resultstatues = C_CV_ERR_2;
+			goto END1;
 		}
 		
 		S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
 
 		//step.4 c.x - t.x should between in 50-100
 		if(S_TempCalData->itemData->testdata.testline.C_Point.x <= S_TempCalData->itemData->testdata.testline.T_Point.x)
-			goto END2;
+		{
+            S_TempCalData->resultstatues = C_L_T_L_1;
+            goto END1;
+        }
 		
 		S_TempCalData->tempvalue3 = S_TempCalData->itemData->testdata.testline.C_Point.x - S_TempCalData->itemData->testdata.testline.T_Point.x;
 		if((S_TempCalData->tempvalue3 < 50) || (S_TempCalData->tempvalue3 > 100))
-			goto END2;
+		{
+            S_TempCalData->resultstatues = C_L_T_L_2;
+            goto END1;
+        }
 		
 		//step.5 c+t cv > 0.2
 		S_TempCalData->CV_T = calculateDataCV(&S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x-15], 31, 0);
-		
+		S_TempCalData->itemData->testdata.t_cv = S_TempCalData->CV_T;
 		if((S_TempCalData->CV_C + S_TempCalData->CV_T) < 0.13)
-			goto END2;
+		{
+            S_TempCalData->resultstatues = C_CV_T_CV;
+            goto END1;
+        }
 		
 		//step.6 canliu
 		S_TempCalData->tempvalue1 = 0;
@@ -371,13 +385,16 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			}
 		}
 		if(S_TempCalData->tempCV > 0.15)
-			goto END2;
+		{
+            S_TempCalData->resultstatues = CANLIU;
+            goto END1;
+        }
 		
 		//step.6 find b
 		S_TempCalData->itemData->testdata.testline.B_Point.y = 10000;
 		S_TempCalData->itemData->testdata.testline.B_Point.x = 0;
 
-		for(i=S_TempCalData->itemData->testdata.testline.T_Point.x; i<S_TempCalData->itemData->testdata.testline.C_Point.x; i++)
+		for(i=S_TempCalData->itemData->testdata.testline.T_Point.x+1; i<S_TempCalData->itemData->testdata.testline.C_Point.x; i++)
 		{
 			if(S_TempCalData->itemData->testdata.testline.B_Point.y > S_TempCalData->itemData->testdata.testline.TestPoint[i])
 			{
@@ -385,18 +402,14 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 				S_TempCalData->itemData->testdata.testline.B_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[i];
 			}
 		}
-		if(S_TempCalData->itemData->testdata.testline.B_Point.x < S_TempCalData->itemData->testdata.testline.T_Point.x)
-			goto END2;
 		
 		//step.7 b line value : c > b, t >= b
 		if((S_TempCalData->itemData->testdata.testline.B_Point.y >= S_TempCalData->itemData->testdata.testline.C_Point.y)
 			|| (S_TempCalData->itemData->testdata.testline.B_Point.y > S_TempCalData->itemData->testdata.testline.T_Point.y))
 		{
-		     goto END2;
+            S_TempCalData->resultstatues = B_V_ERR;
+		     goto END1;
 		}
-		
-		S_TempCalData->itemData->testdata.t_cv = S_TempCalData->CV_T;
-		S_TempCalData->itemData->testdata.c_cv = S_TempCalData->CV_C;
 		
 		//step 9 判断微球是否过少，，补偿
 		S_TempCalData->maxdata = S_TempCalData->itemData->testdata.testline.C_Point.y;
@@ -470,8 +483,8 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			S_TempCalData->finalBili = S_TempCalData->itemData->testdata.t_tcValue;
 			
 			if(S_TempCalData->finalBili <= 0.6133)
-				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 16764.0f 
-					- S_TempCalData->finalBili * 1428.4f + 11.797f;
+				S_TempCalData->itemData->testdata.testline.BasicResult = S_TempCalData->finalBili * S_TempCalData->finalBili * 16864.0f 
+					- S_TempCalData->finalBili * 1510.7f + 26.155f;
 			else if(S_TempCalData->finalBili <= 0.8483)
 				S_TempCalData->itemData->testdata.testline.BasicResult = -63205.0f*S_TempCalData->finalBili*S_TempCalData->finalBili + 
 					139155.0f * S_TempCalData->finalBili - 56327.0f;
@@ -488,6 +501,14 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			else 
 				S_TempCalData->itemData->testdata.testline.BasicResult = 512669.0f*S_TempCalData->finalBili*S_TempCalData->finalBili - 
 					671741.0f * S_TempCalData->finalBili + 229288.0f;
+		}
+        else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1807-01", 9))
+		{
+			if(S_TempCalData->finalBili <= 0.3154)
+				S_TempCalData->itemData->testdata.testline.BasicResult = -17681.0f*S_TempCalData->finalBili * S_TempCalData->finalBili 
+					+ S_TempCalData->finalBili * 15841.0f - 208.34f;
+			else 
+				S_TempCalData->itemData->testdata.testline.BasicResult = 802.31f*exp(4.6264f*S_TempCalData->finalBili);
 		}
 		else
 		{
@@ -531,7 +552,7 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 						
 				S_TempCalData->itemData->testdata.testline.BasicResult += S_TempCalData->itemData->testdata.temperweima.ItemBiaoQu[S_TempCalData->tempvalue3][2];
 			}
-		}			
+		}
 		
 		if(S_TempCalData->itemData->testdata.testline.BasicResult < 0)
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
@@ -556,6 +577,29 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 		{
 			S_TempCalData->itemData->testdata.testline.BasicResult /= 1.3f;
 		}
+        else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1803-01", 9))
+		{
+			if(S_TempCalData->itemData->testdata.testline.BasicResult < 1000)
+                S_TempCalData->itemData->testdata.testline.BasicResult *= 5.0f;
+            else if(S_TempCalData->itemData->testdata.testline.BasicResult <6000)
+                S_TempCalData->itemData->testdata.testline.BasicResult *= 4.0f;
+            else if(S_TempCalData->itemData->testdata.testline.BasicResult < 10000)
+                S_TempCalData->itemData->testdata.testline.BasicResult *= 3.0f;
+            else
+                S_TempCalData->itemData->testdata.testline.BasicResult *= 2.0f;
+		}
+        else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1804-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult *= 2.0f;
+		}
+        else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1805-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult *= 2.0f;
+		}
+        else if(CheckStrIsSame(S_TempCalData->itemData->testdata.temperweima.PiHao, "IB1807-01", 9))
+		{
+			S_TempCalData->itemData->testdata.testline.BasicResult *= 2.0f;
+		}
 		
 		S_TempCalData->resultstatues = ResultIsOK;
 		
@@ -565,15 +609,6 @@ static void AnalysisTestData(TempCalData * S_TempCalData)
 			S_TempCalData->itemData->testdata.testline.B_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.B_Point.x];
 			S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
 			S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
-			S_TempCalData->resultstatues = NoSample;
-			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
-			return;
-		
-		END2:
-			S_TempCalData->itemData->testdata.testline.B_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.B_Point.x];
-			S_TempCalData->itemData->testdata.testline.C_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.C_Point.x];
-			S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
-			S_TempCalData->resultstatues = PeakError;
 			S_TempCalData->itemData->testdata.testline.BasicResult = 0;
 			return;
 	}		

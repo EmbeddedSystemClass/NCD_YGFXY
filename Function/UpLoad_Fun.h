@@ -5,7 +5,7 @@
 #include	"TestDataDao.h"
 #include	"SystemSet_Data.h"
 #include	"RemoteSoft_Data.h"
-
+#include	"Test_Fun.h"
 
 void UpLoadFunction(void);
 

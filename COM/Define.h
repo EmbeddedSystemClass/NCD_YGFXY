@@ -4,7 +4,6 @@
 #include	"stm32f4xx.h"
 #include 	"FreeRTOS.h"
 #include	"ff.h"
-
 /**************************************************************************************************/
 /***************************************************************************************************/
 /*****************************************软件版本**************************************************/
@@ -19,19 +18,19 @@
 //build by device id
 #define	DeviceAll						0x30
 #define	DeviceNCD13011703019			0x31
-#define	DeviceBuildId					DeviceNCD13011703019	
+#define	DeviceBuildId					DeviceAll	
 
 #if (DeviceBuildId == DeviceAll)
 
-	#define	GB_SoftVersion			(unsigned short)1073
-	#define	GB_SoftVersionStr		"V1.0.73\0"
-	#define	GB_SoftVersion_Build	"Build18051801\0"
+	#define	GB_SoftVersion			(unsigned short)1078
+	#define	GB_SoftVersionStr		"V1.0.78\0"
+	#define	GB_SoftVersion_Build	"Build18071001\0"
 	
 #elif (DeviceBuildId == DeviceNCD13011703019)
 
-	#define	GB_SoftVersion			(unsigned short)1074
-	#define	GB_SoftVersionStr		"V1.0.74\0"
-	#define	GB_SoftVersion_Build	"Build18051801\0"
+	#define	GB_SoftVersion			(unsigned short)1079
+	#define	GB_SoftVersionStr		"V1.0.79\0"
+	#define	GB_SoftVersion_Build	"Build18071001\0"
 
 #endif
 	
@@ -284,9 +283,9 @@ typedef struct LineInfo_Tag
 #define	LCD_Head_2		0xBB											//协议头2
 
 #define W_REGSITER 		0x80          									//写入数据,无应答          
-#define R_REGSITER 	0x81          									//读取数据，有应答
+#define R_REGSITER 	    0x81          									//读取数据，有应答
 #define W_ADDRESS  		0x82											//写变量寄存器，无应答
-#define R_ADDRESS  	0x83											//读变量寄存器数据，有应答
+#define R_ADDRESS  	    0x83											//读变量寄存器数据，有应答
 #define W_LINE     		0x84          									//写曲线缓冲区，无应答
 
 #pragma pack(1)
@@ -476,6 +475,14 @@ typedef enum
 	NoSample = 1,										//未加样
 	PeakError = 2,										//检测卡没有C峰
 	MemError = 3,										//内存错误
+    T_CV_0_05 = 4,                                      //找不到T，但是默认位置的cv>0.05
+    C_CV_ERR_1 = 5,
+    C_CV_ERR_2 = 6,
+    C_L_T_L_1 = 7,                                        //c位置小于T位置
+    C_L_T_L_2 = 9,                                        //c位置 - T位置 (50-100)
+    C_CV_T_CV = 10,                                     //c_cv + t_cv < 0.13
+    CANLIU = 11,                                        //残留
+    B_V_ERR = 12,                                       //基线值错误
 	TestInterrupt = 8,									//测试中断
 	ResultIsOK = 99,									//测试成功
 }ResultState;

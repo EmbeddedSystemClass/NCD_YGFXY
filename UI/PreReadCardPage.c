@@ -396,7 +396,7 @@ static void CheckPreTestCard(void)
 			AddNumOfSongToList(14, 0);
 			SendKeyCode(3);
 		}
-		else if(S_PreReadPageBuffer->cardpretestresult == PeakError)
+		else
 		{
 			//如果是排队模式，则进入排队界面
 			if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
