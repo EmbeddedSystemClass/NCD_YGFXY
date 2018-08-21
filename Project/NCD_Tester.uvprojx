@@ -825,6 +825,11 @@
               <FileType>1</FileType>
               <FilePath>..\UI\ServerSetPage.c</FilePath>
             </File>
+            <File>
+              <FileName>SetPrintHeaderPage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\UI\SetPrintHeaderPage.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

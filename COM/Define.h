@@ -22,9 +22,9 @@
 
 #if (DeviceBuildId == DeviceAll)
 
-	#define	GB_SoftVersion			(unsigned short)1078
-	#define	GB_SoftVersionStr		"V1.0.78\0"
-	#define	GB_SoftVersion_Build	"Build18071001\0"
+	#define	GB_SoftVersion			(unsigned short)1079
+	#define	GB_SoftVersionStr		"V1.0.79\0"
+	#define	GB_SoftVersion_Build	"Build18080101\0"
 	
 #elif (DeviceBuildId == DeviceNCD13011703019)
 
@@ -363,6 +363,14 @@ typedef struct DeviceInfo_Tag
 	MyBool isnew;															//设备信息是否有更新
 	unsigned short crc;
 }DeviceInfo;
+#pragma pack()
+
+#pragma pack(1)
+typedef struct PrintInfo_Tag
+{
+	char header[30];
+	unsigned short crc;
+}PrintInfo;
 #pragma pack()
 
 /**********************************************************************************************************/

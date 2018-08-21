@@ -1,29 +1,28 @@
 /******************************************************************************************/
 /*****************************************头文件*******************************************/
 
-#include	"ShowDeviceInfoPage.h"
-#include	"SetDeviceInfoPage.h"
-#include	"SetDeviceIDPage.h"
-#include	"SystemSetPage.h"
 #include	"SetPrintHeaderPage.h"
-#include	"SleepPage.h"
 
 #include	"LCD_Driver.h"
-#include	"SystemSet_Dao.h"
 #include	"MyMem.h"
-#include	"MyTools.h"
-#include	"StringDefine.h"
+#include	"ShowDeviceInfoPage.h"
+#include	"System_Data.h"
+#include	"SystemSet_Dao.h"
+#include	"SleepPage.h"
+#include    "CRC16.h"
+
+#include 	"FreeRTOS.h"
+#include 	"task.h"
+#include 	"queue.h"
 
 #include	<string.h>
 #include	"stdio.h"
 
 /******************************************************************************************/
 /*****************************************局部变量声明*************************************/
-static ShowDeviceInfoPageBuffer * S_ShowDeviceInfoPageBuffer = NULL;
+static SetPrintHeaderPageBuffer * page = NULL;
 /******************************************************************************************/
 /*****************************************局部函数声明*************************************/
-static void showDeviceInfo(void);
-
 static void activityStart(void);
 static void activityInput(unsigned char *pbuf , unsigned short len);
 static void activityFresh(void);
@@ -32,13 +31,14 @@ static void activityResume(void);
 static void activityDestroy(void);
 static MyState_TypeDef activityBufferMalloc(void);
 static void activityBufferFree(void);
-/******************************************************************************************/
-/******************************************************************************************/
-/******************************************************************************************/
-/******************************************************************************************/
-/******************************************************************************************/
-/******************************************************************************************/
 
+static void showDeviceInfoText(void);
+/******************************************************************************************/
+/******************************************************************************************/
+/******************************************************************************************/
+/******************************************************************************************/
+/******************************************************************************************/
+/******************************************************************************************/
 /***************************************************************************************************
 *FunctionName: createSelectUserActivity
 *Description: 创建选择操作人界面
@@ -48,14 +48,14 @@ static void activityBufferFree(void);
 *Author: xsx
 *Date: 2016年12月21日09:00:09
 ***************************************************************************************************/
-MyState_TypeDef createDeviceInfoActivity(Activity * thizActivity, Intent * pram)
+MyState_TypeDef createSetPrintHeaderActivity(Activity * thizActivity, Intent * pram)
 {
 	if(NULL == thizActivity)
 		return My_Fail;
 	
 	if(My_Pass == activityBufferMalloc())
 	{
-		InitActivity(thizActivity, "DeviceInfoActivity\0", activityStart, activityInput, activityFresh, activityHide, activityResume, activityDestroy);
+		InitActivity(thizActivity, "SetPrintHeaderActivity\0", activityStart, activityInput, activityFresh, activityHide, activityResume, activityDestroy);
 		
 		return My_Pass;
 	}
@@ -74,11 +74,11 @@ MyState_TypeDef createDeviceInfoActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	copyGBSystemSetData(&S_ShowDeviceInfoPageBuffer->systemSetData);
-
-	showDeviceInfo();
+	readPrintInfo(&page->printInfo);
 	
-	SelectPage(100);
+    showDeviceInfoText();
+	
+	SelectPage(102);
 }
 
 /***************************************************************************************************
@@ -92,46 +92,46 @@ static void activityStart(void)
 ***************************************************************************************************/
 static void activityInput(unsigned char *pbuf , unsigned short len)
 {
-	S_ShowDeviceInfoPageBuffer->lcdinput[0] = pbuf[4];
-	S_ShowDeviceInfoPageBuffer->lcdinput[0] = (S_ShowDeviceInfoPageBuffer->lcdinput[0]<<8) + pbuf[5];
+	/*命令*/
+	page->lcdinput[0] = pbuf[4];
+	page->lcdinput[0] = (page->lcdinput[0]<<8) + pbuf[5];
 		
-	/*基本信息*/
-	if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a03)
-		S_ShowDeviceInfoPageBuffer->presscount = 0;
-		
-	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a04)
-		S_ShowDeviceInfoPageBuffer->presscount++;
-		
-	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a05)
-	{
-		if(S_ShowDeviceInfoPageBuffer->presscount > 10)
-			SendKeyCode(2);
-	}
-	/*获取密码*/
-	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a10)
-	{
-		S_ShowDeviceInfoPageBuffer->tempValue = GetBufLen(&pbuf[7] , 2*pbuf[6]);
-       
-        if(pdPASS == CheckStrIsSame(&pbuf[7], AdminPassWord, 6))
-        {
-            startActivity(createSetDeviceIDActivity, NULL);
-        }
-        else if(pdPASS == CheckStrIsSame(&pbuf[7], PrintHeaderPassWord, 6))
-        {
-            startActivity(createSetPrintHeaderActivity, NULL);
-        }
-		else
-			SendKeyCode(1);
-	}
 	/*返回*/
-	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a00)
+	if(page->lcdinput[0] == 0x1B00)
 	{
 		backToFatherActivity();
 	}
-	/*修改*/
-	else if(S_ShowDeviceInfoPageBuffer->lcdinput[0] == 0x1a01)
+	/*确认*/
+	else if(page->lcdinput[0] == 0x1B01)
+	{			
+		if(TRUE == page->ismodify)
+        {
+            page->printInfo.crc = CalModbusCRC16Fun1(&page->printInfo, sizeof(PrintInfo)-2);
+            copyGBSystemSetData(&page->systemSetData);
+            memcpy(&page->systemSetData.printInfo, &page->printInfo, sizeof(PrintInfo));
+            
+            if(My_Pass == SaveSystemSetData(&page->systemSetData))
+			{
+				SendKeyCode(1);
+				page->ismodify = FALSE;
+			}
+			else
+				SendKeyCode(2);
+        }
+	}
+	
+	//打印数据头
+	else if(page->lcdinput[0] == 0x1B70)
 	{
-		startActivity(createSetDeviceInfoActivity, NULL);
+        page->tempShort = GetBufLen(&pbuf[7] , 2*pbuf[6]);
+        if(page->tempShort > 30)
+            page->tempShort = 30;
+        
+        memset(page->printInfo.header, 0, 30);
+        memcpy(page->printInfo.header, &pbuf[7], page->tempShort);
+        page->printInfo.crc = CalModbusCRC16Fun1(&page->printInfo, sizeof(PrintInfo)-2);
+        
+        page->ismodify = TRUE;
 	}
 }
 
@@ -174,14 +174,7 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-	if(S_ShowDeviceInfoPageBuffer)
-	{
-		copyGBSystemSetData(&(S_ShowDeviceInfoPageBuffer->systemSetData));
-
-		showDeviceInfo();
-	}
-	
-	SelectPage(100);
+	SelectPage(102);
 }
 
 /***************************************************************************************************
@@ -209,13 +202,13 @@ static void activityDestroy(void)
 ***************************************************************************************************/
 static MyState_TypeDef activityBufferMalloc(void)
 {
-	if(NULL == S_ShowDeviceInfoPageBuffer)
+	if(NULL == page)
 	{
-		S_ShowDeviceInfoPageBuffer = MyMalloc(sizeof(ShowDeviceInfoPageBuffer));
+		page = MyMalloc(sizeof(SetPrintHeaderPageBuffer));
 		
-		if(S_ShowDeviceInfoPageBuffer)
+		if(page)
 		{
-			memset(S_ShowDeviceInfoPageBuffer, 0, sizeof(ShowDeviceInfoPageBuffer));
+			memset(page, 0, sizeof(SetPrintHeaderPageBuffer));
 	
 			return My_Pass;
 		}
@@ -237,26 +230,11 @@ static MyState_TypeDef activityBufferMalloc(void)
 ***************************************************************************************************/
 static void activityBufferFree(void)
 {
-	MyFree(S_ShowDeviceInfoPageBuffer);
-	S_ShowDeviceInfoPageBuffer = NULL;
+	MyFree(page);
+	page = NULL;
 }
 
-
-static void showDeviceInfo(void)
+static void showDeviceInfoText(void)
 {
-	/*显示设备id*/
-	DisText(0x1a40, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceid, MaxDeviceIDLen);
-		
-	/*显示设备名称*/
-	DisText(0x1a50, DeviceNameStr, strlen(DeviceNameStr)+1);
-			
-	/*显示使用单位*/
-	DisText(0x1a60, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceunit, MaxDeviceUnitLen);
-
-	/*显示责任人*/
-	DisText(0x1a90, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceuser.user_name, MaxNameLen);
-		
-	/*显示责任人联系方式*/
-	DisText(0x1a80, S_ShowDeviceInfoPageBuffer->systemSetData.deviceInfo.deviceuser.user_phone, MaxPhoneLen);
+	DisText(0x1b70, page->printInfo.header, 30);
 }
-

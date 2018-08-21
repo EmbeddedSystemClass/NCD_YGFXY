@@ -149,11 +149,12 @@ static MyState_TypeDef loadSystemData(void)
 {
 	SystemSetData * systemSetData = NULL;
 	MyState_TypeDef status = My_Fail;
-	
+
 	systemSetData = MyMalloc(sizeof(SystemSetData));
 	
 	if(systemSetData)
 	{
+
 		//读取SD卡中的配置文件
 		ReadSystemSetData(systemSetData);
 		
@@ -181,6 +182,7 @@ static MyState_TypeDef loadSystemData(void)
 		}
 	}
 	
+   
 	MyFree(systemSetData);
 	
 	return status;

@@ -9,6 +9,7 @@
 /******************************************Header List********************************************/
 /***************************************************************************************************/
 #include	"SystemSet_Data.h"
+#include    "StringDefine.h"
 
 #include	"MyTools.h"
 #include	"CRC16.h"
@@ -64,10 +65,13 @@ void setDefaultSystemSetData(SystemSetData * systemSetData)
 		systemSetData->upLoadIndex = 0;
 		
 		systemSetData->testLedLightIntensity = 200;
+        
+        memcpy(systemSetData->printInfo.header, CompanyNameStr, strlen(CompanyNameStr));
+        systemSetData->printInfo.crc = CalModbusCRC16Fun1(&systemSetData->printInfo, sizeof(PrintInfo)-2);
 		
 		//清空校准参数
 		memset(systemSetData->parm1, 0, 700);
-		memset(systemSetData->parm2, 0, 148);
+		memset(systemSetData->parm2, 0, 116);
 		
 		setDefaultServerData(&systemSetData->serverSet);
 		
@@ -402,5 +406,19 @@ void getGBServerData(ServerSet * server)
 	{
 		memcpy(server, &GB_SystemSetData.serverSet, ServerStructSize);
 	}
+}
+
+void readPrintInfo(PrintInfo * printInfo)
+{
+    if(printInfo)
+    {
+        if(GB_SystemSetData.printInfo.crc == CalModbusCRC16Fun1(&GB_SystemSetData.printInfo, sizeof(PrintInfo)-2))
+        {
+            memcpy(printInfo, &GB_SystemSetData.printInfo, sizeof(PrintInfo));
+            return;
+        }
+    }
+    
+    memcpy(printInfo->header, CompanyNameStr, strlen(CompanyNameStr));
 }
 /****************************************end of file************************************************/

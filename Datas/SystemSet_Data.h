@@ -19,7 +19,8 @@ typedef struct SystemSetData_Tag
 	unsigned char parm1[700];
 	unsigned int userUpLoadIndex;										//用户服务器上传索引
 	ServerSet serverSet;												//服务器设置
-	unsigned char parm2[148];											//预留参数1
+    PrintInfo printInfo;                                                //打印设置
+	unsigned char parm2[116];											//预留参数1
 	
 	unsigned short crc;
 }SystemSetData;
@@ -54,7 +55,7 @@ void setIsShowRealValue(MyBool isShow);
 MyBool IsShowRealValue(void);
 void setDefaultServerData(ServerSet * server);
 void getGBServerData(ServerSet * server);
-
+void readPrintInfo(PrintInfo * printInfo);
 #endif
 
 /****************************************end of file************************************************/
