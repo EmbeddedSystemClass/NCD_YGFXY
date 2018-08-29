@@ -112,7 +112,9 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		/*wifiÉèÖÃ*/
 		else if(S_NetPrePageBuffer->lcdinput[0] == 0x1E02)
 		{
-			startActivity(createWifiSetActivity, NULL);
+            #if (DEVICE_CON_TYPE == DEVICE_WIFI)
+                startActivity(createWifiSetActivity, NULL);
+            #endif //DEVICE_CON_TYPE
 		}
 		//SERVER set
 		else if(S_NetPrePageBuffer->lcdinput[0] == 0x1E0a)

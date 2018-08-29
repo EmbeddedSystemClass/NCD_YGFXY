@@ -44,6 +44,7 @@
 ".\obj\paidui_fun.o"
 ".\obj\systemresetfun.o"
 ".\obj\iap_fun.o"
+".\obj\gprs_fun.o"
 ".\obj\lwipcom_task.o"
 ".\obj\lwipdhcp_task.o"
 ".\obj\codescan_task.o"

@@ -3,7 +3,12 @@
 
 #include	"Define.h"
 
-#define		DeviceTypeString					"YGFXY_1\0"
+#if (DEVICE_CON_TYPE == DEVICE_WIFI)
+    #define		DeviceTypeString					"YGFXY_1\0"
+#elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+    #define		DeviceTypeString					"YGFXY_4\0"
+#endif //DEVICE_CON_TYPE
+
 
 #if(DeviceLanguage == DEVICE_CN)
 	#define	DeviceLanguageString				"CH"
@@ -21,19 +26,11 @@
 #define		EnableUSBPassWord					"201308\0"								//挂载USB
 #define		PrintHeaderPassWord					"201309\0"								//修改打印数据头
 
-#if (NCDServerType == NCDServerFinal)
 #define		NcdServerReadTimeUrlStr				"/NCD_Server/up_dtime\0"
 #define		NcdServerUpDeviceUrlStr				"/NCD_Server/up_device\0"
 #define		NcdServerUpTestDataUrlStr			"/NCD_Server/UpLoadYGFXY\0"
 #define		NcdServerQuerySoftUrlStr			"/NCD_Server/deviceSoftInfo\0"
 #define		NcdServerDownSoftUrlStr				"/NCD_Server/DownloadSoftFile\0"
-#elif (NCDServerType == NCDServerDebug)
-#define		NcdServerReadTimeUrlStr				"/NCD_ServerDebug/up_dtime\0"
-#define		NcdServerUpDeviceUrlStr				"/NCD_ServerDebug/up_device\0"
-#define		NcdServerUpTestDataUrlStr			"/NCD_ServerDebug/UpLoadYGFXY\0"
-#define		NcdServerQuerySoftUrlStr			"/NCD_ServerDebug/deviceSoftInfo\0"
-#define		NcdServerDownSoftUrlStr				"/NCD_ServerDebug/DownloadSoftFile\0"
-#endif
 
 
 #define ChangguiStr			"R\0"

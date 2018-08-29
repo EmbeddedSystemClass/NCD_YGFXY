@@ -33,7 +33,7 @@ static void activityDestroy(void);
 static MyState_TypeDef activityBufferMalloc(void);
 static void activityBufferFree(void);
 
-static void ReadNetInfo(void);
+static void ShowWifiInfo(void);
 static void ShowNetInfo(void);
 /******************************************************************************************/
 /******************************************************************************************/
@@ -77,17 +77,13 @@ MyState_TypeDef createNetInfoActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_NetInfoPageBuffer)
-	{		
-		timer_set(&(S_NetInfoPageBuffer->timer), 10);
+	timer_set(&(S_NetInfoPageBuffer->timer), 10);
 	
-		SelectPage(145);
+	SelectPage(145);
 		
-		ReadNetInfo();
+	ShowWifiInfo();
 		
-		ShowNetInfo();	
-	}
-
+	ShowNetInfo();
 }
 
 /***************************************************************************************************
@@ -110,7 +106,10 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		//返回
 		if(S_NetInfoPageBuffer->lcdinput[0] == 0x1ca0)
 		{
-			RestartWifi();
+            #if (DEVICE_CON_TYPE == DEVICE_WIFI)
+                RestartWifi();
+                giveWifixMutex();
+            #endif //DEVICE_CON_TYPE
 			
 			backToFatherActivity();
 		}
@@ -128,15 +127,11 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 ***************************************************************************************************/
 static void activityFresh(void)
 {
-	if(S_NetInfoPageBuffer)
+	if(TimeOut == timer_expired(&(S_NetInfoPageBuffer->timer)))
 	{
-		if(TimeOut == timer_expired(&(S_NetInfoPageBuffer->timer)))
-		{
-			ReadNetInfo();
-			ShowNetInfo();
-			timer_restart(&(S_NetInfoPageBuffer->timer));
-		}
-
+		ShowWifiInfo();
+		ShowNetInfo();
+        timer_restart(&(S_NetInfoPageBuffer->timer));
 	}
 }
 
@@ -165,11 +160,8 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-	if(S_NetInfoPageBuffer)
-	{
-		timer_restart(&(S_NetInfoPageBuffer->timer));
-	}
-	
+	timer_restart(&(S_NetInfoPageBuffer->timer));
+
 	SelectPage(145);
 }
 
@@ -185,8 +177,6 @@ static void activityResume(void)
 static void activityDestroy(void)
 {
 	activityBufferFree();
-	
-	giveWifixMutex();
 }
 
 /***************************************************************************************************
@@ -247,9 +237,11 @@ static void activityBufferFree(void)
 *Author: xsx
 *Date: 2016年12月5日15:38:30
 ***************************************************************************************************/
-static void ReadNetInfo(void)
+static void ShowWifiInfo(void)
 {
-	S_NetInfoPageBuffer->wifiico.ICO_ID = 32;
+	#if (DEVICE_CON_TYPE == DEVICE_WIFI)
+    
+    S_NetInfoPageBuffer->wifiico.ICO_ID = 32;
 	S_NetInfoPageBuffer->wifiico.X = 189;
 	S_NetInfoPageBuffer->wifiico.Y = 315;
 	
@@ -322,6 +314,7 @@ static void ReadNetInfo(void)
 		//显示mac
 		sprintf(S_NetInfoPageBuffer->tempbuffer1, "00-00-00-00-00-00\0");
 		DisText(0x1Ce0, S_NetInfoPageBuffer->tempbuffer1, 20);
+    #endif //DEVICE_CON_TYPE
 }
 
 /***************************************************************************************************

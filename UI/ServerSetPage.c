@@ -101,7 +101,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 	{
 		GetBufLen(&pbuf[7] , 2*pbuf[6]);
 
-		if(My_Pass != parseIpString(&pageBuffer->serverSet.serverIP, &pbuf[7]))
+		if(My_Pass != parseIpString(&pageBuffer->serverSet.serverIP, (char *) &pbuf[7]))
 		{
 			memset(&pageBuffer->serverSet.serverIP, 0, 4);
 			ClearText(0x1E20);
@@ -112,7 +112,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 	else if(pageBuffer->lcdinput[0] == 0x1E30)
 	{
 		GetBufLen(&pbuf[7] , 2*pbuf[6]);
-		if(My_Pass != parsePortString(&pageBuffer->serverSet.serverPort, &pbuf[7]))
+		if(My_Pass != parsePortString(&pageBuffer->serverSet.serverPort, (char *) &pbuf[7]))
 		{
 			pageBuffer->serverSet.serverPort = 0;
 			ClearText(0x1E30);

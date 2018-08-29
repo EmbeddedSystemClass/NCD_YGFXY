@@ -33,6 +33,7 @@ SystemSetData * getGBSystemSetData(void);
 void setSystemSetData(SystemSetData * systemSetData);
 
 MyBool deviceInfoIsNew(void);
+void set_device_state(MyBool state);
 void getDeviceInfo(DeviceInfo * deviceinfo);
 void readDeviceId(char * buf);
 void readDeviceAddr(char * buf);

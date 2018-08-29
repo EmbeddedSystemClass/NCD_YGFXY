@@ -71,6 +71,32 @@ MyBool CheckStrIsSame(void *str1 , void * str2 , unsigned short len)
 	return TRUE;
 }
 
+char * MyStrStr(const char *str1 , const char * str2 , unsigned short len)
+{
+    char *cp = (char *) str1;
+    char *s1, *s2;
+    unsigned short size = len;
+
+    if ( !*str2 )
+        return((char *)str1);
+
+    while (size--)
+    {
+        s1 = cp;
+        s2 = (char *) str2;
+
+        while ( *s1 && *s2 && !(*s1-*s2) )
+            s1++, s2++;
+
+        if (!*s2)
+            return(cp);
+
+        cp++;
+    }
+    
+    return(NULL);
+}
+
 /***************************************************************************************************
 *FunctionName: calculateDataCV
 *Description: º∆À„cv÷µ

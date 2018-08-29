@@ -18,6 +18,7 @@
 #include	"IAP_Fun.h"
 #include	"RemoteSoft_Data.h"
 #include	"WifiFunction.h"
+#include	"GPRS_Fun.h"
 #include	"MyMem.h"
 #include	"StringDefine.h"
 
@@ -116,6 +117,7 @@ MyState_TypeDef CommunicateWithServerByLineNet(HttpBuffer * httpBuffer)
 		return httpBuffer->status;
 }
 
+#if (DEVICE_CON_TYPE == DEVICE_WIFI)
 MyState_TypeDef CommunicateWithServerByWifi(HttpBuffer * httpBuffer)
 {
 	if(My_Pass == takeWifiMutex(1000 / portTICK_RATE_MS))
@@ -199,6 +201,89 @@ MyState_TypeDef CommunicateWithServerByWifi(HttpBuffer * httpBuffer)
 	
 	return My_Fail;
 }
+#elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+
+MyState_TypeDef CommunicateWithServerByGPRS(HttpBuffer * httpBuffer)
+{
+	xQueueReset(GetUsart4RXQueue());
+	memset(httpBuffer->recvBuf, 0, HttpRecvBufLen);
+	//发送数据
+	httpBuffer->tempInt1 = httpBuffer->sendDataLen;
+    httpBuffer->tempP = httpBuffer->sendBuf;
+	while(httpBuffer->tempInt1 > 800)
+	{
+		SendDataToQueue(GetUsart4TXQueue(), NULL, httpBuffer->sendBuf + (httpBuffer->sendDataLen - httpBuffer->tempInt1), 
+			800, 1, 10 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt);
+
+		httpBuffer->tempInt1 -= 800;
+		vTaskDelay(50 / portTICK_RATE_MS);
+	}
+		
+	if(httpBuffer->tempInt1 > 0)
+	{
+		if(My_Pass == SendDataToQueue(GetUsart4TXQueue(), NULL, httpBuffer->sendBuf + (httpBuffer->sendDataLen - httpBuffer->tempInt1), 
+			httpBuffer->tempInt1, 1, 10 / portTICK_RATE_MS, 10 / portTICK_RATE_MS, EnableUsart4TXInterrupt))
+		{
+			;
+		}
+		else
+			goto END;
+	}
+
+	//接收数据,最好等待1s
+	httpBuffer->recvDataLen = 0;
+	httpBuffer->i = 0;
+	while(pdPASS == ReceiveDataFromQueue(GetUsart4RXQueue(), NULL, httpBuffer->recvBuf, 1000, 
+		&httpBuffer->readSize, 1, FREERTOS_DELAY_20_S, FREERTOS_DELAY_20_S))
+	{
+		if(httpBuffer->isPost)
+		{
+			httpBuffer->recvDataLen += httpBuffer->readSize;
+			break;
+		}
+		//如果发生的是GET请求，则说明是下载固件，需要保存
+		else
+		{
+			if(httpBuffer->i == 0)
+			{
+				//查找文件头
+				httpBuffer->tempP = strstr(httpBuffer->recvBuf, fileStartStr);
+				if(httpBuffer->tempP)
+				{
+					httpBuffer->httpHeadLen = httpBuffer->tempP - httpBuffer->recvBuf + strlen(fileStartStr);
+					httpBuffer->readSize -= httpBuffer->httpHeadLen;
+					WriteAppFile(httpBuffer->recvBuf + httpBuffer->httpHeadLen, httpBuffer->readSize, TRUE);
+					httpBuffer->recvDataLen += httpBuffer->readSize;
+					httpBuffer->i++;
+				}
+			}
+			else
+			{
+				WriteAppFile(httpBuffer->recvBuf, httpBuffer->readSize, FALSE);
+				httpBuffer->recvDataLen += httpBuffer->readSize;
+			}
+		}
+	}
+    
+    //xQueueSend(GetUsart4TXQueue(), 'x' , 1 / portTICK_RATE_MS);
+		
+	END:
+		if(httpBuffer->isPost)
+		{
+			httpBuffer->tempP = strstr(httpBuffer->recvBuf, SuccessStr);
+			if(httpBuffer->tempP)
+				return My_Pass;
+		}
+		else if(My_Pass == checkNewFirmwareIsSuccessDownload())
+		{
+			setIsSuccessDownloadFirmware(TRUE);
+			return My_Pass;
+		}
+	
+	return My_Fail;
+}
+
+#endif  //DEVICE_WIFI
 
 #if (USB_USE == 1)
 MyState_TypeDef CommunicateWithServerByUSB(HttpBuffer * httpBuffer)

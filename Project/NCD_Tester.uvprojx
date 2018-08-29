@@ -615,6 +615,11 @@
               <FileType>1</FileType>
               <FilePath>..\Function\IAP_Fun.c</FilePath>
             </File>
+            <File>
+              <FileName>GPRS_Fun.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Function\GPRS_Fun.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

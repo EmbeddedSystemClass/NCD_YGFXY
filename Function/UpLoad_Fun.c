@@ -11,6 +11,7 @@
 #include	"UpLoad_Fun.h"
 #include	"ServerFun.h"
 #include	"RTC_Driver.h"
+#include	"GPRS_Fun.h"
 #include	"SystemSet_Dao.h"
 #include	"System_Data.h"
 #include	"RemoteSoftDao.h"
@@ -50,25 +51,43 @@ static void upLoadUserServer(void);
 
 void UpLoadFunction(void)
 {
+    unsigned short cnt = 0;
+    
 	while(1)
 	{
 		httpBuffer = MyMalloc(HttpBufferStructSize);
 		if(httpBuffer)
 		{
-			UpLoadDeviceInfo(httpBuffer);
-			vTaskDelay(1000 / portTICK_RATE_MS);
-				
-			UpLoadTestData(httpBuffer);	
-			vTaskDelay(1000 / portTICK_RATE_MS);
-				
-			DownLoadFirmware(httpBuffer);
-			vTaskDelay(1000 / portTICK_RATE_MS);
-			
+            #if (DEVICE_CON_TYPE == DEVICE_GPRS)
+            if(My_Pass == GPRSInit())
+            {
+                if(cnt % 120 == 0)
+                {    
+                    set_device_state(TRUE);
+                    cnt = 0;
+                }
+                    
+            #elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+            {
+            #endif //DEVICE_CON_TYPE
+                if(deviceInfoIsNew())
+                    UpLoadDeviceInfo(httpBuffer);
+                vTaskDelay(100 / portTICK_RATE_MS);
+                    
+                UpLoadTestData(httpBuffer);	
+                vTaskDelay(100 / portTICK_RATE_MS);
+                    
+                DownLoadFirmware(httpBuffer);
+                vTaskDelay(100 / portTICK_RATE_MS);
+			}
+            
 			upLoadUserServer();
 		}
 		
 		MyFree(httpBuffer);
 		
+        cnt++;
+        
 		vTaskDelay(30000 / portTICK_RATE_MS);
 	}
 }
@@ -93,8 +112,12 @@ static void UpLoadDeviceInfo(HttpBuffer * httpBuffer)
 	memcpy(httpBuffer->tempP, httpBuffer->tempBuf, 4);
 	httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
 	httpBuffer->isPost = TRUE;
-		
+	
+    #if (DEVICE_CON_TYPE == DEVICE_WIFI)
 	if(My_Pass == CommunicateWithServerByWifi(httpBuffer))
+    #elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+    if(My_Pass == CommunicateWithServerByGPRS(httpBuffer))
+    #endif //DEVICE_CON_TYPE
 	{
 		httpBuffer->tempP2 = strtok(httpBuffer->tempP, "#");
 		if(httpBuffer->tempP2 == NULL)
@@ -240,8 +263,12 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 						httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
 						httpBuffer->isPost = TRUE;
 						
-						if(My_Pass != CommunicateWithServerByWifi(httpBuffer))
-							break;
+                        #if (DEVICE_CON_TYPE == DEVICE_WIFI)
+                            if(My_Pass != CommunicateWithServerByWifi(httpBuffer))
+                        #elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+                            if(My_Pass != CommunicateWithServerByGPRS(httpBuffer))
+                        #endif //DEVICE_CON_TYPE
+                            break;
 					}
 
 					httpBuffer->tempInt2++;
@@ -273,7 +300,11 @@ static void DownLoadFirmware(HttpBuffer * httpBuffer)
 		httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
 		httpBuffer->isPost = FALSE;
 		
-		CommunicateWithServerByWifi(httpBuffer);
+        #if (DEVICE_CON_TYPE == DEVICE_WIFI)
+            CommunicateWithServerByWifi(httpBuffer);
+        #elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+            CommunicateWithServerByGPRS(httpBuffer);
+        #endif //DEVICE_CON_TYPE
 	}
 }
 

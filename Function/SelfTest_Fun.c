@@ -130,7 +130,9 @@ void SelfTest_Function(void)
 		return;
 	}
 	
+    #if (DEVICE_CON_TYPE == DEVICE_WIFI)
 	WIFIInit();
+    #endif  //DEVICE_WIFI
 	
 	//自检完成，发送结果
 	sendSelfTestStatus(SelfTest_OK);
@@ -173,6 +175,9 @@ static MyState_TypeDef loadSystemData(void)
 
 		if(systemSetData->userUpLoadIndex > systemSetData->testDataNum)
 			systemSetData->userUpLoadIndex = 0;
+        
+        //开机上传设备信息一次
+        systemSetData->deviceInfo.isnew = TRUE;
 		
 		//保存默认设置
 		if(My_Pass == SaveSystemSetData(systemSetData))

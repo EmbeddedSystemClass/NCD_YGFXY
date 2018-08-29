@@ -3,6 +3,7 @@
 
 #include	"Define.h"
 
+#if (DEVICE_CON_TYPE == DEVICE_WIFI)
 
 typedef enum
 { 
@@ -26,6 +27,8 @@ MyState_TypeDef GetWifiStaIP(IP_Def * ip);
 MyState_TypeDef CheckWifiMID(void);
 unsigned char GetWifiIndicator(void);
 MyState_TypeDef WifiIsConnectted(char * ssid);
+
+#endif  //DEVICE_WIFI
 
 #endif
 

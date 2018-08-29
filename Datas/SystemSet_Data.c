@@ -169,6 +169,11 @@ MyBool deviceInfoIsNew(void)
 	else
 		return FALSE;
 }
+void set_device_state(MyBool state)
+{
+    GB_SystemSetData.deviceInfo.isnew = state;
+    GB_SystemSetData.crc = CalModbusCRC16Fun1(&GB_SystemSetData, sizeof(SystemSetData) - 2);
+}
 
 /***************************************************************************************************
 *FunctionName: getNetSet

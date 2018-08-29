@@ -15,24 +15,39 @@
 #define QRVersionUnDefine		0xff							//不支持二维码版本
 #define	GB_QRVersion			QRVersion3Define				//当前支持的二维码版本，往下兼容
 
+//device con type
+#define	DEVICE_WIFI					    0x88
+#define	DEVICE_GPRS					    0x89
+#define	DEVICE_CON_TYPE					DEVICE_GPRS
+
 //build by device id
 #define	DeviceAll						0x30
 #define	DeviceNCD13011703019			0x31                    //废弃
 #define	DeviceBuildId					DeviceAll	
 
-#if (DeviceBuildId == DeviceAll)
+#if (DEVICE_CON_TYPE == DEVICE_WIFI)
+    #if (DeviceBuildId == DeviceAll)
 
-	#define	GB_SoftVersion			(unsigned short)1080
-	#define	GB_SoftVersionStr		"V1.0.80\0"
-	#define	GB_SoftVersion_Build	"Build18082701\0"
-	
-#elif (DeviceBuildId == DeviceNCD13011703019)
+        #define	GB_SoftVersion			(unsigned short)1080
+        #define	GB_SoftVersionStr		"V1.0.80\0"
+        #define	GB_SoftVersion_Build	"Build18082701\0"
+        
+    #elif (DeviceBuildId == DeviceNCD13011703019)
 
-	#define	GB_SoftVersion			(unsigned short)1079
-	#define	GB_SoftVersionStr		"V1.0.79\0"
-	#define	GB_SoftVersion_Build	"Build18071001\0"
+        #define	GB_SoftVersion			(unsigned short)1079
+        #define	GB_SoftVersionStr		"V1.0.79\0"
+        #define	GB_SoftVersion_Build	"Build18071001\0"
 
-#endif
+    #endif  //DeviceBuildId
+#elif (DEVICE_CON_TYPE == DEVICE_GPRS)
+    #if (DeviceBuildId == DeviceAll)
+
+        #define	GB_SoftVersion			(unsigned short)1001
+        #define	GB_SoftVersionStr		"V1.0.01\0"
+        #define	GB_SoftVersion_Build	"Build18082901\0"
+
+    #endif  //DeviceBuildId
+#endif  //DEVICE_CON_TYPE
 	
 
 #define	DEVICE_EN						100
@@ -42,11 +57,7 @@
 #define	Device_Final					0x27
 #define	Device_Demo						0x28
 #define	Device_FastDemo					0x29
-#define	DeviceUseType					Device_Final
-
-#define	NCDServerFinal					0x88
-#define	NCDServerDebug					0x89
-#define	NCDServerType					NCDServerFinal
+#define	DeviceUseType					Device_FastDemo
 
 #define	UserNormalProgram				0x60					//通用程序
 #define	UserXGProgram					0x61					//孝感中心医院程序
@@ -72,6 +83,14 @@
 #define	GB_UserServerIp_4		37
 #define	GB_UserServerPort		9200
 #define	GBDefaultPoctServer				"/NCDPoctServer/UpHandler\0"
+
+#define FREERTOS_DELAY_0            0
+#define FREERTOS_DELAY_500_MS      500
+#define FREERTOS_DELAY_1_S          1000
+#define FREERTOS_DELAY_2_S          2000
+#define FREERTOS_DELAY_20_S          20000l
+#define FREERTOS_DELAY_30_S          30000l
+#define FREERTOS_DELAY_40_S          40000l
 /**********************************************************************************************************/
 /******************************************操作结果变量*************************************************/
 /**********************************************************************************************************/

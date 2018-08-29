@@ -2,6 +2,9 @@
 #define __WIFISET_P_H__
 
 #include	"Define.h"
+
+#if (DEVICE_CON_TYPE == DEVICE_WIFI)
+
 #include	"UI_Data.h"
 #include	"SystemSet_Data.h"
 
@@ -18,6 +21,8 @@ typedef struct WifiPageBuffer_tag {
 }WifiPageBuffer;
 
 MyState_TypeDef createWifiSetActivity(Activity * thizActivity, Intent * pram);
+
+#endif //DEVICE_CON_TYPE
 
 #endif
 

@@ -2,6 +2,9 @@
 /*****************************************Í·ÎÄ¼þ*******************************************/
 
 #include	"WifiSetPage.h"
+#include	"Define.h"
+
+#if (DEVICE_CON_TYPE == DEVICE_WIFI)
 
 #include	"LCD_Driver.h"
 #include	"MyMem.h"
@@ -409,3 +412,4 @@ static void CheckIsNeedKey(void)
 	}
 }
 
+#endif //DEVICE_CON_TYPE
