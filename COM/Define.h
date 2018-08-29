@@ -17,14 +17,14 @@
 
 //build by device id
 #define	DeviceAll						0x30
-#define	DeviceNCD13011703019			0x31
+#define	DeviceNCD13011703019			0x31                    //废弃
 #define	DeviceBuildId					DeviceAll	
 
 #if (DeviceBuildId == DeviceAll)
 
-	#define	GB_SoftVersion			(unsigned short)1079
-	#define	GB_SoftVersionStr		"V1.0.79\0"
-	#define	GB_SoftVersion_Build	"Build18080101\0"
+	#define	GB_SoftVersion			(unsigned short)1080
+	#define	GB_SoftVersionStr		"V1.0.80\0"
+	#define	GB_SoftVersion_Build	"Build18082701\0"
 	
 #elif (DeviceBuildId == DeviceNCD13011703019)
 
@@ -455,7 +455,7 @@ typedef struct
 /**********************************************************************************************************/
 
 #define	MaxTestDataSaveNum	(unsigned int)1000000
-	
+#define MAX_TEST_CNT        5                       //最大重测次数
 /*********************************************************************************************/
 /*********************************************************************************************/
 /*********************************************************************************************/
@@ -523,7 +523,8 @@ typedef struct TestData_tag {
 	float t_tcValue;
 	float t_cv;
 	float c_cv;
-	unsigned char parm[2];
+    unsigned char testcnt;
+	unsigned char parm;
 	TestLine testline;
 	MyTime_Def TestTime;						//测试时间
 	MyTemp_Def TestTemp;						//测试温度

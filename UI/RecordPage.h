@@ -20,7 +20,7 @@ typedef struct Record_tag {
 	unsigned int tempvalue1;
 	unsigned int tempvalue2;
 	TestData *tempdata;
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[20];
 	unsigned int testRecordNum;
 }RecordPageBuffer;
 

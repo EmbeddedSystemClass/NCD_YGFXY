@@ -8,7 +8,7 @@
 typedef struct SetPrintHeaderPageBuffer_tag {
 	SystemSetData systemSetData;
 	PrintInfo printInfo;
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[50];
 	char tempBuf[100];
     unsigned short tempShort;
     MyBool ismodify;

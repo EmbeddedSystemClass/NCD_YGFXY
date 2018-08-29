@@ -168,6 +168,14 @@ ResultState TestFunction(void * parm)
 			S_TempCalData->tempvalue1 = 0;
 			
 			//MotorMoveTo(10, 20, EndTestLocation, FALSE);
+            
+            //测试前，清空曲线
+            if(S_TempCalData->resultstatues == NoResult)
+			{
+				//发送一个特定数据，清除曲线
+				S_TempCalData->itemData->testdata.testline.TestPoint[0] = 0xffff;
+				SendTestPointData(&(S_TempCalData->itemData->testdata.testline.TestPoint[0]));
+			}
 
 			S_TempCalData->motorLocation = GetGB_MotorLocation();
 			S_TempCalData->tempvalue1 = 0;
@@ -298,7 +306,8 @@ void AnalysisTestData(TempCalData * S_TempCalData)
 				goto END1;
 			}
 		}
-		else
+        //2018-8-21 09:46:17 去掉，如果峰比较低，导致找的峰与二维码写的位置直接的cv比较小，这段代码会重置已找的峰为二维码写的峰
+/*		else
 		{
 			if(S_TempCalData->itemData->testdata.testline.T_Point.x < S_TempCalData->itemData->testdata.temperweima.ItemLocation) 
 			{
@@ -314,7 +323,7 @@ void AnalysisTestData(TempCalData * S_TempCalData)
 			        }
 		        }
 			}
-		}
+		}*/
 
 		S_TempCalData->itemData->testdata.testline.T_Point.y = S_TempCalData->itemData->testdata.testline.TestPoint[S_TempCalData->itemData->testdata.testline.T_Point.x];
 

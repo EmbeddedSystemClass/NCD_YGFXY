@@ -5,7 +5,7 @@
 #include	"SystemSet_Data.h"
 
 typedef struct NetPrePageBuffer_tag {
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[20];
 }NetPrePageBuffer;
 
 

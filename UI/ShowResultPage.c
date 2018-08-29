@@ -256,6 +256,9 @@ static void RefreshText(void)
 		else if(S_ShowPageBuffer->testdata.testline.BasicResult <= S_ShowPageBuffer->testdata.temperweima.itemConstData.lowstResult)
 			sprintf(S_ShowPageBuffer->tempbuf, "<%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum, 
 				S_ShowPageBuffer->testdata.temperweima.itemConstData.lowstResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
+        else if(S_ShowPageBuffer->testdata.testline.BasicResult >= S_ShowPageBuffer->testdata.temperweima.itemConstData.highestResult)
+			sprintf(S_ShowPageBuffer->tempbuf, ">%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum, 
+				S_ShowPageBuffer->testdata.temperweima.itemConstData.highestResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);
 		else
 			sprintf(S_ShowPageBuffer->tempbuf, "%.*f %s\0", S_ShowPageBuffer->testdata.temperweima.itemConstData.pointNum, 
 				S_ShowPageBuffer->testdata.testline.BasicResult, S_ShowPageBuffer->testdata.temperweima.itemConstData.itemMeasure);

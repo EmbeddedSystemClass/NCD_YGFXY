@@ -15,7 +15,7 @@ typedef struct PaiDuiPageBuffer_tag {
 	unsigned int tempvalue1;
 	char buf[100];
 	char buf2[100];
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[30];
 	CreateTestErrorType error;
 	unsigned short count;
 	unsigned short count2;

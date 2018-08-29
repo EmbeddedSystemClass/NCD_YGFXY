@@ -37,10 +37,8 @@ static HttpBuffer * httpBuffer = NULL;
 /***************************************************************************************************/
 /**************************************局部函数声明*************************************************/
 /***************************************************************************************************/
-static MyState_TypeDef ReadTime(HttpBuffer * httpBuffer);
 static void UpLoadDeviceInfo(HttpBuffer * httpBuffer);
 static void UpLoadTestData(HttpBuffer * httpBuffer);
-static void readRemoteFirmwareVersion(HttpBuffer * httpBuffer);
 static void DownLoadFirmware(HttpBuffer * httpBuffer);
 static void upLoadUserServer(void);
 /***************************************************************************************************/
@@ -73,31 +71,6 @@ void UpLoadFunction(void)
 		
 		vTaskDelay(30000 / portTICK_RATE_MS);
 	}
-}
-
-static MyState_TypeDef ReadTime(HttpBuffer * httpBuffer)
-{
-	readDeviceId(httpBuffer->tempBuf);
-	
-	sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ndid=%s", 
-		NcdServerReadTimeUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, httpBuffer->tempBuf);
-	
-	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "zh;q=0.8\n\n");
-	httpBuffer->sendDataLen = strlen(httpBuffer->tempP)-10;	
-	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "[##]");
-	sprintf(httpBuffer->tempBuf, "%04d", httpBuffer->sendDataLen);
-	memcpy(httpBuffer->tempP, httpBuffer->tempBuf, 4);
-	httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
-	httpBuffer->isPost = TRUE;
-	
-	if(My_Pass == CommunicateWithServerByWifi(httpBuffer))
-	{
-		RTC_SetTimeData2(httpBuffer->tempP+7);
-				
-		return My_Pass;
-	}
-	else
-		return My_Fail;
 }
 
 static void UpLoadDeviceInfo(HttpBuffer * httpBuffer)
@@ -223,12 +196,15 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 							httpBuffer->testData->TestTime.min = 0;
 							httpBuffer->testData->TestTime.sec = 0;
 						}
+                        
+                        if(httpBuffer->testData->testcnt > MAX_TEST_CNT)
+                            httpBuffer->testData->testcnt = 0;
 						
 						//read device id
 						readDeviceId(httpBuffer->tempBuf+10);
 						readDeviceAddr(httpBuffer->tempBuf+100);
 						
-						sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ncardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%02d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.4f&t_tc_v=%.4f&testv=%.*f&serialnum=%s-%s&t_isok=%s&cparm=%d&t_cv=%.4f&c_cv=%.4f&testaddr=%s&errcode=%d\0",
+						sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\ncardnum=%s&qrdata.cid=%s&device.did=%s&tester=%s&sampleid=%s&testtime=20%02d-%d-%d %d:%d:%d&overtime=%d&cline=%d&tline=%d&bline=%d&t_c_v=%.4f&t_tc_v=%.4f&testv=%.*f&serialnum=%s-%s&t_isok=%s&cparm=%d&t_cv=%.4f&c_cv=%.4f&testaddr=%s&errcode=%d&retestcnt=%d\0",
 							NcdServerUpTestDataUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, 
 							httpBuffer->testData->temperweima.piNum, httpBuffer->testData->temperweima.PiHao, 
 							httpBuffer->tempBuf+10, httpBuffer->testData->user.user_name, 
@@ -241,7 +217,7 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 							httpBuffer->testData->temperweima.itemConstData.pointNum, httpBuffer->testData->testline.BasicResult, 
 							httpBuffer->testData->temperweima.PiHao, httpBuffer->testData->temperweima.piNum, httpBuffer->tempBuf,
 							httpBuffer->testData->testline.CMdifyNum, httpBuffer->testData->t_cv, httpBuffer->testData->c_cv, httpBuffer->tempBuf+100,
-                            httpBuffer->testData->testResultDesc);
+                            httpBuffer->testData->testResultDesc, httpBuffer->testData->testcnt);
 
 						for(httpBuffer->i=0; httpBuffer->i<100; httpBuffer->i++)
 						{
@@ -280,63 +256,6 @@ static void UpLoadTestData(HttpBuffer * httpBuffer)
 		}
 		
 		MyFree(httpBuffer->page);
-	}
-}
-
-/***************************************************************************************************
-*FunctionName: 
-*Description: 
-*Input: 
-*Output: 
-*Return: 
-*Author: xsx
-*Date: 
-***************************************************************************************************/
-static void readRemoteFirmwareVersion(HttpBuffer * httpBuffer)
-{
-	memset(httpBuffer->tempBuf, 0, 100);
-	readDeviceId(httpBuffer->tempBuf);
-	
-	sprintf(httpBuffer->sendBuf, "POST %s HTTP/1.1\nHost: %d.%d.%d.%d:%d\nConnection: keep-alive\nContent-Length:[##]\nContent-Type:application/x-www-form-urlencoded;charset=GBK\nAccept-Language: zh-CN,zh;q=0.8\n\nsoftName=%s&lang=%s", 
-		NcdServerQuerySoftUrlStr, GB_ServerIp_1, GB_ServerIp_2, GB_ServerIp_3, GB_ServerIp_4, GB_ServerPort, httpBuffer->tempBuf, DeviceLanguageString);
-	
-	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "zh;q=0.8\n\n");
-	httpBuffer->sendDataLen = strlen(httpBuffer->tempP)-10;	
-	httpBuffer->tempP = strstr(httpBuffer->sendBuf, "[##]");
-	sprintf(httpBuffer->tempBuf, "%04d", httpBuffer->sendDataLen);
-	memcpy(httpBuffer->tempP, httpBuffer->tempBuf, 4);
-	httpBuffer->sendDataLen = strlen(httpBuffer->sendBuf);
-	httpBuffer->isPost = TRUE;
-	
-	if(My_Pass == CommunicateWithServerByWifi(httpBuffer))
-	{
-		//解析最新固件版本
-		httpBuffer->remoteSoftInfo = (RemoteSoftInfo *)httpBuffer->sendBuf;
-		memset(httpBuffer->remoteSoftInfo, 0, RemoteSoftInfoStructSize);
-		httpBuffer->remoteSoftInfo->RemoteFirmwareVersion = strtol(httpBuffer->tempP+16, NULL, 10);
-			
-			//如果读取到的版本，大于当前版本，且大于当前保存的最新远程版本，则此次读取的是最新的
-			if((httpBuffer->remoteSoftInfo->RemoteFirmwareVersion > GB_SoftVersion) &&
-				(httpBuffer->remoteSoftInfo->RemoteFirmwareVersion > getGbRemoteFirmwareVersion()))
-			{
-				//解析最新固件MD5
-				httpBuffer->tempP = strtok(httpBuffer->recvBuf, "#");
-				if(httpBuffer->tempP)
-				{
-					httpBuffer->tempP = strtok(NULL, "#");
-					
-					memcpy(httpBuffer->remoteSoftInfo->md5, httpBuffer->tempP+4, 32);
-					
-					if(My_Pass == WriteRemoteSoftInfo(httpBuffer->remoteSoftInfo))
-					{
-						//md5保存成功后，才更新最新版本号，保存最新固件版本
-						setGbRemoteFirmwareVersion(httpBuffer->remoteSoftInfo->RemoteFirmwareVersion);
-						setGbRemoteFirmwareMd5(httpBuffer->remoteSoftInfo->md5);
-						
-						setIsSuccessDownloadFirmware(FALSE);
-					}
-				}
-			}	
 	}
 }
 

@@ -75,13 +75,11 @@ MyState_TypeDef createTimeDownActivity(Activity * thizActivity, Intent * pram)
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_TimeDownPageData)
-	{
-		S_TimeDownPageData->currenttestdata = GetCurrentTestItem();
-		S_TimeDownPageData->currenttestdata->statues = status_timedownagain;
+	S_TimeDownPageData->currenttestdata = GetCurrentTestItem();
+	S_TimeDownPageData->currenttestdata->statues = status_timedownagain;
 	
-		S_TimeDownPageData->S_Timer = &(S_TimeDownPageData->currenttestdata->timer);
-	}
+	S_TimeDownPageData->S_Timer = &(S_TimeDownPageData->currenttestdata->timer);
+    S_TimeDownPageData->isStart = FALSE;
 	
 	SelectPage(95);
 
@@ -117,6 +115,11 @@ static void activityFresh(void)
 		RefreshTimeText();
 		if(TimeOut == timer_expired(S_TimeDownPageData->S_Timer))
 		{
+            if(S_TimeDownPageData->isStart == FALSE)
+            {
+                timer_restart(&S_TimeDownPageData->currenttestdata->timer2);
+                S_TimeDownPageData->isStart = TRUE;
+            }
 			startActivity(createTestActivity, NULL);
 		}
 	}
@@ -149,7 +152,8 @@ static void activityHide(void)
 ***************************************************************************************************/
 static void activityResume(void)
 {
-
+    S_TimeDownPageData->currenttestdata->statues = status_timedownagain;
+    SelectPage(95);
 }
 
 /***************************************************************************************************

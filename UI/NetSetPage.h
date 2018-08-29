@@ -9,7 +9,7 @@ typedef struct NetSetPageBuffer_tag {
 	NetSet myNetSet;
 	SystemSetData systemSetData;
 	char buf[100];
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[50];
 }NetSetPageBuffer;
 
 

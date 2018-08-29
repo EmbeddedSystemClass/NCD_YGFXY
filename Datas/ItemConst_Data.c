@@ -35,7 +35,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 1,
 		.pointNum = 2,
 		.lowstResult = 0.5,
-		.highestResult = 80,
+		.highestResult = 60000, //80,
 		.normalResult = {"<=3.8 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
 	},
@@ -44,7 +44,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 2,
 		.pointNum = 3,
 		.lowstResult = 0.01,
-		.highestResult = 30,
+		.highestResult = 60000, //30,
 		.normalResult = {"<=0.3 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
 	},
@@ -53,7 +53,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 2.5,
-		.highestResult = 350,
+		.highestResult = 60000, //350,
 		.normalResult = {"<=99.3 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
 	},
@@ -62,7 +62,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 0.2,
-		.highestResult = 15,
+		.highestResult = 60000, //15,
 		.normalResult = {"<=0.5 mg/L\0"},
 		.itemMeasure = {"mg/L\0"}
 	},
@@ -71,7 +71,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 0.44,
-		.highestResult = 200,
+		.highestResult = 60000, //200,
 		.normalResult = {"<=1.0 mg/L\0"},
 		.itemMeasure = {"mg/L\0"}
 	},
@@ -80,7 +80,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 0.01,
-		.highestResult = 100,
+		.highestResult = 60000, //100,
 		.normalResult = {"<=0.5 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
 	},
@@ -89,7 +89,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 0.46,
-		.highestResult = 8,
+		.highestResult = 60000, //8,
 		.normalResult = {"0.5-1.3 mg/L\0"},
 		.itemMeasure = {"mg/L\0"}
 	},
@@ -98,7 +98,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 2,
-		.highestResult = 25000,
+		.highestResult = 60000, //25000,
 		.normalResult = {"<=5 mIU/mL\0"},
 		.itemMeasure = {"mIU/mL\0"}
 	},
@@ -107,7 +107,7 @@ const ItemConstData GB_ItemConstData[ITEM_NUM]=
 		.icoIndex = 3,
 		.pointNum = 2,
 		.lowstResult = 10,
-		.highestResult = 1500,
+		.highestResult = 60000, //1500,
 		.normalResult = {"<=170 ng/mL\0"},
 		.itemMeasure = {"ng/mL\0"}
 	},

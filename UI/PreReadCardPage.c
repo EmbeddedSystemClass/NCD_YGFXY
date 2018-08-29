@@ -48,7 +48,6 @@ static void activityBufferFree(void);
 static void clearPageText(void);
 static void CheckQRCode(void);
 static void ShowCardInfo(void);
-static void CheckPreTestCard(void);
 static void showTemperature(void);
 /******************************************************************************************/
 /******************************************************************************************/
@@ -92,18 +91,15 @@ MyState_TypeDef createPreReadCardActivity(Activity * thizActivity, Intent * pram
 ***************************************************************************************************/
 static void activityStart(void)
 {
-	if(S_PreReadPageBuffer)
-	{
-		S_PreReadPageBuffer->currenttestdata = GetCurrentTestItem();
+	S_PreReadPageBuffer->currenttestdata = GetCurrentTestItem();
 		
-		clearPageText();
+	clearPageText();
 		
-		clearScanQRCodeResult();
-		clearTestResult();
+	clearScanQRCodeResult();
+	clearTestResult();
 		
-		vTaskDelay(500 / portTICK_RATE_MS);
-		StartScanQRCode(&(S_PreReadPageBuffer->temperweima));
-	}
+	vTaskDelay(500 / portTICK_RATE_MS);
+	StartScanQRCode(&(S_PreReadPageBuffer->temperweima));
 	
 	SelectPage(92);
 }
@@ -128,7 +124,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 		/*数据*/
 		S_PreReadPageBuffer->lcdinput[1] = pbuf[7];
 		S_PreReadPageBuffer->lcdinput[1] = (S_PreReadPageBuffer->lcdinput[1]<<8) + pbuf[8];
-			
+
 		/*更换检测卡*/
 		if(S_PreReadPageBuffer->lcdinput[1] == 0x0001)
 		{
@@ -150,7 +146,7 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 				
 			//如果还有卡在排队，说明这个界面是从排队界面过来的，只需返回到排队界面
 			if(IsPaiDuiTestting())
-				backToActivity(paiduiActivityName);	
+				backToActivity(paiduiActivityName);
 			else
 				backToActivity(lunchActivityName);
 		}
@@ -169,8 +165,6 @@ static void activityInput(unsigned char *pbuf , unsigned short len)
 static void activityFresh(void)
 {
 	CheckQRCode();
-		
-	CheckPreTestCard();
 }
 
 /***************************************************************************************************
@@ -291,54 +285,28 @@ static void CheckQRCode(void)
 			{
 				//将读取的二维码数据拷贝到测试数据包中
 				memcpy(&(S_PreReadPageBuffer->currenttestdata->testdata.temperweima), &(S_PreReadPageBuffer->temperweima), sizeof(QRCode));
-
+                
+                //设置倒计时时间
 				#if(DeviceUseType == Device_Final)
-				
-					//设置倒计时时间
-					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*60);
-				
-					S_PreReadPageBuffer->preTestErrorCount = 0;
-					StartTest(S_PreReadPageBuffer->currenttestdata);
-				
+                    timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*60);
 				#elif(DeviceUseType == Device_Demo)
-				
-					//设置倒计时时间
-					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*15);
-				
-					/*跳过验证加样功能，直接测试*/
-					//如果是排队模式，则进入排队界面
-					if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
-					{
-						MotorMoveTo(1, 2, MaxLocation, FALSE);
-						
-						S_PreReadPageBuffer->currenttestdata->statues = status_start;
+                    timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*15);
+                #elif(DeviceUseType == Device_FastDemo)
+                    timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*1);
+                #endif
+                timer_restart(&S_PreReadPageBuffer->currenttestdata->timer);
+                
+                //如果是排队模式，则进入排队界面
+                if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
+                {
+                    MotorMoveTo(1, 2, MaxLocation, FALSE);
+                        
+                    S_PreReadPageBuffer->currenttestdata->statues = status_start;
 
-						startActivity(createPaiDuiActivity, NULL);
-					}
-					else
-					{		
-						startActivity(createTimeDownActivity, NULL);
-					}
-				#elif(DeviceUseType == Device_FastDemo)
-				
-					//设置倒计时时间
-					timer_set(&(S_PreReadPageBuffer->currenttestdata->timer), S_PreReadPageBuffer->currenttestdata->testdata.temperweima.CardWaitTime*1);
-				
-					/*跳过验证加样功能，直接测试*/
-					//如果是排队模式，则进入排队界面
-					if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
-					{
-						MotorMoveTo(1, 2, MaxLocation, FALSE);
-						
-						S_PreReadPageBuffer->currenttestdata->statues = status_start;
-
-						startActivity(createPaiDuiActivity, NULL);
-					}
-					else
-					{		
-						startActivity(createTimeDownActivity, NULL);
-					}
-				#endif
+                    startActivity(createPaiDuiActivity, NULL);
+                }
+                else
+                    startActivity(createTimeDownActivity, NULL);	
 			}
 			else
 			{
@@ -365,54 +333,6 @@ static void CheckQRCode(void)
 			AddNumOfSongToList(12, 0);
 			SendKeyCode(1);
 		}
-	}
-}
-
-static void CheckPreTestCard(void)
-{
-	if(My_Pass == TakeTestResult(&(S_PreReadPageBuffer->cardpretestresult)))
-	{
-		timer_restart(&(S_PreReadPageBuffer->currenttestdata->timer));
-		
-		//未加样
-		if(S_PreReadPageBuffer->cardpretestresult == NoSample)
-		{
-			//未加样重测3次，第三次未加样则表明真的未加样
-			S_PreReadPageBuffer->preTestErrorCount++;
-			if(S_PreReadPageBuffer->preTestErrorCount < 8)
-			{	
-				StartTest(S_PreReadPageBuffer->currenttestdata);
-			}
-			else
-			{
-				MotorMoveTo(1, 2, MaxLocation, FALSE);
-				AddNumOfSongToList(16, 0);
-				SendKeyCode(5);
-			}
-		}
-		else if(S_PreReadPageBuffer->cardpretestresult == ResultIsOK)
-		{
-			MotorMoveTo(1, 2, MaxLocation, FALSE);
-			AddNumOfSongToList(14, 0);
-			SendKeyCode(3);
-		}
-		else
-		{
-			//如果是排队模式，则进入排队界面
-			if(S_PreReadPageBuffer->currenttestdata->testlocation > 0)
-			{
-				MotorMoveTo(1, 2, MaxLocation, FALSE);
-				
-				S_PreReadPageBuffer->currenttestdata->statues = status_start;
-
-				startActivity(createPaiDuiActivity, NULL);
-			}
-			else
-			{		
-				startActivity(createTimeDownActivity, NULL);
-			}
-		}
-		
 	}
 }
 

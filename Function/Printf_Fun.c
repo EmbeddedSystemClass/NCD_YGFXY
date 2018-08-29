@@ -67,6 +67,8 @@ void PrintfData(TestData * testd2)
 			sprintf(printBuffer->tempBuf, "%s: %.*f %-8.8s\n", ResultStr, printBuffer->tempTestData.temperweima.itemConstData.pointNum, printBuffer->tempTestData.testline.BasicResult, printBuffer->tempTestData.temperweima.itemConstData.itemMeasure);
 		else if(printBuffer->tempTestData.testline.BasicResult <= printBuffer->tempTestData.temperweima.itemConstData.lowstResult)
 			sprintf(printBuffer->tempBuf, "%s: <%.*f %-8.8s\n", ResultStr, printBuffer->tempTestData.temperweima.itemConstData.pointNum, printBuffer->tempTestData.temperweima.itemConstData.lowstResult, printBuffer->tempTestData.temperweima.itemConstData.itemMeasure);
+        else if(printBuffer->tempTestData.testline.BasicResult >= printBuffer->tempTestData.temperweima.itemConstData.highestResult)
+			sprintf(printBuffer->tempBuf, "%s: >%.*f %-8.8s\n", ResultStr, printBuffer->tempTestData.temperweima.itemConstData.pointNum, printBuffer->tempTestData.temperweima.itemConstData.highestResult, printBuffer->tempTestData.temperweima.itemConstData.itemMeasure);
 		else
 			sprintf(printBuffer->tempBuf, "%s: %.*f %-8.8s\n", ResultStr, printBuffer->tempTestData.temperweima.itemConstData.pointNum, printBuffer->tempTestData.testline.BasicResult, printBuffer->tempTestData.temperweima.itemConstData.itemMeasure);
 		

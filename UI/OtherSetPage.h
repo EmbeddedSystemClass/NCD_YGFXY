@@ -10,7 +10,7 @@ typedef struct OtherSetPageBuffer_tag {
 	SystemSetData systemSetData;
 	MyBool isChange;
 	char buf[50];
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[50];
 	unsigned short tempvalue;
 	Basic_ICO ico;
 }OtherSetPageBuffer;

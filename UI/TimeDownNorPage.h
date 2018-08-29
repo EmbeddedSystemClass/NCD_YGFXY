@@ -10,6 +10,7 @@ typedef struct TimeDownPage_tag {
 	ItemData * currenttestdata;
 	unsigned short count;
 	unsigned short time;
+    MyBool isStart;             //超时定时器是否启动
 }TimeDownPageData;
 
 

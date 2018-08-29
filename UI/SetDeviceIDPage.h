@@ -9,7 +9,7 @@ typedef struct SetDeviceIDPage_tag {
 	char tempbuf[150];								//临时指针
 	char deviceId[MaxDeviceIDLen];							//新输入的设备id
 	unsigned char ismodify;
-	unsigned short lcdinput[100];
+	unsigned short lcdinput[50];
 }SetDeviceIDPage;
 
 MyState_TypeDef createSetDeviceIDActivity(Activity * thizActivity, Intent * pram);
